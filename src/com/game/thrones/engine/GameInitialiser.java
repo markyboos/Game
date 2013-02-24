@@ -40,11 +40,24 @@ public class GameInitialiser {
         Territory kingsLanding = createTerritory("Kings landing", 20, kingsHouse);
         Territory winterfell = createTerritory("Winterfell", 10, majorOne);
         Territory rock = createTerritory("Castle rock", 10, majorTwo);
-        createTerritory("Bogland", 2, minorOne);
-        createTerritory("Desert", 2, minorTwo);
-        createTerritory("Coastal city", 4, minorThree);
-        createTerritory("Forest town", 3, minorFour);    
+        Territory bogland = createTerritory("Bogland", 2, minorOne);
+        Territory desert = createTerritory("Desert", 2, minorTwo);
+        Territory coast = createTerritory("Coastal city", 4, minorThree);
+        Territory forest = createTerritory("Forest town", 3, minorFour);    
         Territory outlands = createTerritory("Outlands", 1, neutralMinor);
+        
+        //conecting territories
+        kingsLanding.nextTo(bogland);
+        kingsLanding.nextTo(desert);
+        kingsLanding.nextTo(outlands);
+        
+        desert.nextTo(coast);
+        
+        coast.nextTo(rock);
+        
+        bogland.nextTo(forest);
+        
+        forest.nextTo(winterfell);
         
         //heroes
         createHero("The King", kingsHouse, kingsLanding);

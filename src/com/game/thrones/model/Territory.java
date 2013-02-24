@@ -1,6 +1,9 @@
 
 package com.game.thrones.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  *
  * @author James
@@ -13,6 +16,8 @@ public class Territory {
     private int goldPerTurn;
     
     private House ownedBy;
+    
+    private Set<Territory> nextTo = new HashSet<Territory>();
 
     /**
      * @return the name
@@ -54,6 +59,18 @@ public class Territory {
      */
     public void setOwnedBy(House ownedBy) {
         this.ownedBy = ownedBy;
+    }
+    
+    public void nextTo(Territory territory) {
+        boolean added = nextTo.add(territory);
+        if (!added) {
+            return;
+        }
+        territory.nextTo(this);
+    }
+
+    public boolean isNextTo(final Territory territory) {
+        return nextTo.contains(territory);
     }
     
 }
