@@ -26,6 +26,14 @@ public class Territory implements Comparable<Territory> {
         return getValue();
     }
 
+    /**
+     * The higher value territories are the hardest to defend, perhaps?
+     * @return the defensive value of the territory (a bonus applicable to a unit fighting in his own territory); a function of the value
+     */
+    public int getDefensiveValue() {
+        return getValue() / 2;
+    }
+
     public int getValue() {
         return value;
     }

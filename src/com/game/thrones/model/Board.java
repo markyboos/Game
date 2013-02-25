@@ -15,10 +15,10 @@ import java.util.*;
  */
 public class Board {
 
-    private List<Territory> territories;
-    private Map<Territory, House> ownershipMap = new HashMap<Territory, House>();
-    private Set<House> houses;
-    private Set<Hero> heroes;
+    final private List<Territory> territories;
+    final private Map<Territory, House> ownershipMap;
+    final private Set<House> houses;
+    final private Set<Hero> heroes;
 
     /**
      * 2D array representing the borders of the territories.
@@ -31,9 +31,7 @@ public class Board {
     public Board(Map<Territory, Set<Territory>> landMap, Map<Territory, House> ownership, Set<House> houses, Set<Hero> heroes) {
 
         this.borders = new int[landMap.size()][landMap.size()];
-
-        territories = new ArrayList<Territory>(landMap.size());
-        territories.addAll(landMap.keySet());
+        territories = Collections.unmodifiableList(new ArrayList<Territory>(landMap.keySet()));
 
         //Populate the 2D array based on the borders.
         for(Territory t : landMap.keySet()) {
@@ -111,7 +109,7 @@ public class Board {
     public boolean moveHero(Hero hero, Territory targetLocation) {
         Territory currentLocation = hero.getPosition();
 
-        if(areBordering(currentLocation, targetLocation)) {
+        if(areBordering(currentLocation, targetLocation) ) {
             hero.setPosition(targetLocation);
             return true;
         }

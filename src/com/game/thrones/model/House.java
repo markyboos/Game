@@ -1,6 +1,7 @@
 
 package com.game.thrones.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -8,19 +9,25 @@ import java.util.Map;
  * @author James
  */
 public class House implements Comparable<House>{
+    public enum Type {KING, MAJOR, MINOR}
+
+    final private String name;
+    final private Type houseType;
+
+    private House serves;
+    //how this house sees other houses
+    final private Map<House, Standing> houseStandings = new HashMap<House,Standing>();
+
+    public House(String name, Type houseType) {
+        this.name = name;
+        this.houseType = houseType;
+    }
 
     /**
      * @return the name
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -45,24 +52,10 @@ public class House implements Comparable<House>{
     }
 
     /**
-     * @param houseType the houseType to set
-     */
-    public void setHouseType(Type houseType) {
-        this.houseType = houseType;
-    }
-
-    /**
      * @return the houseStandings
      */
     public Map<House, Standing> getHouseStandings() {
         return houseStandings;
-    }
-
-    /**
-     * @param houseStandings the houseStandings to set
-     */
-    public void setHouseStandings(Map<House, Standing> houseStandings) {
-        this.houseStandings = houseStandings;
     }
 
     @Override
@@ -70,17 +63,4 @@ public class House implements Comparable<House>{
         return getName().compareTo(house.getName());
     }
 
-    public enum Type {KING, MAJOR, MINOR}
-    
-    private String name;
-    
-    private House serves;
-    
-    private Type houseType;
-    
-    //how this house sees other houses    
-    private Map<House, Standing> houseStandings;
-    
-    
-    
 }

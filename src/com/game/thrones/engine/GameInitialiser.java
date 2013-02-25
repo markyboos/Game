@@ -73,11 +73,9 @@ public class GameInitialiser {
     }
     
     private House createHouse(String name, Type type, House serves) {
-        House house = new House();
-        house.setName(name);
-        house.setHouseType(type);
+        House house = new House(name, type);
         house.setServes(serves);
-        
+
         houses.add(house);
         
         return house;
@@ -113,9 +111,8 @@ public class GameInitialiser {
     
     private Hero createHero(String name, House house, Territory position) {
         
-        Hero hero = new Hero();
-        
-        hero.setName(name);
+        Hero hero = new Hero(name);
+
         hero.setHouse(house);
         hero.setPosition(position);
         

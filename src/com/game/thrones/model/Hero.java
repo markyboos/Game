@@ -6,8 +6,8 @@ package com.game.thrones.model;
  * @author James
  */
 public class Hero implements Comparable<Hero>{
-    
-    private String name;
+
+    final private String name;
     
     //who they are fighting for
     private House house;
@@ -15,18 +15,15 @@ public class Hero implements Comparable<Hero>{
     //where they are
     private Territory position;
 
+    public Hero(String name) {
+        this.name = name;
+    }
+
     /**
      * @return the name
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
