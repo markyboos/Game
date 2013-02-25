@@ -57,4 +57,13 @@ public class Hero {
         this.position = position;
     }
     
+    public boolean move(Territory territory) {        
+        if (getPosition().isNextTo(territory)) {
+            setPosition(territory);
+            return true;
+        }
+        
+        return false;        
+    }
+    
 }

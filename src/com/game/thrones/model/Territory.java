@@ -38,4 +38,5 @@ public class Territory implements Comparable<Territory> {
     public int compareTo(Territory territory) {
         return getName().compareTo(territory.getName());
     }
+    
 }

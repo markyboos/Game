@@ -6,6 +6,8 @@ import com.game.thrones.model.Hero;
 import com.game.thrones.model.House;
 import com.game.thrones.model.House.Type;
 import com.game.thrones.model.Territory;
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.*;
 
@@ -36,7 +38,8 @@ public class GameInitialiser {
         House minorFour = createHouse("Honorable Minor Three", Type.MINOR, majorTwo);  
                 
         House neutralMinor = createHouse("Wild men", Type.MINOR);
-
+        
+        // territories        
         Territory kingsLanding = createTerritory("Kings landing", 20, kingsHouse);
         Territory winterfell = createTerritory("Winterfell", 10, majorOne);
         Territory rock = createTerritory("Castle rock", 10, majorTwo);
@@ -45,6 +48,19 @@ public class GameInitialiser {
         createTerritory("Coastal city", 4, minorThree);
         createTerritory("Forest town", 3, minorFour);
         Territory outlands = createTerritory("Outlands", 1, neutralMinor);
+        
+        //conecting territories
+        kingsLanding.nextTo(bogland);
+        kingsLanding.nextTo(desert);
+        kingsLanding.nextTo(outlands);
+        
+        desert.nextTo(coast);
+        
+        coast.nextTo(rock);
+        
+        bogland.nextTo(forest);
+        
+        forest.nextTo(winterfell);
         
         //heroes
         createHero("The King", kingsHouse, kingsLanding);
