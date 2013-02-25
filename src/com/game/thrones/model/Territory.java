@@ -5,55 +5,37 @@ package com.game.thrones.model;
  *
  * @author James
  */
-public class Territory {
+public class Territory implements Comparable<Territory> {
     
-    private String name;
-    
-    //money generated per turn
-    private int goldPerTurn;
-    
-    private House ownedBy;
+    private final String name;
 
     /**
-     * @return the name
+     *  Value of the territory; a value which may be used by a number of functions. E.g. gold value, unit value, etc.
      */
+    private final int value;
+
+    public Territory(String name, int value) {
+        this.name = name;
+        this.value = value;
+    }
+
+    /**
+     * @return the goldPerTurn that this territory generates; a function of the value.
+     */
+    public int getGoldPerTurn() {
+        return getValue();
+    }
+
+    public int getValue() {
+        return value;
+    }
+
     public String getName() {
         return name;
     }
 
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public int compareTo(Territory territory) {
+        return getName().compareTo(territory.getName());
     }
-
-    /**
-     * @return the goldPerTurn
-     */
-    public int getGoldPerTurn() {
-        return goldPerTurn;
-    }
-
-    /**
-     * @param goldPerTurn the goldPerTurn to set
-     */
-    public void setGoldPerTurn(int goldPerTurn) {
-        this.goldPerTurn = goldPerTurn;
-    }
-
-    /**
-     * @return the ownedBy
-     */
-    public House getOwnedBy() {
-        return ownedBy;
-    }
-
-    /**
-     * @param ownedBy the ownedBy to set
-     */
-    public void setOwnedBy(House ownedBy) {
-        this.ownedBy = ownedBy;
-    }
-    
 }

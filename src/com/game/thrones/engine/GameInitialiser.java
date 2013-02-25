@@ -1,12 +1,13 @@
 
 package com.game.thrones.engine;
 
+import com.game.thrones.model.Board;
 import com.game.thrones.model.Hero;
 import com.game.thrones.model.House;
 import com.game.thrones.model.House.Type;
 import com.game.thrones.model.Territory;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
 
 /**
  *
@@ -14,13 +15,13 @@ import java.util.List;
  */
 public class GameInitialiser {
     
-    List<House> houses = new ArrayList<House>();
+    private Set<House> houses = new HashSet<House>();
+    private Set<Hero> heroes = new HashSet<Hero>();
+
+    private Map<Territory, House> ownershipMap = new HashMap<Territory, House>();
+    private Map<Territory, List<Territory>> borderMap = new HashMap<Territory, List<Territory>>();
     
-    List<Territory> territories = new ArrayList<Territory>();
-    
-    List<Hero> heroes = new ArrayList<Hero>();
-    
-    void create() {
+    private void initialise() {
         
         //start with the king and 2 other major houses
         //to see how this goes
@@ -35,15 +36,14 @@ public class GameInitialiser {
         House minorFour = createHouse("Honorable Minor Three", Type.MINOR, majorTwo);  
                 
         House neutralMinor = createHouse("Wild men", Type.MINOR);
-        
-        // territories        
+
         Territory kingsLanding = createTerritory("Kings landing", 20, kingsHouse);
         Territory winterfell = createTerritory("Winterfell", 10, majorOne);
         Territory rock = createTerritory("Castle rock", 10, majorTwo);
         createTerritory("Bogland", 2, minorOne);
         createTerritory("Desert", 2, minorTwo);
         createTerritory("Coastal city", 4, minorThree);
-        createTerritory("Forest town", 3, minorFour);    
+        createTerritory("Forest town", 3, minorFour);
         Territory outlands = createTerritory("Outlands", 1, neutralMinor);
         
         //heroes
@@ -62,7 +62,7 @@ public class GameInitialiser {
         
     }
     
-    House createHouse(String name, Type type, House serves) {
+    private House createHouse(String name, Type type, House serves) {
         House house = new House();
         house.setName(name);
         house.setHouseType(type);
@@ -73,24 +73,26 @@ public class GameInitialiser {
         return house;
     }
     
-    House createHouse(String name, Type type) {
+    private House createHouse(String name, Type type) {
         return createHouse(name, type, null);        
     }
-    
-    Territory createTerritory(String name, int goldPerTurn, House house) {
-        
-        Territory territory = new Territory();
-        
-        territory.setGoldPerTurn(goldPerTurn);
-        territory.setOwnedBy(house);
-        territory.setName(name);
-        
-        territories.add(territory);
-        
-        return territory;
+
+    private Territory createTerritory(String name, int value, House ownedBy) {
+        Territory t1 = new Territory(name, value);
+
+        ownershipMap.put(t1, ownedBy);
+        borderMap.put(t1, new ArrayList<Territory>());
+
+        return t1;
+    }
+
+    Board createBoard() {
+        initialise();
+
+        return new Board(borderMap, ownershipMap, houses, heroes);
     }
     
-    Hero createHero(String name, House house, Territory position) {
+    private Hero createHero(String name, House house, Territory position) {
         
         Hero hero = new Hero();
         
