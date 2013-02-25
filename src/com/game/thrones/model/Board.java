@@ -28,7 +28,7 @@ public class Board {
      */
     private int[][] borders;
 
-    public Board(Map<Territory, List<Territory>> landMap, Map<Territory, House> ownership, Set<House> houses, Set<Hero> heroes) {
+    public Board(Map<Territory, Set<Territory>> landMap, Map<Territory, House> ownership, Set<House> houses, Set<Hero> heroes) {
 
         this.borders = new int[landMap.size()][landMap.size()];
 
@@ -106,5 +106,16 @@ public class Board {
 
     public void changeOwnership(Territory t1, House newOwner) {
         ownershipMap.put(t1, newOwner);
+    }
+
+    public boolean moveHero(Hero hero, Territory targetLocation) {
+        Territory currentLocation = hero.getPosition();
+
+        if(areBordering(currentLocation, targetLocation)) {
+            hero.setPosition(targetLocation);
+            return true;
+        }
+
+        return false;
     }
 }

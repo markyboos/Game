@@ -6,8 +6,6 @@ import com.game.thrones.model.Hero;
 import com.game.thrones.model.House;
 import com.game.thrones.model.House.Type;
 import com.game.thrones.model.Territory;
-import java.util.ArrayList;
-import java.util.List;
 
 import java.util.*;
 
@@ -21,7 +19,7 @@ public class GameInitialiser {
     private Set<Hero> heroes = new HashSet<Hero>();
 
     private Map<Territory, House> ownershipMap = new HashMap<Territory, House>();
-    private Map<Territory, List<Territory>> borderMap = new HashMap<Territory, List<Territory>>();
+    private Map<Territory, Set<Territory>> borderMap = new HashMap<Territory, Set<Territory>>();
     
     private void initialise() {
         
@@ -43,24 +41,20 @@ public class GameInitialiser {
         Territory kingsLanding = createTerritory("Kings landing", 20, kingsHouse);
         Territory winterfell = createTerritory("Winterfell", 10, majorOne);
         Territory rock = createTerritory("Castle rock", 10, majorTwo);
-        createTerritory("Bogland", 2, minorOne);
-        createTerritory("Desert", 2, minorTwo);
-        createTerritory("Coastal city", 4, minorThree);
-        createTerritory("Forest town", 3, minorFour);
+        Territory bogland = createTerritory("Bogland", 2, minorOne);
+        Territory desert = createTerritory("Desert", 2, minorTwo);
+        Territory coast = createTerritory("Coastal city", 4, minorThree);
+        Territory forest = createTerritory("Forest town", 3, minorFour);
         Territory outlands = createTerritory("Outlands", 1, neutralMinor);
         
         //conecting territories
-        kingsLanding.nextTo(bogland);
-        kingsLanding.nextTo(desert);
-        kingsLanding.nextTo(outlands);
-        
-        desert.nextTo(coast);
-        
-        coast.nextTo(rock);
-        
-        bogland.nextTo(forest);
-        
-        forest.nextTo(winterfell);
+        addBorder(kingsLanding, bogland);
+        addBorder(kingsLanding, desert);
+        addBorder(kingsLanding, outlands);
+        addBorder(coast, desert);
+        addBorder(coast, rock);
+        addBorder(forest, bogland);
+        addBorder(forest, winterfell);
         
         //heroes
         createHero("The King", kingsHouse, kingsLanding);
@@ -97,9 +91,18 @@ public class GameInitialiser {
         Territory t1 = new Territory(name, value);
 
         ownershipMap.put(t1, ownedBy);
-        borderMap.put(t1, new ArrayList<Territory>());
+        borderMap.put(t1, new HashSet<Territory>());
 
         return t1;
+    }
+
+    private void addBorder(Territory t1, Territory t2) {
+        if(!borderMap.containsKey(t1) || !borderMap.containsKey(t2)) {
+            throw new IllegalArgumentException("Trying to add a border to an unknown territory");
+        }
+
+        borderMap.get(t1).add(t2);
+        borderMap.get(t2).add(t1);
     }
 
     Board createBoard() {

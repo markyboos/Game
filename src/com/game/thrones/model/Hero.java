@@ -5,7 +5,7 @@ package com.game.thrones.model;
  *
  * @author James
  */
-public class Hero {
+public class Hero implements Comparable<Hero>{
     
     private String name;
     
@@ -56,14 +56,9 @@ public class Hero {
     public void setPosition(Territory position) {
         this.position = position;
     }
-    
-    public boolean move(Territory territory) {        
-        if (getPosition().isNextTo(territory)) {
-            setPosition(territory);
-            return true;
-        }
-        
-        return false;        
+
+    @Override
+    public int compareTo(Hero hero) {
+        return getName().compareTo(hero.getName());
     }
-    
 }
