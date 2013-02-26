@@ -49,6 +49,11 @@ public class Board {
 
             for(Territory bordering : landMap.get(t)) {
                 int t2Id = territories.indexOf(bordering);
+
+                if(t2Id == -1) {
+                    throw new IllegalArgumentException("Bordering territory is not part of the board");
+                }
+
                 borders[t1Id][t2Id] = 1;
             }
         }
@@ -88,7 +93,7 @@ public class Board {
             }
         }
 
-        return borderingTerritories;
+        return Collections.unmodifiableList(borderingTerritories);
     }
 
     /**
@@ -106,7 +111,7 @@ public class Board {
             }
         }
 
-        return alliedTerritories;
+        return Collections.unmodifiableList(alliedTerritories);
     }
 
     /**
