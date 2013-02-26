@@ -1,5 +1,7 @@
 package com.game.thrones.model;
 
+import com.game.thrones.model.piece.Piece;
+
 import java.util.*;
 
 /**
@@ -18,7 +20,7 @@ public class Board {
     final private List<Territory> territories;
     final private Map<Territory, House> ownershipMap;
     final private Set<House> houses;
-    final private Set<Hero> heroes;
+    final private Set<Piece> pieces;
 
     /**
      * 2D array representing the borders of the territories.
@@ -28,7 +30,7 @@ public class Board {
      */
     private int[][] borders;
 
-    public Board(Map<Territory, Set<Territory>> landMap, Map<Territory, House> ownership, Set<House> houses, Set<Hero> heroes) {
+    public Board(Map<Territory, Set<Territory>> landMap, Map<Territory, House> ownership, Set<House> houses, Set<Piece> pieces) {
 
         this.borders = new int[landMap.size()][landMap.size()];
         territories = Collections.unmodifiableList(new ArrayList<Territory>(landMap.keySet()));
@@ -59,7 +61,7 @@ public class Board {
 
         this.ownershipMap = ownership;
         this.houses = houses;
-        this.heroes = heroes;
+        this.pieces = pieces;
     }
 
     /**
@@ -106,11 +108,12 @@ public class Board {
         ownershipMap.put(t1, newOwner);
     }
 
-    public boolean moveHero(Hero hero, Territory targetLocation) {
-        Territory currentLocation = hero.getPosition();
+    public boolean movePiece(Piece piece, Territory targetLocation) {
+        Territory currentLocation = piece.getPosition();
 
-        if(areBordering(currentLocation, targetLocation) ) {
-            hero.setPosition(targetLocation);
+        if(areBordering(currentLocation, targetLocation)) {
+
+            piece.setPosition(targetLocation);
             return true;
         }
 

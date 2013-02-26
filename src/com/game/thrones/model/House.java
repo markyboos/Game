@@ -8,7 +8,7 @@ import java.util.Map;
  *
  * @author James
  */
-public class House implements Comparable<House>{
+public class House {
     public enum Type {KING, MAJOR, MINOR}
 
     final private String name;
@@ -57,10 +57,4 @@ public class House implements Comparable<House>{
     public Map<House, Standing> getHouseStandings() {
         return houseStandings;
     }
-
-    @Override
-    public int compareTo(House house) {
-        return getName().compareTo(house.getName());
-    }
-
 }

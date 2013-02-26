@@ -5,7 +5,7 @@ package com.game.thrones.model;
  *
  * @author James
  */
-public class Territory implements Comparable<Territory> {
+public class Territory {
     
     private final String name;
 
@@ -43,8 +43,19 @@ public class Territory implements Comparable<Territory> {
     }
 
     @Override
-    public int compareTo(Territory territory) {
-        return getName().compareTo(territory.getName());
+    public boolean equals(Object o) {
+        if(o instanceof Territory) {
+            Territory t2 = (Territory) o;
+
+            return getName().equals(t2.getName());
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
     }
     
 }

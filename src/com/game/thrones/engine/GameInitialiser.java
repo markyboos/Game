@@ -1,11 +1,12 @@
 
 package com.game.thrones.engine;
 
-import com.game.thrones.model.Board;
-import com.game.thrones.model.Hero;
-import com.game.thrones.model.House;
+import com.game.thrones.model.*;
 import com.game.thrones.model.House.Type;
-import com.game.thrones.model.Territory;
+import com.game.thrones.model.piece.Emissary;
+import com.game.thrones.model.piece.Knight;
+import com.game.thrones.model.piece.Lord;
+import com.game.thrones.model.piece.Piece;
 
 import java.util.*;
 
@@ -16,7 +17,7 @@ import java.util.*;
 public class GameInitialiser {
     
     private Set<House> houses = new HashSet<House>();
-    private Set<Hero> heroes = new HashSet<Hero>();
+    private Set<Piece> pieces = new HashSet<Piece>();
 
     private Map<Territory, House> ownershipMap = new HashMap<Territory, House>();
     private Map<Territory, Set<Territory>> borderMap = new HashMap<Territory, Set<Territory>>();
@@ -57,17 +58,17 @@ public class GameInitialiser {
         addBorder(forest, winterfell);
         
         //heroes
-        createHero("The King", kingsHouse, kingsLanding);
-        createHero("Stinky", minorOne, kingsLanding);
-        createHero("Champy", minorTwo, kingsLanding);
+        createLord("The King", kingsHouse, kingsLanding);
+        createEmissary("Sneaky", minorOne, kingsLanding);
+        createKnight("Champy", minorTwo, kingsLanding);
         
-        createHero("Player one", majorOne, winterfell);
-        createHero("The cruncher", minorThree, winterfell);
+        createLord("Player one", majorOne, winterfell);
+        createKnight("The cruncher", minorThree, winterfell);
         
-        createHero("Player two", majorTwo, rock);
-        createHero("Goldy", minorThree, rock);
+        createLord("Player two", majorTwo, rock);
+        createKnight("Goldy", minorThree, rock);
         
-        createHero("smelly", neutralMinor, outlands);        
+        createKnight("smelly", neutralMinor, outlands);
         
         
     }
@@ -106,20 +107,41 @@ public class GameInitialiser {
     Board createBoard() {
         initialise();
 
-        return new Board(borderMap, ownershipMap, houses, heroes);
+        return new Board(borderMap, ownershipMap, houses, pieces);
     }
     
-    private Hero createHero(String name, House house, Territory position) {
+    private Knight createKnight(String name, House house, Territory position) {
         
-        Hero hero = new Hero(name);
+        Knight knight = new Knight(name);
 
-        hero.setHouse(house);
-        hero.setPosition(position);
+        knight.setHouse(house);
+        knight.setPosition(position);
         
-        heroes.add(hero);
+        pieces.add(knight);
         
-        return hero;
-        
+        return knight;
     }
+
+    private Lord createLord(String name, House house, Territory position) {
+        Lord lord = new Lord(name, house);
+
+        lord.setPosition(position);
+
+        pieces.add(lord);
+
+        return lord;
+    }
+
+    private Emissary createEmissary(String name, House house, Territory position) {
+        Emissary emissary = new Emissary(name);
+
+        emissary.setHouse(house);
+
+        pieces.add(emissary);
+
+        return emissary;
+    }
+
+
 
 }
