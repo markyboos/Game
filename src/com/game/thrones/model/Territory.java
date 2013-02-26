@@ -14,9 +14,12 @@ public class Territory {
      */
     private final int value;
 
-    public Territory(String name, int value) {
+    private House owner;
+
+    public Territory(String name, int value, House ownedBy) {
         this.name = name;
         this.value = value;
+        this.owner = ownedBy;
     }
 
     /**
@@ -40,6 +43,10 @@ public class Territory {
 
     public String getName() {
         return name;
+    }
+
+    public House getOwner() {
+        return owner;
     }
 
     @Override

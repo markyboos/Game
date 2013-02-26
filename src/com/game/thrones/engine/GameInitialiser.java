@@ -18,8 +18,6 @@ public class GameInitialiser {
     
     private Set<House> houses = new HashSet<House>();
     private Set<Piece> pieces = new HashSet<Piece>();
-
-    private Map<Territory, House> ownershipMap = new HashMap<Territory, House>();
     private Map<Territory, Set<Territory>> borderMap = new HashMap<Territory, Set<Territory>>();
     
     private void initialise() {
@@ -87,9 +85,8 @@ public class GameInitialiser {
     }
 
     private Territory createTerritory(String name, int value, House ownedBy) {
-        Territory t1 = new Territory(name, value);
+        Territory t1 = new Territory(name, value, ownedBy);
 
-        ownershipMap.put(t1, ownedBy);
         borderMap.put(t1, new HashSet<Territory>());
 
         return t1;
@@ -107,7 +104,7 @@ public class GameInitialiser {
     Board createBoard() {
         initialise();
 
-        return new Board(borderMap, ownershipMap, houses, pieces);
+        return new Board(borderMap, houses, pieces);
     }
     
     private Knight createKnight(String name, House house, Territory position) {
@@ -136,6 +133,7 @@ public class GameInitialiser {
         Emissary emissary = new Emissary(name);
 
         emissary.setHouse(house);
+        emissary.setPosition(position);
 
         pieces.add(emissary);
 

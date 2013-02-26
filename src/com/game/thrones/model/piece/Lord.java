@@ -27,6 +27,7 @@ public class Lord extends Piece implements IEmissary, IKnight {
         //TODO More effective than a regular knight; but only one lord per house so use wisely.
     }
 
+    @Override
     public void setHouse(House house) {
         if(house == null) {
             throw new IllegalArgumentException("A Lord cannot be without a House!");

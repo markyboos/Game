@@ -9,16 +9,15 @@ import java.util.*;
  * Date: 24/02/13
  * Time: 23:09
  *
- * Class to model the board, consisting of territories and their borders and ownership. Abstracts these concepts away from
+ * Class to model the board, consisting of territories and their borders. Abstracts these concepts away from
  * the territory themselves.
  *
  * Provides utility methods (such as determining if two territories are bordering)
- * Provides methods for modifying the state of the game (e.g. changing ownership of a territory)
+ * Provides methods for modifying the state of the game (e.g. moving pieces)
  */
 public class Board {
 
     final private List<Territory> territories;
-    final private Map<Territory, House> ownershipMap;
     final private Set<House> houses;
     final private Set<Piece> pieces;
 
@@ -30,7 +29,14 @@ public class Board {
      */
     private int[][] borders;
 
-    public Board(Map<Territory, Set<Territory>> landMap, Map<Territory, House> ownership, Set<House> houses, Set<Piece> pieces) {
+    /**
+     * Construct the board; the main model of the game state.
+     *
+     * @param landMap A map of all the territories and their borders.
+     * @param houses A set of all the houses on the board.
+     * @param pieces A set of all the pieces on the board.
+     */
+    public Board(Map<Territory, Set<Territory>> landMap, Set<House> houses, Set<Piece> pieces) {
 
         this.borders = new int[landMap.size()][landMap.size()];
         territories = Collections.unmodifiableList(new ArrayList<Territory>(landMap.keySet()));
@@ -59,7 +65,6 @@ public class Board {
             }
         }
 
-        this.ownershipMap = ownership;
         this.houses = houses;
         this.pieces = pieces;
     }
@@ -87,6 +92,24 @@ public class Board {
     }
 
     /**
+     * Retrieves a list of territories allied to a given house.
+     * An allied territory is either owned by the house, or owned by a house that serves it.
+     * @param house The house to retrieve a list of owned territories for.
+     * @return A list of owned territories.
+     */
+    public List<Territory> getAlliedTerritories(House house) {
+        List<Territory> alliedTerritories = new ArrayList<Territory>();
+
+        for(Territory t : territories) {
+            if(t.getOwner() == house || t.getOwner().getServes() == house) {
+                alliedTerritories.add(t);
+            }
+        }
+
+        return alliedTerritories;
+    }
+
+    /**
      * Determine if two territories are bordering.
      * @param t1 1st territory to compare
      * @param t2 2nd territory to compare.
@@ -100,14 +123,12 @@ public class Board {
         return borders[territories.indexOf(t1)][territories.indexOf(t2)] == 1;
     }
 
-    public House retrieveOwner(Territory t1) {
-        return ownershipMap.get(t1);
-    }
-
-    public void changeOwnership(Territory t1, House newOwner) {
-        ownershipMap.put(t1, newOwner);
-    }
-
+    /**
+     * Utility function to move a piece; checks the two territories are bordering.
+     * @param piece Piece to move.
+     * @param targetLocation Territory to move to
+     * @return true if the piece was moved; false otherwise.
+     */
     public boolean movePiece(Piece piece, Territory targetLocation) {
         Territory currentLocation = piece.getPosition();
 
