@@ -17,4 +17,9 @@ public class Knight extends Piece implements IKnight {
         return 1;
         //TODO
     }
+    
+    @Override
+    public String toString() {
+        return "Knight " + super.toString();
+    }
 }

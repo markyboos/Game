@@ -35,4 +35,9 @@ public class Lord extends Piece implements IEmissary, IKnight {
 
         super.setHouse(house);
     }
+    
+    @Override
+    public String toString() {
+        return "Lord " + super.toString();
+    }
 }

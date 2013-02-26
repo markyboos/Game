@@ -145,4 +145,34 @@ public class Board {
 
         return false;
     }
+    
+    //
+    //The following methods are just in so i can start working on some activities.
+    //They should be removed when we decide how to do them properly.
+    //
+    public Set<House> getHouses() {
+        return houses;
+    }
+    
+    public Piece getPiece(final String name) {
+        for (Piece piece : pieces) {
+            if (piece.getName().equals(name)) {
+                return piece;
+            }
+        }
+        
+        throw new IllegalArgumentException("Invalid piece");        
+    }
+    
+    public Set<Piece> getPieces(House house) {        
+        Set<Piece> housePieces = new HashSet<Piece>();
+        
+        for (Piece piece : pieces) {
+            if (piece.getHouse().equals(house)) {
+                housePieces.add(piece);                
+            }
+        }        
+        
+        return housePieces;
+    }
 }

@@ -65,4 +65,9 @@ public class Territory {
         return getName().hashCode();
     }
     
+    @Override
+    public String toString() {
+        return getName();
+    }
+    
 }

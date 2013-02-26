@@ -101,7 +101,7 @@ public class GameInitialiser {
         borderMap.get(t2).add(t1);
     }
 
-    Board createBoard() {
+    public Board createBoard() {
         initialise();
 
         return new Board(borderMap, houses, pieces);
