@@ -9,6 +9,9 @@ import com.game.thrones.model.House;
  * A special hero type; can perform both diplomatic and combat duties better than a normal hero.
  */
 public class Lord extends Piece implements IEmissary, IKnight {
+    
+    private int forces;
+    
     //Unlike other units, a Lord must belong to a house (else he is not a Lord!)
     public Lord(String name, House house) {
         this.name = name;
@@ -26,6 +29,22 @@ public class Lord extends Piece implements IEmissary, IKnight {
         return 2;
         //TODO More effective than a regular knight; but only one lord per house so use wisely.
     }
+    
+    @Override
+    public int getTroopSize() {
+        return forces;
+    }
+    
+    public void recruit(int total) {
+        forces += total;
+    }
+
+    public void disband(int total) {
+        forces -= total;
+        if (forces <= 0) {
+            forces = 0;
+        }
+    }
 
     @Override
     public void setHouse(House house) {
@@ -38,6 +57,6 @@ public class Lord extends Piece implements IEmissary, IKnight {
     
     @Override
     public String toString() {
-        return "Lord " + super.toString();
+        return "Lord with " + forces + " troops "+ super.toString();
     }
 }

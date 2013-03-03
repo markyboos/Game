@@ -10,7 +10,9 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.game.thrones.engine.GameController;
+import com.game.thrones.engine.RecruitAction;
 import com.game.thrones.model.Territory;
+import com.game.thrones.model.piece.IKnight;
 import com.game.thrones.model.piece.Piece;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +46,14 @@ public class PlayerActionActivity extends ListActivity {
         //all possible moves  
         List<Territory> borderingTerritories = controller.getBoard().getBorderingTerritories(turnItIs.getPosition());
         
+        //generic actions
         List<Action> actions = createActions(turnItIs, borderingTerritories);
+        
+        //piece specific actions
+        if (turnItIs instanceof IKnight) {
+            actions.add(new RecruitAction((IKnight)turnItIs));
+        }
+        
         
         setListAdapter(new ActionAdapter(actions));
     }

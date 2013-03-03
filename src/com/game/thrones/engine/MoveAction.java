@@ -27,14 +27,10 @@ public class MoveAction implements Action {
         GameController.getInstance()
                 .getBoard().movePiece(piece, territory);
     }
-
-    public String getDescription() {
-        return "Move to " + territory.getName();
-    }
     
     @Override
     public String toString() {
-        return getDescription();
+        return "Move to " + territory.getName();
     }
 
 }

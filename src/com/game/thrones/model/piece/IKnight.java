@@ -8,4 +8,25 @@ package com.game.thrones.model.piece;
  */
 public interface IKnight {
     public int getCombatEffectiveness();
+    
+    /**
+     * This is the total number of troops under this knights command.
+     * 
+     * @return the total number of troops
+     */
+    int getTroopSize();
+    
+    /**
+     * Adds more troops to this knights army.
+     * 
+     * @param total the number of troops that have been recruited
+     */    
+    void recruit(int total);
+    
+    /**
+     * Disbands troops from this knights army.
+     * 
+     * @param total the number of troops that have been disbanded
+     */    
+    void disband(int total);
 }

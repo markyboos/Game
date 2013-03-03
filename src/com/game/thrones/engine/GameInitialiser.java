@@ -28,12 +28,13 @@ public class GameInitialiser {
         House minorOne = createHouse("Scumbag Minor One", Type.MINOR, kingsHouse);        
         House minorTwo = createHouse("Honorable Minor One", Type.MINOR, kingsHouse);
                 
-        House majorOne = createHouse("Player One", Type.MAJOR);        
+        House majorOne = createHouse("Player One", Type.MAJOR, kingsHouse);        
         House minorThree = createHouse("Honorable Minor Two", Type.MINOR, majorOne);
                 
-        House majorTwo = createHouse("Player Two", Type.MAJOR);
+        House majorTwo = createHouse("Player Two", Type.MAJOR, kingsHouse);
         House minorFour = createHouse("Honorable Minor Three", Type.MINOR, majorTwo);  
-                
+        
+        //this house is completly neutral
         House neutralMinor = createHouse("Wild men", Type.MINOR);
         
         // territories        

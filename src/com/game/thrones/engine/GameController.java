@@ -2,8 +2,6 @@
 package com.game.thrones.engine;
 
 import com.game.thrones.model.Board;
-import com.game.thrones.model.House;
-import com.game.thrones.model.piece.Piece;
 
 /**
  * Singleton of the board
@@ -32,9 +30,5 @@ public class GameController {
     public Board getBoard() {
         return board;
     }
-    
-    
-    
-    
 
 }

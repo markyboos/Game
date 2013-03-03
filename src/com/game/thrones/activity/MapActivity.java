@@ -3,13 +3,13 @@ package com.game.thrones.activity;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.model.House;
@@ -25,7 +25,7 @@ import java.util.Set;
  */
 public class MapActivity extends ListActivity {
     
-    BaseAdapter adapter;
+    private BaseAdapter adapter;
     
     /** Called when the activity is first created. */
     @Override public void onCreate(Bundle savedInstanceState)
@@ -70,12 +70,28 @@ public class MapActivity extends ListActivity {
         this.startActivity(intent);
     }
     
-    class PieceAdapter extends ArrayAdapter<Piece> {
+    class PieceAdapter extends ArrayAdapter<Piece> {        
         
         public PieceAdapter(List<Piece> options) {
           super(MapActivity.this, 
                   android.R.layout.simple_list_item_1, options);
-        }        
+        }
+        
+        @Override public View getView(int position, View convertView, ViewGroup parent) {
+            
+            View view = super.getView(position, convertView, parent);
+            
+            Piece piece = super.getItem(position);
+
+            View textView = (View)view.findViewById(android.R.id.text1);
+            
+            //todo this is pretty rubbish
+            if (piece.getHouse().getName().equals("The King")) {
+                textView.setBackgroundColor(Color.YELLOW);                    
+            }
+
+            return view;
+        }
     }
 
 }

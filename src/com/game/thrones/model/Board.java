@@ -1,5 +1,6 @@
 package com.game.thrones.model;
 
+import com.game.thrones.model.piece.IKnight;
 import com.game.thrones.model.piece.Piece;
 
 import java.util.*;
@@ -161,7 +162,7 @@ public class Board {
             }
         }
         
-        throw new IllegalArgumentException("Invalid piece");        
+        throw new IllegalArgumentException("Invalid piece name");        
     }
     
     public Set<Piece> getPieces(House house) {        
@@ -174,5 +175,81 @@ public class Board {
         }        
         
         return housePieces;
+    }
+    
+    public void calculateFunds() {
+        
+        Map<House, Integer> totalEarnedPerHouse = new HashMap<House, Integer>();
+        //add any funds to the houses based on territory
+        for (Territory territory : territories) {
+            
+            House owner = territory.getOwner();
+            int goldPerTurn = territory.getGoldPerTurn();
+
+            owner.addFunds(goldPerTurn);
+            
+            if (!totalEarnedPerHouse.containsKey(owner)) {
+                totalEarnedPerHouse.put(owner, goldPerTurn);
+            } else {
+                totalEarnedPerHouse.put(owner, totalEarnedPerHouse.get(owner) + goldPerTurn);
+            }
+        }
+        
+        //take off taxes from each of the houses
+        //if they are a servant
+        for (House servantHouse : houses) {
+            
+            House masterHouse = servantHouse.getServes();
+            if (servantHouse.getServes() != null) {
+                
+                int taxRate = masterHouse.getTaxRate();
+                
+                int totalEarned = totalEarnedPerHouse.get(servantHouse);
+                
+                if (taxRate == 0 || totalEarned == 0) {
+                    continue;
+                }
+                
+                int totalToBeTaken = Math.round(totalEarned / taxRate);
+                
+                masterHouse.addFunds(totalToBeTaken);
+                servantHouse.removeFunds(totalToBeTaken);
+                
+            }
+        }
+        
+        //remove funds based on the size of the armies that house commands
+        for (Piece piece : pieces) {
+            if (piece instanceof IKnight) {
+                IKnight knight = (IKnight)piece;
+                
+                int troopCost = calculateTroopCost(knight);      
+                
+                House house = piece.getHouse();  
+                
+                int maxTroopSize = house.getFunds() / individualTroopCost();
+                
+                                
+                if (knight.getTroopSize() > maxTroopSize) {
+                    //disband some troops
+                    knight.disband(knight.getTroopSize() - maxTroopSize);
+                    
+                }                
+                
+                house.removeFunds(troopCost);
+            }
+        }
+    }
+    
+    private int individualTroopCost() {
+        return 5;        
+    }
+    
+    private int calculateTroopCost(final IKnight knight) {
+        //todo
+        //make it 5 for now
+        int troopSize = knight.getTroopSize();
+        
+        return troopSize * individualTroopCost();                
     }
 }
