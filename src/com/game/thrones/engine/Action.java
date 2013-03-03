@@ -1,6 +1,8 @@
 
 package com.game.thrones.engine;
 
+import com.game.thrones.model.piece.Piece;
+
 /**
  * A possible action for a piece
  *
@@ -9,5 +11,7 @@ package com.game.thrones.engine;
 public interface Action {
     
     void execute();
+    
+    Piece getPiece();
     
 }

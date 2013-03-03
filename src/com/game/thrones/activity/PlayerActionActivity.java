@@ -51,7 +51,7 @@ public class PlayerActionActivity extends ListActivity {
         
         //piece specific actions
         if (turnItIs instanceof IKnight) {
-            actions.add(new RecruitAction((IKnight)turnItIs));
+            actions.add(new RecruitAction(turnItIs));
         }
         
         
@@ -61,7 +61,8 @@ public class PlayerActionActivity extends ListActivity {
     @Override protected void onListItemClick(ListView l, View v, int position, long id) {
         Action selected = (Action)l.getItemAtPosition(position);
         
-        selected.execute();
+        GameController controller = GameController.getInstance();
+        controller.getOrders().addAction(selected);
         
         this.finish();
     }

@@ -2,22 +2,21 @@
 package com.game.thrones.engine;
 
 import com.game.thrones.model.piece.IKnight;
+import com.game.thrones.model.piece.Piece;
 
 /**
  *
  * @author James
  */
-public class RecruitAction implements Action {
+public class RecruitAction extends AbstractAction {
     
-    private final IKnight knight;
-    
-    public RecruitAction(IKnight knight) {
-        this.knight = knight;
+    public RecruitAction(final Piece piece) {
+        super(piece);
     }
 
     //todo
     public void execute() {
-        knight.recruit(1);
+        ((IKnight)piece).recruit(1);
     }
     
     @Override

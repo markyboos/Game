@@ -73,6 +73,6 @@ public abstract class Piece {
     
     @Override
     public String toString() {
-        return name + " at " + position;
+        return name + " of house " + house.getName() + " at " + position;
     }
 }

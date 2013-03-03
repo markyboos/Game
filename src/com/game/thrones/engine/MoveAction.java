@@ -8,20 +8,18 @@ import com.game.thrones.model.piece.Piece;
  *
  * @author James
  */
-public class MoveAction implements Action {
+public class MoveAction extends AbstractAction {
     
     private Territory territory;
-    private Piece piece;
     
     /**
      * @param territory where they are going
      * @param piece the piece that wants to move
      */
     public MoveAction(final Piece piece, final Territory territory) {
+        super(piece);
         this.territory = territory;
-        this.piece = piece;
     }
-    
 
     public void execute() {
         GameController.getInstance()

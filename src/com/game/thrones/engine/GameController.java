@@ -2,6 +2,7 @@
 package com.game.thrones.engine;
 
 import com.game.thrones.model.Board;
+import com.game.thrones.model.House;
 
 /**
  * Singleton of the board
@@ -16,6 +17,7 @@ public class GameController {
         
         GameInitialiser initialiser = new GameInitialiser();
         board = initialiser.createBoard();
+        player = board.getHouses().iterator().next();
     }
     
     public static GameController getInstance() {
@@ -29,6 +31,27 @@ public class GameController {
     
     public Board getBoard() {
         return board;
+    }
+    
+    private House player;
+    
+    public House getPlayer() {
+        return player;
+    }
+    
+    private Orders orders = new Orders();
+    
+    public Orders getOrders() {
+        return orders;
+    }
+    
+    public void takeTurn() {
+        
+        for (Action action : orders.getActions()) {
+            action.execute();            
+        }
+        
+        orders = new Orders();
     }
 
 }

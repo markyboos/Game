@@ -1,6 +1,7 @@
 
 package com.game.thrones.activity;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,7 +11,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import com.game.thrones.R;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.model.House;
 import com.game.thrones.model.piece.Piece;
@@ -34,8 +37,20 @@ public class MapActivity extends ListActivity {
         
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         
+        setContentView(R.layout.dashboard);
+        
         //this ensures that the volume control is for music rather than ringtone
         //setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        
+        Button buttonOne = (Button) findViewById(R.id.endTurnButton);
+        buttonOne.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+                GameController controller = GameController.getInstance();
+                controller.takeTurn();
+                
+                notifyDataChanged();
+            }
+        });
         
         GameController controller = GameController.getInstance();
         
@@ -56,7 +71,7 @@ public class MapActivity extends ListActivity {
     public void onResume() {
         super.onResume();
         
-        adapter.notifyDataSetChanged();
+        notifyDataChanged();
         
     }
     
@@ -64,18 +79,34 @@ public class MapActivity extends ListActivity {
         
         Piece selected = (Piece)l.getItemAtPosition(position);
         
+        GameController controller = GameController.getInstance();
+        if (!selected.getHouse().equals(controller.getPlayer())) {
+            
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+            dialog.setMessage("Not your piece!");
+            
+            dialog.show();
+            
+            return;
+        }
+        
         Intent intent = new Intent(this, PlayerActionActivity.class);
         intent.putExtra(PlayerActionActivity.PIECE_NAME, selected.getName());
         
         this.startActivity(intent);
     }
+
+    private void notifyDataChanged() {
+        adapter.notifyDataSetChanged();
+    }
     
     class PieceAdapter extends ArrayAdapter<Piece> {        
         
-        public PieceAdapter(List<Piece> options) {
-          super(MapActivity.this, 
-                  android.R.layout.simple_list_item_1, options);
+        public PieceAdapter(final List<Piece> options) {
+          super(MapActivity.this, android.R.layout.simple_list_item_1, options);
         }
+        
+        /**
         
         @Override public View getView(int position, View convertView, ViewGroup parent) {
             
@@ -85,13 +116,16 @@ public class MapActivity extends ListActivity {
 
             View textView = (View)view.findViewById(android.R.id.text1);
             
+            GameController controller = GameController.getInstance();
+            
             //todo this is pretty rubbish
-            if (piece.getHouse().getName().equals("The King")) {
-                textView.setBackgroundColor(Color.YELLOW);                    
+            if (controller.getPlayer().equals(piece.getHouse())) {
+                textView.setBackgroundColor(Color.BLUE);                    
             }
 
             return view;
         }
+        */
     }
 
 }
