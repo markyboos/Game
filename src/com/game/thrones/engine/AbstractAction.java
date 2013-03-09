@@ -29,4 +29,11 @@ public abstract class AbstractAction implements Action {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + (this.piece != null ? this.piece.hashCode() : 0);
+        return hash;
+    }
+
 }

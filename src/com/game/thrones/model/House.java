@@ -10,31 +10,43 @@ import java.util.Map;
  */
 public class House {
     
-    public enum Type {
+    public enum HouseType {
         
         KING(5), MAJOR(10), MINOR(0);        
         
         private int startingTaxRate;
         
-        Type(int startingTaxRate) {
+        HouseType(int startingTaxRate) {
             this.startingTaxRate = startingTaxRate;
         }
     }
+    
+    public enum PlayerType {AI, HUMAN}
 
     final private String name;
-    final private Type houseType;
+    final private HouseType houseType;
+    final private PlayerType playerType;
 
     private House serves;
     //how this house sees other houses
+    //this is only useful for AI players
     final private Map<House, Standing> houseStandings = new HashMap<House,Standing>();
     
     private int funds;    
     private int taxRate;
-
-    public House(String name, Type houseType) {
+    
+    public House(String name, HouseType houseType) {
         this.name = name;
         this.houseType = houseType;
         this.taxRate = houseType.startingTaxRate;
+        this.playerType = PlayerType.AI;
+    }
+
+    public House(String name, HouseType houseType, PlayerType playerType) {
+        this.name = name;
+        this.houseType = houseType;
+        this.taxRate = houseType.startingTaxRate;
+        this.playerType = playerType;
     }
 
     /**
@@ -61,8 +73,12 @@ public class House {
     /**
      * @return the houseType
      */
-    public Type getHouseType() {
+    public HouseType getHouseType() {
         return houseType;
+    }
+    
+    public PlayerType getPlayerType() {
+        return playerType;
     }
 
     /**

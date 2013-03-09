@@ -3,7 +3,7 @@ package com.game.thrones;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import com.game.thrones.activity.MapActivity;
+import com.game.thrones.activity.MapCanvasActivity;
 import com.game.thrones.engine.GameController;
 
 /**
@@ -22,7 +22,7 @@ public class MainActivity extends Activity
         GameController.getInstance();
         
         //start the map activity
-        Intent intent = new Intent(this, MapActivity.class);
+        Intent intent = new Intent(this, MapCanvasActivity.class);
         
         this.startActivity(intent);
     }

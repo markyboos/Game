@@ -151,8 +151,13 @@ public class Board {
     //The following methods are just in so i can start working on some activities.
     //They should be removed when we decide how to do them properly.
     //
+    
+    public Territory getFirstTerritory() {
+        return territories.get(0);
+    }
+            
     public Set<House> getHouses() {
-        return houses;
+        return Collections.unmodifiableSet(houses);
     }
     
     public Piece getPiece(final String name) {

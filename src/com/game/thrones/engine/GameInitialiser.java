@@ -2,7 +2,8 @@
 package com.game.thrones.engine;
 
 import com.game.thrones.model.*;
-import com.game.thrones.model.House.Type;
+import com.game.thrones.model.House.HouseType;
+import com.game.thrones.model.House.PlayerType;
 import com.game.thrones.model.piece.Emissary;
 import com.game.thrones.model.piece.Knight;
 import com.game.thrones.model.piece.Lord;
@@ -24,18 +25,18 @@ public class GameInitialiser {
         
         //start with the king and 2 other major houses
         //to see how this goes
-        House kingsHouse = createHouse("The kings house", Type.KING);                
-        House minorOne = createHouse("Scumbag Minor One", Type.MINOR, kingsHouse);        
-        House minorTwo = createHouse("Honorable Minor One", Type.MINOR, kingsHouse);
+        House kingsHouse = createHouse("The kings house", HouseType.KING);                
+        House minorOne = createHouse("Scumbag Minor One", HouseType.MINOR, kingsHouse);        
+        House minorTwo = createHouse("Honorable Minor One", HouseType.MINOR, kingsHouse);
                 
-        House majorOne = createHouse("Player One", Type.MAJOR, kingsHouse);        
-        House minorThree = createHouse("Honorable Minor Two", Type.MINOR, majorOne);
+        House majorOne = createHumanHouse("Player One", HouseType.MAJOR, kingsHouse);        
+        House minorThree = createHouse("Honorable Minor Two", HouseType.MINOR, majorOne);
                 
-        House majorTwo = createHouse("Player Two", Type.MAJOR, kingsHouse);
-        House minorFour = createHouse("Honorable Minor Three", Type.MINOR, majorTwo);  
+        House majorTwo = createHouse("Player Two", HouseType.MAJOR, kingsHouse);
+        House minorFour = createHouse("Honorable Minor Three", HouseType.MINOR, majorTwo);  
         
         //this house is completly neutral
-        House neutralMinor = createHouse("Wild men", Type.MINOR);
+        House neutralMinor = createHouse("Wild men", HouseType.MINOR);
         
         // territories        
         Territory kingsLanding = createTerritory("Kings landing", 20, kingsHouse);
@@ -72,8 +73,8 @@ public class GameInitialiser {
         
     }
     
-    private House createHouse(String name, Type type, House serves) {
-        House house = new House(name, type);
+    private House createHumanHouse(String name, HouseType hType, House serves) {
+        House house = new House(name, hType, PlayerType.HUMAN);
         house.setServes(serves);
 
         houses.add(house);
@@ -81,7 +82,16 @@ public class GameInitialiser {
         return house;
     }
     
-    private House createHouse(String name, Type type) {
+    private House createHouse(String name, HouseType hType, House serves) {
+        House house = new House(name, hType);
+        house.setServes(serves);
+
+        houses.add(house);
+        
+        return house;
+    }
+    
+    private House createHouse(String name, HouseType type) {
         return createHouse(name, type, null);        
     }
 
