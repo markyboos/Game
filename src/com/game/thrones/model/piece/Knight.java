@@ -28,7 +28,7 @@ public class Knight extends Piece implements IKnight {
     
     @Override
     public String toString() {
-        return "Knight with " + forces + " troops " + super.toString();
+        return "Knight [" + forces + "] troops";
     }
 
     public void recruit(int total) {

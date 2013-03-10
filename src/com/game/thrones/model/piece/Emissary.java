@@ -19,6 +19,6 @@ public class Emissary extends Piece implements IEmissary {
     
     @Override
     public String toString() {
-        return "Emissary " + super.toString();
+        return "Emissary [" + name + "]";
     }
 }

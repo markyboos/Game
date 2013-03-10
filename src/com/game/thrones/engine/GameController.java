@@ -18,7 +18,8 @@ public class GameController {
         
         GameInitialiser initialiser = new GameInitialiser();
         board = initialiser.createBoard();
-        player = board.getHouses().iterator().next();
+        player = board.getHouse(House.PLAYER_ONE);
+        aiController = new AIController();
     }
     
     public static GameController getInstance() {

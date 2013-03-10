@@ -1,7 +1,6 @@
 
 package com.game.thrones.activity;
 
-import com.game.thrones.engine.MoveAction;
 import com.game.thrones.engine.Action;
 import android.app.ListActivity;
 import android.os.Bundle;
@@ -9,12 +8,9 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import com.game.thrones.engine.ActionCreator;
 import com.game.thrones.engine.GameController;
-import com.game.thrones.engine.RecruitAction;
-import com.game.thrones.model.Territory;
-import com.game.thrones.model.piece.IKnight;
 import com.game.thrones.model.piece.Piece;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +23,10 @@ public class PlayerActionActivity extends ListActivity {
     
     public static final String PIECE_NAME = "PIECE";
     
+    private GameController controller = GameController.getInstance();
+    
+    private ActionCreator actionCreator = new ActionCreator();
+    
     /** Called when the activity is first created. */
     @Override public void onCreate(Bundle savedInstanceState)
     {
@@ -37,23 +37,21 @@ public class PlayerActionActivity extends ListActivity {
         //this ensures that the volume control is for music rather than ringtone
         //setVolumeControlStream(AudioManager.STREAM_MUSIC);
         
-        String name = getIntent().getExtras().getString(PIECE_NAME);
+        Bundle extras = getIntent().getExtras();
         
-        GameController controller = GameController.getInstance();
+        if (extras == null) {
+            throw new IllegalArgumentException("Failed to get PIECE_NAME, did you forget to add it?");
+        }
+        
+        String name = extras.getString(PIECE_NAME);
+        
+        if (name == null) {
+            throw new IllegalArgumentException("Failed to get PIECE_NAME, did you forget to add it?");
+        }
         
         Piece turnItIs = controller.getBoard().getPiece(name);
         
-        //all possible moves  
-        List<Territory> borderingTerritories = controller.getBoard().getBorderingTerritories(turnItIs.getPosition());
-        
-        //generic actions
-        List<Action> actions = createActions(turnItIs, borderingTerritories);
-        
-        //piece specific actions
-        if (turnItIs instanceof IKnight) {
-            actions.add(new RecruitAction(turnItIs));
-        }
-        
+        List<Action> actions = actionCreator.createActions(turnItIs);
         
         setListAdapter(new ActionAdapter(actions));
     }
@@ -61,20 +59,9 @@ public class PlayerActionActivity extends ListActivity {
     @Override protected void onListItemClick(ListView l, View v, int position, long id) {
         Action selected = (Action)l.getItemAtPosition(position);
         
-        GameController controller = GameController.getInstance();
         controller.getOrders().addAction(selected);
         
         this.finish();
-    }
-
-    private List<Action> createActions(Piece piece, List<Territory> territorys) {
-        List<Action> actions = new ArrayList<Action>();
-        
-        for (Territory territory : territorys) {
-            actions.add(new MoveAction(piece, territory));
-        }
-        
-        return actions;
     }
     
     class ActionAdapter extends ArrayAdapter<Action> {

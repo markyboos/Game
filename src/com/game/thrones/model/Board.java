@@ -1,5 +1,7 @@
 package com.game.thrones.model;
 
+import com.game.thrones.activity.TerritoryTile;
+import com.game.thrones.engine.GameInitialiser;
 import com.game.thrones.model.piece.IKnight;
 import com.game.thrones.model.piece.Piece;
 
@@ -147,17 +149,125 @@ public class Board {
         return false;
     }
     
+    public List<Piece> getPieces(final Territory territory) {
+        List<Piece> territoryPieces = new ArrayList<Piece>();
+        
+        for (Piece piece : pieces) {
+            if (piece.getPosition().equals(territory)) {
+                territoryPieces.add(piece);
+            }
+        }
+        
+        return Collections.unmodifiableList(territoryPieces);
+    }
+    
+    public List<Piece> getPieces(final PieceCriteria criteria) {
+        List<Piece> foundPieces = new ArrayList<Piece>();
+        
+        for (Piece piece : pieces) {
+            
+            boolean found = true;
+            
+            if (!piece.getPosition().equals(criteria.getTerritory())) {
+                found = false;
+            }
+            
+            if (!piece.getHouse().equals(criteria.getOwner())) {
+                found = false;
+            }
+            
+            if (found) {
+                foundPieces.add(piece);
+            }
+        }
+        
+        return Collections.unmodifiableList(foundPieces);        
+    }
+    
+    public List<Piece> getVisiblePieces(final House house) {
+        
+        List<Piece> visible = new ArrayList<Piece>();
+        for (Piece piece : pieces) {
+            if (canSee(house, piece)) {
+                System.out.println("can see" + piece);
+                visible.add(piece);                
+            }
+        }        
+        return Collections.unmodifiableList(visible);
+    }
+    
+    /**
+     * Utility function to check if a house can see a piece.
+     * 
+     * @param house the house that the map is being rendered for
+     * @param piece the piece the house is trying to see
+     * @return a flag if that piece is visible for the house
+     */    
+    public boolean canSee(final House house, final Piece piece) {
+        
+        //System.out.println("can " + house + " see " + piece.getName());
+                
+        if (getAlliedTerritories(house).contains(piece.getPosition())) {
+            return true;
+        }
+        
+        if (piece.getHouse().getServes().equals(house)) {
+            return true;
+        }
+        
+        if (piece.getHouse().equals(house)) {
+            return true;
+        }
+        
+        for (Piece pieceAtPosition : getPieces(piece.getPosition())) {
+            if (pieceAtPosition.getHouse().equals(house)) {
+                return true;
+            }            
+        }
+        
+        if (piece instanceof IKnight) {
+            IKnight knight = (IKnight) piece;
+            
+            if (knight.getTroopSize() > 4) {
+                return true;
+            }
+        }
+        
+        return false;
+        
+    }
+    
     //
+    //todo
     //The following methods are just in so i can start working on some activities.
     //They should be removed when we decide how to do them properly.
     //
     
+    public List<Territory> getTerritories() {
+        return Collections.unmodifiableList(territories);
+    }
+    
     public Territory getFirstTerritory() {
-        return territories.get(0);
+        for (Territory territory : territories) {
+            if (territory.getName().equals(Territory.KINGS_LANDING)) {
+                return territory;                
+            }
+        }
+        
+        throw new IllegalStateException("No kings landing territory");
     }
             
     public Set<House> getHouses() {
         return Collections.unmodifiableSet(houses);
+    }
+    
+    public House getHouse(final String name) {
+        for (House house : houses) {
+            if (house.getName().equals(name)) {
+                return house;
+            }
+        }
+        throw new IllegalArgumentException("Invalid house name");
     }
     
     public Piece getPiece(final String name) {

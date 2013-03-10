@@ -12,7 +12,7 @@ public class Orders {
     
     private Set<Action> actions;
     
-    Orders() {
+    public Orders() {
         actions = new HashSet<Action>();
     }
     

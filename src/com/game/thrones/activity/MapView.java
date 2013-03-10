@@ -1,16 +1,24 @@
 
 package com.game.thrones.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
+import android.graphics.Point;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.model.House;
+import com.game.thrones.model.PieceCriteria;
 import com.game.thrones.model.Territory;
+import com.game.thrones.model.piece.Piece;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -18,17 +26,19 @@ import com.game.thrones.model.Territory;
  */
 public class MapView extends View {
     
-    private final static Paint WHITE;
-    private final static Paint BLACK;
+    private final static Paint GREEN;
     
     static {
-        WHITE = new Paint();
-        WHITE.setColor(Color.WHITE);
-        BLACK = new Paint();
-        BLACK.setColor(Color.BLACK);
+        GREEN = new Paint();
+        GREEN.setColor(Color.GREEN);
     }
         
-    private GameController controller;    
+    private GameController controller;
+    
+    private int camerax = 0;
+    private int cameray = 0;    
+    
+    private final Point startPosition = new Point();
     
     public MapView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -36,38 +46,197 @@ public class MapView extends View {
         controller = GameController.getInstance();
     }
     
+    Territory[][] map = new Territory[6][6];
+    
+    public List<TerritoryTile> createTerritoryTiles(List<Territory> territory) {
+        
+        List<TerritoryTile> tiles = new ArrayList<TerritoryTile>();
+        
+        map[3][3] = controller.getBoard().getFirstTerritory();
+        
+        populateNeighbours(3, 3, map[3][3]);
+        
+        List<Piece> pieces = controller.getBoard().getVisiblePieces(controller.getPlayer());
+        
+        for (int i = 0 ; i < map.length ; i ++) {
+            for (int j = 0; j < map[0].length; j ++) {
+                if (map[i][j] == null) {
+                    continue;
+                }
+                
+                List<Piece> piecesAt = new ArrayList<Piece>();
+                
+                for (Piece piece : pieces) {
+                    if (map[i][j].equals(piece.getPosition())) {
+                        piecesAt.add(piece);
+                    }
+                }
+                        
+                TerritoryTile tile = new TerritoryTile(map[i][j], i, j, piecesAt);
+                
+                
+                tiles.add(tile);
+            }
+        }
+        
+        return tiles;        
+    }
+    
+    private void populateNeighbours(int x, int y, Territory territory ) {
+        
+        List<Territory> neighbours = controller.getBoard().getBorderingTerritories(territory);
+                
+        for (Territory t : neighbours) {
+            
+            if (alreadyInMap(t)) {
+                continue;
+            }
+            
+            System.out.println(t.getName());
+            
+            populateClosestTile(x, y, t);
+            
+        }
+        
+    }
+    
+    private void populateClosestTile(int x, int y, Territory territory) {
+        
+        for (int i = x - 1; i < x + 2; i += 2) {
+            for (int j = y - 1; j < y + 2; j += 2) {
+                if (i < 0 || j < 0 || i >= map.length || j >= map[0].length) {
+                    continue;
+                }
+                
+                if (map[i][j] == null) {
+                    map[i][j] = territory;
+                    
+                    populateNeighbours(i, j, territory);
+                    return;
+                }                
+            }
+        }   
+    }
+    
+    private boolean alreadyInMap(Territory territory) {
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[0].length; j++) {
+                if (map[i][j] == null) {
+                    continue;
+                }
+                if (map[i][j].equals(territory)) {
+                    return true;
+                }
+            }
+        }        
+        return false;
+    }
+    
+    private List<TerritoryTile> territoryTiles;
+    
     @Override
     public void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
         
-        Territory territory = controller.getBoard().getFirstTerritory();
-        
-        controller.getBoard().getBorderingTerritories(territory);
-        
-        drawTerritory(canvas, territory);
-        
-        Paint houseColor = getHouseColour(null);
-        
-        //canvas.drawCircle(2f, 2f, 10f, houseColor);
+        territoryTiles = createTerritoryTiles(controller.getBoard().getTerritories());
+                
+        for (TerritoryTile tile : territoryTiles) {
+            tile.draw(canvas, camerax, cameray);
+                        
+            for (Territory t : controller.getBoard().getBorderingTerritories(tile.getTerritory())) {
+                
+                for (TerritoryTile border : territoryTiles)  {
+                    if (t.equals(border.getTerritory())) {
+                        canvas.drawLine(border.getX() + camerax, border.getY() + cameray, tile.getX() + camerax, tile.getY() + cameray, GREEN);
+                    }
+                }
+            }
+        }
     }
     
-    private void drawTerritory(final Canvas canvas, final Territory territory) {
-        
-        canvas.drawRect(new Rect(0, 0, 100, 100), WHITE);
-        
-        canvas.drawText(territory.getName(), 0, 10, BLACK);
-        
-        //controller.getBoard().get;
-        
-        
+    boolean moving = false;
+    
+    @Override
+    public boolean onTouchEvent(final MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            startPosition.x = (int)event.getX();
+            startPosition.y = (int)event.getY();
+            return true;
+        } else if(event.getAction() == MotionEvent.ACTION_MOVE) {
+
+            camerax = (int)event.getX() - startPosition.x + camerax;
+            cameray = (int)event.getY() - startPosition.y + cameray;
+            
+            startPosition.x = (int)event.getX();            
+            startPosition.y = (int)event.getY();
+
+            invalidate();
+            
+            moving = true;
+
+            return true;
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            
+            TerritoryTile clicked = null;
+            
+            for (TerritoryTile territory : territoryTiles) {
+                if (territory.hasClicked((int)event.getX() - camerax, (int)event.getY() - cameray)) {
+                    clicked = territory;
+                    System.out.println("clicked");
+                    break;
+                }                
+            }
+            
+            if (!moving && clicked != null) {
+                
+                PieceCriteria criteria = new PieceCriteria();
+                criteria.setTerritory(clicked.getTerritory());
+                criteria.setOwner(controller.getPlayer());
+                
+                final List<Piece> pieceOptions = controller.getBoard().getPieces(criteria);
+                
+                if (pieceOptions.size() == 1) {
+                    startPieceMoveActivity(pieceOptions.get(0));                    
+                } else if (!pieceOptions.isEmpty()) {
+                    showChooseUnitDialog(pieceOptions);
+                }
+                
+            } else {
+                moving = false;
+            }
+            
+            return true;            
+        } else {
+            return super.onTouchEvent(event);
+        }
     }
 
-    private Paint getHouseColour(final House house) {        
-        final Paint paint = new Paint();
+    private void showChooseUnitDialog(final List<Piece> pieceOptions) {
+        List<String> options = new ArrayList<String>();
         
-        paint.setColor(Color.RED);
+        for (Piece piece : pieceOptions) {
+            options.add(piece.toString());
+        }
         
-        return paint;
+        AlertDialog.Builder ab=new AlertDialog.Builder(getContext());
+        ab.setTitle("Choose a unit");
+        ab.setItems(options.toArray(new String[options.size()]), new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface arg, int choice) {
+                Piece selected = pieceOptions.get(choice);
+                
+                startPieceMoveActivity(selected);
+            }
+        });
+        
+        ab.show();
+    }
+    
+    private void startPieceMoveActivity(Piece selected) {
+        Intent intent = new Intent(getContext(), PlayerActionActivity.class);
+        intent.putExtra(PlayerActionActivity.PIECE_NAME, selected.getName());
+
+        getContext().startActivity(intent);
     }
 
 }

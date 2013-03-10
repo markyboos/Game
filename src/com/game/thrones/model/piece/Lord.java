@@ -57,6 +57,6 @@ public class Lord extends Piece implements IEmissary, IKnight {
     
     @Override
     public String toString() {
-        return "Lord with " + forces + " troops "+ super.toString();
+        return "Lord [" + name + "] troops [" + forces + "]";
     }
 }

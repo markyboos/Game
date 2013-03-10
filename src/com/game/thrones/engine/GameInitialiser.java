@@ -29,7 +29,7 @@ public class GameInitialiser {
         House minorOne = createHouse("Scumbag Minor One", HouseType.MINOR, kingsHouse);        
         House minorTwo = createHouse("Honorable Minor One", HouseType.MINOR, kingsHouse);
                 
-        House majorOne = createHumanHouse("Player One", HouseType.MAJOR, kingsHouse);        
+        House majorOne = createHumanHouse(House.PLAYER_ONE, HouseType.MAJOR, kingsHouse);        
         House minorThree = createHouse("Honorable Minor Two", HouseType.MINOR, majorOne);
                 
         House majorTwo = createHouse("Player Two", HouseType.MAJOR, kingsHouse);
@@ -39,7 +39,7 @@ public class GameInitialiser {
         House neutralMinor = createHouse("Wild men", HouseType.MINOR);
         
         // territories        
-        Territory kingsLanding = createTerritory("Kings landing", 20, kingsHouse);
+        Territory kingsLanding = createTerritory(Territory.KINGS_LANDING, 20, kingsHouse);
         Territory winterfell = createTerritory("Winterfell", 10, majorOne);
         Territory rock = createTerritory("Castle rock", 10, majorTwo);
         Territory bogland = createTerritory("Bogland", 2, minorOne);
@@ -66,7 +66,7 @@ public class GameInitialiser {
         createKnight("The cruncher", minorThree, winterfell);
         
         createLord("Player two", majorTwo, rock);
-        createKnight("Goldy", minorThree, rock);
+        createKnight("Goldy", minorTwo, rock);
         
         createKnight("smelly", neutralMinor, outlands);
         

@@ -7,6 +7,8 @@ package com.game.thrones.model;
  */
 public class Territory {
     
+    public static final String KINGS_LANDING = "Kings landing";
+    
     private final String name;
 
     /**
@@ -51,6 +53,10 @@ public class Territory {
 
     @Override
     public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        
         if(o instanceof Territory) {
             Territory t2 = (Territory) o;
 
