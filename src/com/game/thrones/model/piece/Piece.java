@@ -18,6 +18,8 @@ public abstract class Piece {
 
     //where they are
     private Territory position;
+    
+    private boolean prisoner;
 
     /**
      * @return the name
@@ -52,6 +54,14 @@ public abstract class Piece {
      */
     public void setPosition(Territory position) {
         this.position = position;
+    }
+    
+    public boolean isPrisoner() {
+        return prisoner;
+    }
+    
+    public void setPrisoned() {
+        prisoner = true;
     }
 
     /**

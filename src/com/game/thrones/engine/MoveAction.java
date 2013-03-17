@@ -17,11 +17,17 @@ public class MoveAction extends AbstractAction {
      * @param piece the piece that wants to move
      */
     public MoveAction(final Piece piece, final Territory territory) {
-        super(piece);
+        super(piece, MOVE_ACTION);
         this.territory = territory;
+    }
+    
+    public Territory getMovingTo() {
+        return territory;
     }
 
     public void execute() {
+        
+        //moves will not work if an attacking piece is blocking the way
         GameController.getInstance()
                 .getBoard().movePiece(piece, territory);
     }

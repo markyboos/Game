@@ -10,7 +10,7 @@ import com.game.thrones.model.piece.Piece;
 class DoNothingAction extends AbstractAction {
     
     public DoNothingAction(final Piece piece) {
-        super(piece);
+        super(piece, DO_NOTHING_ACTION);
     }
 
     public void execute() {}

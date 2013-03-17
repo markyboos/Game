@@ -59,7 +59,7 @@ public class PlayerActionActivity extends ListActivity {
     @Override protected void onListItemClick(ListView l, View v, int position, long id) {
         Action selected = (Action)l.getItemAtPosition(position);
         
-        controller.getOrders().addAction(selected);
+        controller.getOrders().addAction(selected.getPiece().getHouse(), selected);
         
         this.finish();
     }

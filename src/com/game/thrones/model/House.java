@@ -93,6 +93,16 @@ public class House {
     }
     
     /**
+     * Add a standing for a house. This should only be called on game initialisation.
+     * 
+     * @param house
+     * @param standing 
+     */
+    public void addHouseStanding(final House house, final Standing standing) {
+        houseStandings.put(house, standing);
+    }    
+    
+    /**
      * Funds are the money that a house has.
      * @return the funds
      */

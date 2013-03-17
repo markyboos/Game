@@ -70,6 +70,17 @@ public class GameInitialiser {
         
         createKnight("smelly", neutralMinor, outlands);
         
+        //standings
+        for (House house : houses) {
+            for (House other : houses) {
+                if (house.equals(other)) {
+                    continue;
+                }
+                
+                house.addHouseStanding(other, new Standing());                
+            }
+        }
+        
         
     }
     

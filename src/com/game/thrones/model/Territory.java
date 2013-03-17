@@ -50,6 +50,10 @@ public class Territory {
     public House getOwner() {
         return owner;
     }
+    
+    public void setOwner(final House house) {
+        owner = house;
+    }
 
     @Override
     public boolean equals(Object o) {

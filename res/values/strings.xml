@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">MainActivity</string>
     <string name="end_turn">End Turn</string>
+    <string name="standings">Standings</string>
 </resources>

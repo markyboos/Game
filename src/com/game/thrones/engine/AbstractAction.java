@@ -9,14 +9,30 @@ import com.game.thrones.model.piece.Piece;
  */
 public abstract class AbstractAction implements Action {
     
+    public static final int DO_NOTHING_ACTION = 0;
+    public static final int ASSASSINATE_ACTION = DO_NOTHING_ACTION + 1;
+    public static final int ATTACK_ACTION = ASSASSINATE_ACTION + 1;
+    public static final int FORTIFY_ACTION = ATTACK_ACTION + 1;
+    public static final int MOVE_ACTION = ATTACK_ACTION + 1;
+    public static final int PERSUADE_ACTION = MOVE_ACTION + 1;
+    public static final int DISBAND_ACTION = PERSUADE_ACTION + 1;
+    public static final int RECRUIT_ACTION = DISBAND_ACTION + 1;
+    
     protected Piece piece;
+    
+    private int executionStep;
 
-    public AbstractAction(Piece piece) {
+    public AbstractAction(Piece piece, int executionStep) {
         this.piece = piece;
+        this.executionStep = executionStep;
     }
 
     public Piece getPiece() {
         return piece;
+    }
+    
+    public Integer executionStep() {
+        return executionStep;
     }
     
     @Override

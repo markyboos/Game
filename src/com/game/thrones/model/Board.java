@@ -1,7 +1,5 @@
 package com.game.thrones.model;
 
-import com.game.thrones.activity.TerritoryTile;
-import com.game.thrones.engine.GameInitialiser;
 import com.game.thrones.model.piece.IKnight;
 import com.game.thrones.model.piece.Piece;
 
@@ -149,8 +147,8 @@ public class Board {
         return false;
     }
     
-    public List<Piece> getPieces(final Territory territory) {
-        List<Piece> territoryPieces = new ArrayList<Piece>();
+    public Set<Piece> getPieces(final Territory territory) {
+        Set<Piece> territoryPieces = new HashSet<Piece>();
         
         for (Piece piece : pieces) {
             if (piece.getPosition().equals(territory)) {
@@ -158,7 +156,7 @@ public class Board {
             }
         }
         
-        return Collections.unmodifiableList(territoryPieces);
+        return Collections.unmodifiableSet(territoryPieces);
     }
     
     public List<Piece> getPieces(final PieceCriteria criteria) {
@@ -189,7 +187,7 @@ public class Board {
         List<Piece> visible = new ArrayList<Piece>();
         for (Piece piece : pieces) {
             if (canSee(house, piece)) {
-                System.out.println("can see" + piece);
+                //System.out.println("can see" + piece);
                 visible.add(piece);                
             }
         }        
@@ -319,7 +317,8 @@ public class Board {
                 
                 int taxRate = masterHouse.getTaxRate();
                 
-                int totalEarned = totalEarnedPerHouse.get(servantHouse);
+                int totalEarned = totalEarnedPerHouse.containsKey(servantHouse) ? 
+                    totalEarnedPerHouse.get(servantHouse) : 0;
                 
                 if (taxRate == 0 || totalEarned == 0) {
                     continue;

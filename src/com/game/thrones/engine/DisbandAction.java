@@ -11,7 +11,7 @@ import com.game.thrones.model.piece.Piece;
 public class DisbandAction extends AbstractAction {
     
     public DisbandAction(final Piece piece) {
-        super(piece);
+        super(piece, DISBAND_ACTION);
         
         if (!(piece instanceof IKnight)) {
             throw new IllegalArgumentException("Needs to be a knight piece");                            

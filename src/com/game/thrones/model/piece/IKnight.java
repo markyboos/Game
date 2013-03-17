@@ -1,5 +1,7 @@
 package com.game.thrones.model.piece;
 
+import java.util.List;
+
 /**
  * Author: Jimmy
  * Date: 26/02/13
@@ -29,4 +31,29 @@ public interface IKnight {
      * @param total the number of troops that have been disbanded
      */    
     void disband(int total);
+    
+    /**
+     * Kill the number of troops from this army.
+     * 
+     * @param total 
+     * @return true if the army has been destroyed
+     */
+    boolean kill(int total);
+
+    /**
+     * Improves the defence of a army but if they move then they are no longer fortified.
+     */
+    void fortify();
+    
+    /**
+     * Gets the prisoners of the knight
+     * @return 
+     */
+    List<Piece> getPrisoners();
+    
+    /**
+     * Add a prisoner, prisoners will move along with this piece and can make no actions.
+     * @param piece 
+     */
+    void addPrisoner(Piece piece);
 }

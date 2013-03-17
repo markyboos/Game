@@ -13,7 +13,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import com.game.thrones.engine.GameController;
-import com.game.thrones.model.House;
 import com.game.thrones.model.PieceCriteria;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.piece.Piece;
@@ -43,7 +42,7 @@ public class MapView extends View {
     public MapView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         
-        controller = GameController.getInstance();
+        controller = GameController.getInstance();        
     }
     
     Territory[][] map = new Territory[6][6];
@@ -92,7 +91,7 @@ public class MapView extends View {
                 continue;
             }
             
-            System.out.println(t.getName());
+            //System.out.println(t.getName());
             
             populateClosestTile(x, y, t);
             
@@ -154,8 +153,6 @@ public class MapView extends View {
         }
     }
     
-    boolean moving = false;
-    
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -171,8 +168,6 @@ public class MapView extends View {
             startPosition.y = (int)event.getY();
 
             invalidate();
-            
-            moving = true;
 
             return true;
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -187,7 +182,7 @@ public class MapView extends View {
                 }                
             }
             
-            if (!moving && clicked != null) {
+            if (clicked != null) {
                 
                 PieceCriteria criteria = new PieceCriteria();
                 criteria.setTerritory(clicked.getTerritory());
@@ -201,8 +196,6 @@ public class MapView extends View {
                     showChooseUnitDialog(pieceOptions);
                 }
                 
-            } else {
-                moving = false;
             }
             
             return true;            
@@ -232,7 +225,7 @@ public class MapView extends View {
         ab.show();
     }
     
-    private void startPieceMoveActivity(Piece selected) {
+    private void startPieceMoveActivity(final Piece selected) {
         Intent intent = new Intent(getContext(), PlayerActionActivity.class);
         intent.putExtra(PlayerActionActivity.PIECE_NAME, selected.getName());
 

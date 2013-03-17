@@ -1,6 +1,10 @@
 package com.game.thrones.model.piece;
 
 import com.game.thrones.model.House;
+import com.game.thrones.model.Territory;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Author: Jimmy
@@ -10,7 +14,10 @@ import com.game.thrones.model.House;
  */
 public class Lord extends Piece implements IEmissary, IKnight {
     
-    private int forces;
+    private int forces = 1;
+    private boolean fortified;
+    
+    private List<Piece> prisoners = new ArrayList<Piece>();
     
     //Unlike other units, a Lord must belong to a house (else he is not a Lord!)
     public Lord(String name, House house) {
@@ -41,9 +48,32 @@ public class Lord extends Piece implements IEmissary, IKnight {
 
     public void disband(int total) {
         forces -= total;
+        if (forces <= 1) {
+            forces = 1;
+        }
+    }
+    
+    public boolean kill(int total) {
+        forces -= total;
         if (forces <= 0) {
             forces = 0;
+            return true;
         }
+        
+        return false;
+    }
+    
+    public void fortify() {
+        fortified = true;
+    }
+    
+    public List<Piece> getPrisoners() {
+        return Collections.unmodifiableList(prisoners);
+    }
+
+    public void addPrisoner(Piece piece) {
+        piece.setPrisoned();
+        prisoners.add(piece);
     }
 
     @Override
@@ -56,7 +86,18 @@ public class Lord extends Piece implements IEmissary, IKnight {
     }
     
     @Override
+    public void setPosition(Territory territory) {
+        super.setPosition(territory);
+        
+        for (Piece prisoner : prisoners) {
+            prisoner.setPosition(territory);
+        }
+        
+        fortified = false;        
+    }
+    
+    @Override
     public String toString() {
         return "Lord [" + name + "] troops [" + forces + "]";
-    }
+    }    
 }

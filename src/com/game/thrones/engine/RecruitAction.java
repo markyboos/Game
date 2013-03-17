@@ -11,7 +11,7 @@ import com.game.thrones.model.piece.Piece;
 public class RecruitAction extends AbstractAction {
     
     public RecruitAction(final Piece piece) {
-        super(piece);
+        super(piece, RECRUIT_ACTION);
     }
 
     //todo
