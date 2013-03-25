@@ -71,6 +71,10 @@ public class Knight extends Piece implements IKnight {
 
     public void addPrisoner(Piece piece) {
         piece.setPrisoned();
+        if (piece instanceof IKnight) {
+            IKnight knight = (IKnight)piece;
+            prisoners.addAll(knight.getPrisoners());
+        }
         prisoners.add(piece);
     }
     

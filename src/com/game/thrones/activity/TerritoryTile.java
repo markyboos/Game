@@ -59,7 +59,7 @@ public class TerritoryTile {
         
         canvas.drawRect(new Rect(x * SIZE + camerax, y * SIZE + cameray, x * SIZE + SIZE + camerax, y * SIZE + SIZE + cameray), WHITE);
         
-        canvas.drawText(territory.getName(), x * SIZE + camerax, 10 + y * SIZE + cameray, getHouseColour(territory.getOwner()));
+        canvas.drawText(territory.getName() + " [" + territory.getTainted() + "]", x * SIZE + camerax, 10 + y * SIZE + cameray, getHouseColour(territory.getOwner()));
         
         canvas.drawCircle(getX() + camerax, getY() + cameray, 2, BLACK);
         

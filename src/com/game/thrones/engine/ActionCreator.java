@@ -1,7 +1,11 @@
 
 package com.game.thrones.engine;
 
+import com.game.thrones.model.PieceCriteria;
 import com.game.thrones.model.Territory;
+import com.game.thrones.model.hero.General;
+import com.game.thrones.model.hero.Hero;
+import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.piece.IEmissary;
 import com.game.thrones.model.piece.IKnight;
 import com.game.thrones.model.piece.Piece;
@@ -30,6 +34,29 @@ public class ActionCreator {
         List<Action> actions = createMoveActions(piece);
         
         actions.add(new DoNothingAction(piece));
+        
+        PieceCriteria criteria = new PieceCriteria();
+        criteria.setClass(Minion.class);
+        criteria.setTerritory(piece.getPosition());
+        
+        boolean minionsAtHero = !controller.getBoard().getPieces(criteria).isEmpty();
+        
+        criteria.setClass(General.class);
+        
+        List<Piece> pieces = controller.getBoard().getPieces(criteria);
+        
+        boolean generalAtHero = !pieces.isEmpty();
+        
+        if (piece instanceof Hero) {
+            
+            if (minionsAtHero) {
+                actions.add(new AttackAction(piece));
+            }
+            
+            if (generalAtHero) {
+                actions.add(new AttackGeneralAction(piece, (General)pieces.get(0)));
+            }
+        }
         
         //piece specific actions
         if (piece instanceof IKnight) {
@@ -67,7 +94,7 @@ public class ActionCreator {
             //    .getAlliedTerritories(piece.getHouse()).contains(territory)) { 
             
                 //can you attack allies?
-                actions.add(new AttackAction(piece, territory));            
+                //actions.add(new AttackAction(piece, territory));            
             
             }
         }

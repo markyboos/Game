@@ -51,11 +51,11 @@ public class MapView extends View {
         
         List<TerritoryTile> tiles = new ArrayList<TerritoryTile>();
         
-        map[3][3] = controller.getBoard().getFirstTerritory();
+        map[3][3] = controller.getBoard().getCentralTerritory();
         
         populateNeighbours(3, 3, map[3][3]);
         
-        List<Piece> pieces = controller.getBoard().getVisiblePieces(controller.getPlayer());
+        List<Piece> pieces = controller.getBoard().getPieces(new PieceCriteria());
         
         for (int i = 0 ; i < map.length ; i ++) {
             for (int j = 0; j < map[0].length; j ++) {
@@ -186,15 +186,24 @@ public class MapView extends View {
                 
                 PieceCriteria criteria = new PieceCriteria();
                 criteria.setTerritory(clicked.getTerritory());
-                criteria.setOwner(controller.getPlayer());
                 
                 final List<Piece> pieceOptions = controller.getBoard().getPieces(criteria);
                 
+                if (pieceOptions.contains(controller.getPlayer())) {
+                    if (controller.getPlayer().getActionsAvailable() == 0) {
+                        showNoMovesLeftDialog();
+                    } else {
+                        startPieceMoveActivity(controller.getPlayer());
+                    }
+                }
+                
+                /**
                 if (pieceOptions.size() == 1) {
                     startPieceMoveActivity(pieceOptions.get(0));                    
                 } else if (!pieceOptions.isEmpty()) {
                     showChooseUnitDialog(pieceOptions);
                 }
+                */
                 
             }
             
@@ -202,6 +211,14 @@ public class MapView extends View {
         } else {
             return super.onTouchEvent(event);
         }
+    }
+    
+    private void showNoMovesLeftDialog() {
+        AlertDialog.Builder ab = new AlertDialog.Builder(getContext());
+        ab.setTitle("No moves left");
+        ab.setNeutralButton("OK", null);
+        
+        ab.show();
     }
 
     private void showChooseUnitDialog(final List<Piece> pieceOptions) {
@@ -211,7 +228,7 @@ public class MapView extends View {
             options.add(piece.toString());
         }
         
-        AlertDialog.Builder ab=new AlertDialog.Builder(getContext());
+        AlertDialog.Builder ab = new AlertDialog.Builder(getContext());
         ab.setTitle("Choose a unit");
         ab.setItems(options.toArray(new String[options.size()]), new DialogInterface.OnClickListener() {
 

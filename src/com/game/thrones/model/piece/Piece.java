@@ -14,7 +14,7 @@ public abstract class Piece {
     protected String name;
 
     //who they are fighting for
-    private House house;
+    private House house = House.NO_ONE;
 
     //where they are
     private Territory position;

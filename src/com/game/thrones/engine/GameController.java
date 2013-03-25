@@ -1,18 +1,16 @@
 
 package com.game.thrones.engine;
 
-import android.util.Log;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.game.thrones.model.Board;
-import com.game.thrones.model.House;
-import com.game.thrones.model.House.PlayerType;
-import com.game.thrones.model.Standing;
+import com.game.thrones.model.PieceCriteria;
 import com.game.thrones.model.Territory;
-import com.game.thrones.model.piece.IKnight;
+import com.game.thrones.model.hero.General;
+import com.game.thrones.model.hero.Hero;
+import com.game.thrones.model.hero.Item;
 import com.game.thrones.model.piece.Piece;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Singleton of the board
@@ -27,7 +25,17 @@ public class GameController {
         
         GameInitialiser initialiser = new GameInitialiser();
         board = initialiser.createBoard();
-        player = board.getHouse(House.PLAYER_ONE);
+        
+        PieceCriteria criteria = new PieceCriteria();
+        criteria.setClass(Hero.class);
+        
+        players = new ArrayList<Hero>();
+        
+        for (Piece piece : board.getPieces(criteria)) {
+            players.add((Hero)piece);
+        }        
+        
+        player = players.get(0);
         aiController = new AIController();
     }
     
@@ -46,183 +54,87 @@ public class GameController {
         return board;
     }
     
-    private House player;
+    private List<Hero> players;
     
-    public House getPlayer() {
+    private Hero player;
+    
+    public Hero getPlayer() {
         return player;
     }
     
-    private Orders orders = new Orders();
+    List<Item> items = new ArrayList<Item>();
     
-    public Orders getOrders() {
-        return orders;
-    }
-    
-    public void takeTurn() {
-        
-        //gather all orders        
-        for (House house : board.getHouses()) {            
-            if (house.getPlayerType() == PlayerType.AI) {
-                aiController.takeTurn(house);                
-            }
-        }
-        
-        boolean attacked = false;        
-        //execute orders
-        for (Action action : orders.getOrderedActions()) {
-            Log.d("action executed", action.toString());
-            
-            if (!attacked && action.executionStep() > AbstractAction.ATTACK_ACTION) {
-                resolveAttacks();
-                attacked = true;
-            }
-            action.execute();
-        }
-        
-        //if attack action is the last action in the list
-        if (!attacked) {
-            resolveAttacks();
-        }
-        
-        //update standings              
-        for (House house : board.getHouses()) {            
-            
-            for (House otherHouse : getBoard().getHouses()) {
-                if (otherHouse.equals(house)) {
-                    continue;
-                }
-
-                if (house.getPlayerType() == PlayerType.AI) {                    
-                    aiController.updateStandingBasedOnAction(house, otherHouse);
-                }
-            }
-        }
-        
-        //resolve move orders
-        
-        //reset orders
-        orders = new Orders();
-        
-        //reset attacks
-        attackingPieces.clear();
-        
-        //calculate funds        
-        board.calculateFunds();
-    }
-    
-    private Map<Territory, Set<IKnight>> attackingPieces = new HashMap<Territory, Set<IKnight>>();
-
-    public void addAttackingPiece(final IKnight piece, final Territory target) {        
-        if (attackingPieces.containsKey(target)) {
-            attackingPieces.get(target).add(piece);
-        } else {
-            Set<IKnight> pieces = new HashSet<IKnight>();
-            pieces.add(piece);
-            attackingPieces.put(target, pieces);            
-        }
-    }
-    
-    private void resolveAttacks() {
-        //resolve attacks
-        for (Territory territory : attackingPieces.keySet()) {
-            //attacking units
-            Set<IKnight> attackPieces = attackingPieces.get(territory);
-            
-            //defending units
-            Set<Piece> defendingPieces = board.getPieces(territory);
-            
-            resolveFight(territory, attackPieces, defendingPieces);
-        }
-    }
-
-    //todo need to think about this
-    private void resolveFight(final Territory territory, final Set<IKnight> attackPieces, final Set<Piece> defendingPieces) {
-        
-        if (attackPieces.isEmpty()) {
-            throw new IllegalArgumentException("Cant have a fight with no attackers");
-        }
-        
-        //what happens when there is more than one house attacking the same place?
-        
-        Log.d("fight", "resolving a fight..");
+    public boolean endTurn() {
                 
-        //easy win
-        if (defendingPieces.isEmpty()) {
-            for (IKnight knight : attackPieces) {
-                board.movePiece((Piece)knight, territory);
-            }
-            
-            territory.setOwner(((Piece)attackPieces.iterator().next()).getHouse());
-            
-            return;
+        //collect items
+        player.addItem(null);        
+        
+        //take evil players turn
+        aiController.takeTurn();
+        
+        //check loss conditions
+        //if a general reaches the centre,
+        //the centre has taint
+        //or the taint has spread too far then its game over
+        Territory centralTerritory = board.getCentralTerritory();
+        
+        if (centralTerritory.getTainted() > 0) {
+            return true;
         }
         
-        int attackingDamage = 0;
-        //need to fight        
-        for (IKnight piece : attackPieces) {            
-            attackingDamage += piece.getCombatEffectiveness() * piece.getTroopSize();                        
+        int tainted = 0;
+        
+        for (Territory territory : board.getTerritories()) {
+            tainted = territory.getTainted();
         }
         
-        int defendingDamage = 0;
-        
-        for (Piece piece : defendingPieces) {
-            if (!(piece instanceof IKnight)) {
-                continue;
-            }
-            
-            IKnight defender = (IKnight)piece;
-            defendingDamage += defender.getCombatEffectiveness() * defender.getTroopSize();
+        if (tainted > 10) {
+            return true;
         }
         
-        boolean allAttackersDead = true;
+        PieceCriteria criteria = new PieceCriteria();
+        criteria.setTerritory(centralTerritory);
+        criteria.setClass(General.class);
         
-        int toLose = defendingDamage / attackPieces.size();        
-        for (IKnight attacker : attackPieces) {
-            if (!attacker.kill(toLose)) {
-                allAttackersDead = false;
-            }
+        if (!board.getPieces(criteria).isEmpty()) {
+            return true;
         }
         
-        boolean allDefendersDead = true;
+        player.rest();
         
-        toLose = attackingDamage / defendingPieces.size();        
-        for (Piece piece : defendingPieces) {
-            if (!(piece instanceof IKnight)) {
-                continue;
-            }
+        //next player
+        
+        player = getNextPlayer();
+        
+        
+        return false;
+    }
+    
+    public boolean takeMove(final Action action) {
+        
+        //take the turn for that hero
+        action.execute();
+        
+        player.useAction();
+        
+        if (player.getActionsAvailable() == 0) {
+            //end that players turn            
+            return true;           
             
-            IKnight defender = (IKnight)piece;
-            if (!defender.kill(toLose)) {
-                allDefendersDead = false;
-            }
         }
         
-        if (allAttackersDead && !allDefendersDead) {
-            //defenders have won
-            
-            //add prisoners            
-            IKnight knight = (IKnight)defendingPieces.iterator().next();
-            
-            for (IKnight piece : attackPieces) {
-                knight.addPrisoner((Piece)piece);
-            }
-            
-        } else if (allDefendersDead && !allAttackersDead) {
-            //attackers have won
-            for (IKnight knight : attackPieces) {
-                board.movePiece((Piece)knight, territory);
-            }
-            
-            IKnight knight = attackPieces.iterator().next();
-            
-            for (Piece defender : defendingPieces) {
-                knight.addPrisoner(defender);
-            }
-            
-            territory.setOwner(((Piece)knight).getHouse());
-            
-        } else {
-            //everyone died!
-        }      
+        return false;
+    }
+
+    private Hero getNextPlayer() {
+        int index = players.indexOf(player);
+        
+        index ++;
+        
+        if (index >= players.size()) {
+            index = 0;
+        }
+        
+        return players.get(index);
     }
 }

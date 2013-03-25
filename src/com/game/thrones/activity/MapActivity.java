@@ -44,7 +44,7 @@ public class MapActivity extends ListActivity {
         buttonOne.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 GameController controller = GameController.getInstance();
-                controller.takeTurn();
+                controller.endTurn();
                 
                 notifyDataChanged();
             }
@@ -78,7 +78,7 @@ public class MapActivity extends ListActivity {
         Piece selected = (Piece)l.getItemAtPosition(position);
         
         GameController controller = GameController.getInstance();
-        if (!selected.getHouse().equals(controller.getPlayer())) {
+        if (!selected.equals(controller.getPlayer())) {
             
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
             dialog.setMessage("Not your piece!");

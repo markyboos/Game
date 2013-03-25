@@ -31,7 +31,7 @@ public class HouseStandingsActivity extends ListActivity {
                 
         GameController controller = GameController.getInstance();
         
-        House currentPlayer = controller.getPlayer();
+        House currentPlayer = null;///controller.getPlayer();
         
         List<String> standings = new ArrayList<String>();
         

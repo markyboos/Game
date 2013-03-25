@@ -1,5 +1,7 @@
 package com.game.thrones.model;
 
+import android.util.Log;
+import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.piece.IKnight;
 import com.game.thrones.model.piece.Piece;
 
@@ -166,15 +168,20 @@ public class Board {
             
             boolean found = true;
             
-            if (!piece.getPosition().equals(criteria.getTerritory())) {
+            if (criteria.getTerritory() != null && !piece.getPosition().equals(criteria.getTerritory())) {
                 found = false;
             }
             
-            if (!piece.getHouse().equals(criteria.getOwner())) {
+            if (criteria.getType() != null && !piece.getClass().isAssignableFrom(criteria.getType())) {
+                found = false;            
+            }
+            
+            if (criteria.getOwner() != null && !piece.getHouse().equals(criteria.getOwner())) {
                 found = false;
             }
             
             if (found) {
+                Log.d("Board:getPieces", "Found " + piece);
                 foundPieces.add(piece);
             }
         }
@@ -192,6 +199,14 @@ public class Board {
             }
         }        
         return Collections.unmodifiableList(visible);
+    }
+    
+    public void removePiece(final Piece pice) {
+        pieces.remove(pice);
+    }
+    
+    public void addPiece(final Piece piece) {
+        pieces.add(piece);
     }
     
     /**
@@ -245,7 +260,7 @@ public class Board {
         return Collections.unmodifiableList(territories);
     }
     
-    public Territory getFirstTerritory() {
+    public Territory getCentralTerritory() {
         for (Territory territory : territories) {
             if (territory.getName().equals(Territory.KINGS_LANDING)) {
                 return territory;                

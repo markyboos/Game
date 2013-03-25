@@ -2,10 +2,10 @@
 package com.game.thrones.engine;
 
 import com.game.thrones.model.House;
-import com.game.thrones.model.Standing;
-import com.game.thrones.model.piece.Piece;
+import com.game.thrones.model.hero.General;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 /**
  * In charge of AI moves.
@@ -16,96 +16,51 @@ public class AIController {
     
     private GameController controller;
     
-    private ActionCreator actionCreator = new ActionCreator();
+    private List<Orders> evilActions;
     
-    public void takeTurn(final House house) {
+    public void takeTurn() {
+        
+        if (evilActions == null) {
+            evilActions = createEvilActions();
+        }
+        
+        //shuffle and pick one
+        Collections.shuffle(evilActions);
+        
+        Orders orders = evilActions.get(0);
+        
+        //add minions to places        
+        //add taint        
+        //possibly move general
+        for (Action action : orders.getOrderedActions()) {
+            action.execute();            
+        }
+        
+    }
+    
+    private List<Orders> createEvilActions() {
         
         controller = GameController.getInstance();
         
-        //generate possible moves        
-        Set<Piece> pieces = controller.getBoard().getPieces(house);
+        List<Orders> orders = new ArrayList<Orders>();
         
-        Orders orders = controller.getOrders();
+        Orders order = new Orders();
+        order.addAction(House.NO_ONE, new AddMinionAction(controller.getBoard().getCentralTerritory(), 2));
         
-        for (Piece piece : pieces) {
-            List<Action> actions = actionCreator.createActions(piece);
-            
-            orders.addAction(house, chooseBestAction(house, actions));
-        }
-    }
-    
-    //todo    
-    private Action chooseBestAction(final House house, final List<Action> actions) {
-        Action best = null;
+        orders.add(order);
         
-        boolean atWar = false;
+        order = new Orders();
+        order.addAction(House.NO_ONE, new MoveAction(controller.getBoard().getPiece(General.FATTY), controller.getBoard().getCentralTerritory()));
         
-        for (House opposingHouse : controller.getBoard().getHouses()) {
-            if (opposingHouse.equals(house)) {
-                continue;
-            }
-            Standing standing = house.getHouseStandings().get(opposingHouse);
-            
-            if (standing.atWar()) {
-                atWar = true;                
-            }
-        }
+        orders.add(order);
         
-        int score = 0;
+        order = new Orders();
+        order.addAction(House.NO_ONE, new AddMinionAction(controller.getBoard().getTerritories().get(2), 2));
         
-        for (Action action : actions) {
-            
-            if (best == null) {
-                best = action;
-            } else if (atWar && score < 5 && action instanceof AttackAction) {
-                best = action;
-                score = 5;
-            } else if (atWar && score < 2 && action instanceof RecruitAction) {
-                best = action;
-                score = 2;
-            }
-        }
+        orders.add(order);        
         
-        return best;
-    }
-    
-    public void updateStandingBasedOnAction(final House house, final House other) {
+        return orders;
         
-        controller = GameController.getInstance();
-        
-        //if other players do whats asked of them thats good
-        
-        //if they give you money thats good
-        
-        //if nothing happens thats good
-        
-        //if they attack you thats bad
-        
-        //if they are aggressive towards you thats bad
-        
-        //if they are less aggressive thats good
-        
-        Standing standing = house.getHouseStandings().get(other);
-        
-        for (Action action : controller.getOrders().getActions(other)) {
-        
-            if (action instanceof MoveAction) {
-                MoveAction mAction = (MoveAction)action;
-                if (controller.getBoard().getAlliedTerritories(house).contains(mAction.getMovingTo())) {
-                    standing.didBadThing();
-                } else {
-                    standing.didGoodThing();
-                }
-            } else if (action instanceof AttackAction) {
-                standing.ruined();
-            } else if (action instanceof RecruitAction) {
-                standing.didBadThing();
-            } else if (action instanceof DoNothingAction) {
-                standing.didGoodThing();
-            } else if (action instanceof DisbandAction) {
-                standing.didGoodThing();
-            }
-        }
     }
 
 }

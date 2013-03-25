@@ -4,6 +4,8 @@ package com.game.thrones.engine;
 import com.game.thrones.model.*;
 import com.game.thrones.model.House.HouseType;
 import com.game.thrones.model.House.PlayerType;
+import com.game.thrones.model.hero.General;
+import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.piece.Emissary;
 import com.game.thrones.model.piece.Knight;
 import com.game.thrones.model.piece.Lord;
@@ -23,8 +25,32 @@ public class GameInitialiser {
     
     private void initialise() {
         
+        // territories        
+        Territory kingsLanding = createTerritory(Territory.KINGS_LANDING);
+        Territory winterfell = createTerritory("Winterfell");
+        Territory rock = createTerritory("Castle rock");
+        Territory bogland = createTerritory("Bogland");
+        Territory desert = createTerritory("Desert");
+        Territory coast = createTerritory("Coastal city");
+        Territory forest = createTerritory("Forest town");
+        Territory outlands = createTerritory("Outlands");
+        
+        //conecting territories
+        addBorder(kingsLanding, bogland);
+        addBorder(kingsLanding, desert);
+        addBorder(kingsLanding, outlands);
+        addBorder(coast, desert);
+        addBorder(coast, rock);
+        addBorder(forest, bogland);
+        addBorder(forest, winterfell);
+        
+        createGeneral(General.FATTY, rock);
+        
+        createHero("godBoy", kingsLanding);
+        
         //start with the king and 2 other major houses
         //to see how this goes
+        /**
         House kingsHouse = createHouse("The kings house", HouseType.KING);                
         House minorOne = createHouse("Scumbag Minor One", HouseType.MINOR, kingsHouse);        
         House minorTwo = createHouse("Honorable Minor One", HouseType.MINOR, kingsHouse);
@@ -80,6 +106,7 @@ public class GameInitialiser {
                 house.addHouseStanding(other, new Standing());                
             }
         }
+        */
         
         
     }
@@ -106,8 +133,8 @@ public class GameInitialiser {
         return createHouse(name, type, null);        
     }
 
-    private Territory createTerritory(String name, int value, House ownedBy) {
-        Territory t1 = new Territory(name, value, ownedBy);
+    private Territory createTerritory(String name) {
+        Territory t1 = new Territory(name, 0, House.NO_ONE);
 
         borderMap.put(t1, new HashSet<Territory>());
 
@@ -160,6 +187,22 @@ public class GameInitialiser {
         pieces.add(emissary);
 
         return emissary;
+    }
+
+    private void createGeneral(final String name, Territory position) {
+        General general = new General(name);
+        
+        general.setPosition(position);
+        
+        pieces.add(general);
+    }
+
+    private void createHero(final String name, Territory position) {
+        Hero hero = new Hero(name);
+        
+        hero.setPosition(position);
+        
+        pieces.add(hero);
     }
 
 

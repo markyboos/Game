@@ -16,7 +16,9 @@ public class Territory {
      */
     private final int value;
 
-    private House owner;
+    private House owner = House.NO_ONE;
+    
+    private int tainted = 0;
 
     public Territory(String name, int value, House ownedBy) {
         this.name = name;
@@ -53,6 +55,18 @@ public class Territory {
     
     public void setOwner(final House house) {
         owner = house;
+    }
+    
+    public int getTainted() {
+        return tainted;
+    }
+    
+    public void taint() {
+        tainted ++;
+    }
+    
+    public void removeTaint() {
+        tainted --;
     }
 
     @Override

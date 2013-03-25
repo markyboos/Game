@@ -12,7 +12,7 @@ public class House {
     
     public static final String PLAYER_ONE = "Player One";
     
-    private static final House NO_ONE = new House("null", HouseType.MINOR);
+    public static final House NO_ONE = new House("null", HouseType.MINOR);
     
     public enum HouseType {
         
