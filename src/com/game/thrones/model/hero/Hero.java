@@ -1,6 +1,7 @@
 
 package com.game.thrones.model.hero;
 
+import com.game.thrones.model.Territory;
 import com.game.thrones.model.piece.Piece;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,8 +41,18 @@ public class Hero extends Piece {
         actionsAvailable -= 1;
     }
     
+    public void heal() {
+        if (getPosition().getName().equals(Territory.KINGS_LANDING)) {
+            health = maxHealth;
+        } else {
+            health += 2;
+            if (health > maxHealth) {
+                health = maxHealth;
+            }
+        }
+    }
+    
     public void rest() {
-        health = maxHealth;
         actionsAvailable = health;
     }
     

@@ -1,6 +1,7 @@
 
 package com.game.thrones.engine;
 
+import com.game.thrones.model.Territory;
 import com.game.thrones.model.piece.Piece;
 
 /**
@@ -9,15 +10,23 @@ import com.game.thrones.model.piece.Piece;
  */
 public class CleanseAction extends AbstractAction {
     
+    final Territory position;
+    
     public CleanseAction(final Piece piece) {
-        super(piece, 0);
+        super(piece);
         
-        
-        
+        position = piece.getPosition();
     }
+    
+    Dice dice = new Dice();
 
     public void execute() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
+        //use a card
+        
+        if (dice.roll() > 5 || dice.roll() > 5) {
+            position.removeTaint();                        
+        }
     }
 
 }

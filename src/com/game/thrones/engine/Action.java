@@ -24,13 +24,4 @@ public interface Action {
      */
     Piece getPiece();
     
-    
-    /**
-     * Get the order that this action should be executed in.
-     * i.e diplomatic moves (such as assassinations are completed before moves and attacks)
-     * 
-     * @return 
-     */    
-    Integer executionStep();
-    
 }

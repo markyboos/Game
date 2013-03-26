@@ -44,20 +44,20 @@ public class AIController {
         
         List<Orders> orders = new ArrayList<Orders>();
         
-        Orders order = new Orders();
-        order.addAction(House.NO_ONE, new AddMinionAction(controller.getBoard().getCentralTerritory(), 2));
+        for (int i = 0; i < 30; i ++) {
+            Orders order = new Orders();
+            order.addAction(House.NO_ONE, new AddMinionAction(controller.getBoard().getRandomTerritory(), 2));
+            order.addAction(House.NO_ONE, new AddMinionAction(controller.getBoard().getRandomTerritory(), 1));            
+            
+            orders.add(order);            
+        }
         
-        orders.add(order);
-        
-        order = new Orders();
-        order.addAction(House.NO_ONE, new MoveAction(controller.getBoard().getPiece(General.FATTY), controller.getBoard().getCentralTerritory()));
-        
-        orders.add(order);
-        
-        order = new Orders();
-        order.addAction(House.NO_ONE, new AddMinionAction(controller.getBoard().getTerritories().get(2), 2));
-        
-        orders.add(order);        
+        for (int i = 0; i < 5; i ++) {
+            Orders order = new Orders();
+            order.addAction(House.NO_ONE, new MoveAction(controller.getBoard().getPiece(General.FATTY), controller.getBoard().getCentralTerritory()));
+
+            orders.add(order);
+        }      
         
         return orders;
         

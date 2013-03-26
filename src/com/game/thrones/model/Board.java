@@ -1,8 +1,6 @@
 package com.game.thrones.model;
 
 import android.util.Log;
-import com.game.thrones.model.hero.Minion;
-import com.game.thrones.model.piece.IKnight;
 import com.game.thrones.model.piece.Piece;
 
 import java.util.*;
@@ -189,18 +187,6 @@ public class Board {
         return Collections.unmodifiableList(foundPieces);        
     }
     
-    public List<Piece> getVisiblePieces(final House house) {
-        
-        List<Piece> visible = new ArrayList<Piece>();
-        for (Piece piece : pieces) {
-            if (canSee(house, piece)) {
-                //System.out.println("can see" + piece);
-                visible.add(piece);                
-            }
-        }        
-        return Collections.unmodifiableList(visible);
-    }
-    
     public void removePiece(final Piece pice) {
         pieces.remove(pice);
     }
@@ -209,52 +195,18 @@ public class Board {
         pieces.add(piece);
     }
     
-    /**
-     * Utility function to check if a house can see a piece.
-     * 
-     * @param house the house that the map is being rendered for
-     * @param piece the piece the house is trying to see
-     * @return a flag if that piece is visible for the house
-     */    
-    public boolean canSee(final House house, final Piece piece) {
-        
-        //System.out.println("can " + house + " see " + piece.getName());
-                
-        if (getAlliedTerritories(house).contains(piece.getPosition())) {
-            return true;
-        }
-        
-        if (piece.getHouse().getServes().equals(house)) {
-            return true;
-        }
-        
-        if (piece.getHouse().equals(house)) {
-            return true;
-        }
-        
-        for (Piece pieceAtPosition : getPieces(piece.getPosition())) {
-            if (pieceAtPosition.getHouse().equals(house)) {
-                return true;
-            }            
-        }
-        
-        if (piece instanceof IKnight) {
-            IKnight knight = (IKnight) piece;
-            
-            if (knight.getTroopSize() > 4) {
-                return true;
-            }
-        }
-        
-        return false;
-        
-    }
-    
     //
     //todo
     //The following methods are just in so i can start working on some activities.
     //They should be removed when we decide how to do them properly.
     //
+    
+    public Territory getRandomTerritory() {
+        List<Territory> randomChoice = new ArrayList(territories);
+        Collections.shuffle(randomChoice);
+        
+        return randomChoice.get(0);
+    }
     
     public List<Territory> getTerritories() {
         return Collections.unmodifiableList(territories);
@@ -303,82 +255,5 @@ public class Board {
         }        
         
         return housePieces;
-    }
-    
-    public void calculateFunds() {
-        
-        Map<House, Integer> totalEarnedPerHouse = new HashMap<House, Integer>();
-        //add any funds to the houses based on territory
-        for (Territory territory : territories) {
-            
-            House owner = territory.getOwner();
-            int goldPerTurn = territory.getGoldPerTurn();
-
-            owner.addFunds(goldPerTurn);
-            
-            if (!totalEarnedPerHouse.containsKey(owner)) {
-                totalEarnedPerHouse.put(owner, goldPerTurn);
-            } else {
-                totalEarnedPerHouse.put(owner, totalEarnedPerHouse.get(owner) + goldPerTurn);
-            }
-        }
-        
-        //take off taxes from each of the houses
-        //if they are a servant
-        for (House servantHouse : houses) {
-            
-            House masterHouse = servantHouse.getServes();
-            if (servantHouse.getServes() != null) {
-                
-                int taxRate = masterHouse.getTaxRate();
-                
-                int totalEarned = totalEarnedPerHouse.containsKey(servantHouse) ? 
-                    totalEarnedPerHouse.get(servantHouse) : 0;
-                
-                if (taxRate == 0 || totalEarned == 0) {
-                    continue;
-                }
-                
-                int totalToBeTaken = Math.round(totalEarned / taxRate);
-                
-                masterHouse.addFunds(totalToBeTaken);
-                servantHouse.removeFunds(totalToBeTaken);
-                
-            }
-        }
-        
-        //remove funds based on the size of the armies that house commands
-        for (Piece piece : pieces) {
-            if (piece instanceof IKnight) {
-                IKnight knight = (IKnight)piece;
-                
-                int troopCost = calculateTroopCost(knight);      
-                
-                House house = piece.getHouse();  
-                
-                int maxTroopSize = house.getFunds() / individualTroopCost();
-                
-                                
-                if (knight.getTroopSize() > maxTroopSize) {
-                    //disband some troops
-                    knight.disband(knight.getTroopSize() - maxTroopSize);
-                    
-                }                
-                
-                house.removeFunds(troopCost);
-            }
-        }
-    }
-    
-    private int individualTroopCost() {
-        return 5;        
-    }
-    
-    private int calculateTroopCost(final IKnight knight) {
-        //todo
-        //make it 5 for now
-        int troopSize = knight.getTroopSize();
-        
-        return troopSize * individualTroopCost();                
     }
 }

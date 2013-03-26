@@ -103,27 +103,6 @@ public class MapActivity extends ListActivity {
         public PieceAdapter(final List<Piece> options) {
           super(MapActivity.this, android.R.layout.simple_list_item_1, options);
         }
-        
-        /**
-        
-        @Override public View getView(int position, View convertView, ViewGroup parent) {
-            
-            View view = super.getView(position, convertView, parent);
-            
-            Piece piece = super.getItem(position);
-
-            View textView = (View)view.findViewById(android.R.id.text1);
-            
-            GameController controller = GameController.getInstance();
-            
-            //todo this is pretty rubbish
-            if (controller.getPlayer().equals(piece.getHouse())) {
-                textView.setBackgroundColor(Color.BLUE);                    
-            }
-
-            return view;
-        }
-        */
     }
 
 }

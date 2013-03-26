@@ -39,7 +39,7 @@ public class Orders {
 
     public Set<Action> getOrderedActions() {
         
-        Set<Action> actions = new TreeSet<Action>(new ActionComparator());
+        Set<Action> actions = new TreeSet<Action>();
         
         for (Set<Action> houseAction : houseActions.values()) {
             if (houseAction == null) {

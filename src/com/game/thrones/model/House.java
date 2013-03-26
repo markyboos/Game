@@ -33,8 +33,6 @@ public class House {
 
     private House serves;
     //how this house sees other houses
-    //this is only useful for AI players
-    final private Map<House, Standing> houseStandings = new HashMap<House,Standing>();
     
     private int funds;    
     private int taxRate;
@@ -84,23 +82,6 @@ public class House {
     public PlayerType getPlayerType() {
         return playerType;
     }
-
-    /**
-     * @return the houseStandings
-     */
-    public Map<House, Standing> getHouseStandings() {
-        return houseStandings;
-    }
-    
-    /**
-     * Add a standing for a house. This should only be called on game initialisation.
-     * 
-     * @param house
-     * @param standing 
-     */
-    public void addHouseStanding(final House house, final Standing standing) {
-        houseStandings.put(house, standing);
-    }    
     
     /**
      * Funds are the money that a house has.

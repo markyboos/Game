@@ -6,9 +6,6 @@ import com.game.thrones.model.House.HouseType;
 import com.game.thrones.model.House.PlayerType;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
-import com.game.thrones.model.piece.Emissary;
-import com.game.thrones.model.piece.Knight;
-import com.game.thrones.model.piece.Lord;
 import com.game.thrones.model.piece.Piece;
 
 import java.util.*;
@@ -154,39 +151,6 @@ public class GameInitialiser {
         initialise();
 
         return new Board(borderMap, houses, pieces);
-    }
-    
-    private Knight createKnight(String name, House house, Territory position) {
-        
-        Knight knight = new Knight(name);
-
-        knight.setHouse(house);
-        knight.setPosition(position);
-        
-        pieces.add(knight);
-        
-        return knight;
-    }
-
-    private Lord createLord(String name, House house, Territory position) {
-        Lord lord = new Lord(name, house);
-
-        lord.setPosition(position);
-
-        pieces.add(lord);
-
-        return lord;
-    }
-
-    private Emissary createEmissary(String name, House house, Territory position) {
-        Emissary emissary = new Emissary(name);
-
-        emissary.setHouse(house);
-        emissary.setPosition(position);
-
-        pieces.add(emissary);
-
-        return emissary;
     }
 
     private void createGeneral(final String name, Territory position) {

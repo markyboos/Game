@@ -14,12 +14,6 @@
             android:layout_width="wrap_content"
             android:id="@+id/endTurnButton"
             android:text="@string/end_turn" />
-
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:id="@+id/standings"
-            android:text="@string/standings" />
     
     </LinearLayout>
     

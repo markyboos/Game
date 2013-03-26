@@ -17,9 +17,8 @@ public class AttackGeneralAction extends AbstractAction {
     private Dice dice = new Dice();
     
     public AttackGeneralAction(final Piece hero, final General target) {
-        super(hero, 0);
+        super(hero);
         
-        //itemsToUse = items;
         this.target = target;        
     }
     

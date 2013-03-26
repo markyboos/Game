@@ -9,6 +9,7 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.game.thrones.engine.ActionCreator;
+import com.game.thrones.engine.AttackGeneralAction;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.model.piece.Piece;
 import java.util.List;
@@ -58,6 +59,14 @@ public class PlayerActionActivity extends ListActivity {
     
     @Override protected void onListItemClick(ListView l, View v, int position, long id) {
         Action selected = (Action)l.getItemAtPosition(position);
+        
+        if (selected instanceof AttackGeneralAction) {
+            AttackGeneralAction action = (AttackGeneralAction)selected;
+            
+            //make a choice about the items to use
+            
+            action.setItemsToUse(null);
+        }
         
         //all actions have finished
         controller.takeMove(selected);

@@ -17,7 +17,7 @@ public class MoveAction extends AbstractAction {
      * @param piece the piece that wants to move
      */
     public MoveAction(final Piece piece, final Territory territory) {
-        super(piece, MOVE_ACTION);
+        super(piece);
         this.territory = territory;
     }
     

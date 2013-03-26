@@ -45,15 +45,6 @@ public class MapCanvasActivity extends Activity {
                 updateTextDashboard();
             }
         });
-        
-        Button buttonTwo = (Button) findViewById(R.id.standings);
-        buttonTwo.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(final View v) {
-                Intent intent = new Intent(MapCanvasActivity.this, HouseStandingsActivity.class);
-        
-                MapCanvasActivity.this.startActivity(intent);
-            }
-        });
     }
     
     @Override

@@ -20,19 +20,13 @@ public abstract class AbstractAction implements Action {
     
     protected Piece piece;
     
-    private int executionStep;
 
-    public AbstractAction(Piece piece, int executionStep) {
+    public AbstractAction(Piece piece) {
         this.piece = piece;
-        this.executionStep = executionStep;
     }
 
     public Piece getPiece() {
         return piece;
-    }
-    
-    public Integer executionStep() {
-        return executionStep;
     }
     
     @Override

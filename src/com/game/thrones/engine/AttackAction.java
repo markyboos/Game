@@ -15,7 +15,7 @@ class AttackAction extends AbstractAction {
     
 
     public AttackAction(final Piece piece) {
-        super(piece, ATTACK_ACTION);
+        super(piece);
         
         if (!(piece instanceof Hero)) {
             throw new IllegalArgumentException("Needs to be a knight piece");                            
@@ -44,12 +44,6 @@ class AttackAction extends AbstractAction {
                 GameController.getInstance().getBoard().removePiece(minion);
             }
         }
-        
-        //GameController.getInstance().addAttackingPiece((IKnight)piece, target);
-        
-        //adds it to the list of things attacking that place
-        //IKnight knight = (IKnight)piece;
-        //double capability = knight.getCombatEffectiveness() * knight.getTroopSize();
     }
     
     @Override
