@@ -32,5 +32,10 @@ public class General extends Piece {
     public boolean isDead() {
         return health <= 0;
     }
+    
+    @Override
+    public String toString() {
+        return name + " [" + health + "/" + maxHealth + "]";
+    }
 
 }

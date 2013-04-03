@@ -1,14 +1,12 @@
 
 package com.game.thrones.engine;
 
-import android.util.Log;
 import com.game.thrones.model.House;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  *
@@ -39,7 +37,7 @@ public class Orders {
 
     public Set<Action> getOrderedActions() {
         
-        Set<Action> actions = new TreeSet<Action>();
+        Set<Action> actions = new HashSet<Action>();
         
         for (Set<Action> houseAction : houseActions.values()) {
             if (houseAction == null) {

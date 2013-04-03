@@ -11,7 +11,10 @@ import android.widget.ListView;
 import com.game.thrones.engine.ActionCreator;
 import com.game.thrones.engine.AttackGeneralAction;
 import com.game.thrones.engine.GameController;
+import com.game.thrones.model.hero.Hero;
+import com.game.thrones.model.hero.Item;
 import com.game.thrones.model.piece.Piece;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +30,8 @@ public class PlayerActionActivity extends ListActivity {
     private GameController controller = GameController.getInstance();
     
     private ActionCreator actionCreator = new ActionCreator();
+    
+    private Hero hero;
     
     /** Called when the activity is first created. */
     @Override public void onCreate(Bundle savedInstanceState)
@@ -52,6 +57,8 @@ public class PlayerActionActivity extends ListActivity {
         
         Piece turnItIs = controller.getBoard().getPiece(name);
         
+        hero = (Hero)turnItIs;
+        
         List<Action> actions = actionCreator.createActions(turnItIs);
         
         setListAdapter(new ActionAdapter(actions));
@@ -65,7 +72,7 @@ public class PlayerActionActivity extends ListActivity {
             
             //make a choice about the items to use
             
-            action.setItemsToUse(null);
+            action.setItemsToUse(hero.getInventory());
         }
         
         //all actions have finished

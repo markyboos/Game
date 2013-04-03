@@ -1,6 +1,9 @@
 
 package com.game.thrones.engine;
 
+import android.view.View;
+import com.game.thrones.activity.CameraChangeEvent;
+import com.game.thrones.activity.CameraChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +13,7 @@ import com.game.thrones.model.Territory;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Item;
+import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.piece.Piece;
 
 /**
@@ -67,13 +71,15 @@ public class GameController {
     public boolean endTurn() {
                 
         //collect items
-        player.addItem(null);        
+        player.addItem(new Item(1));        
         
         //take evil players turn
         aiController.takeTurn();
         
-        //check loss conditions
+        //check loss conditions:
+        
         //if a general reaches the centre,
+        //there are too many minions on the map
         //the centre has taint
         //or the taint has spread too far then its game over
         Territory centralTerritory = board.getCentralTerritory();
@@ -85,7 +91,7 @@ public class GameController {
         int tainted = 0;
         
         for (Territory territory : board.getTerritories()) {
-            tainted = territory.getTainted();
+            tainted += territory.getTainted();
         }
         
         if (tainted > 10) {
@@ -97,6 +103,13 @@ public class GameController {
         criteria.setClass(General.class);
         
         if (!board.getPieces(criteria).isEmpty()) {
+            return true;
+        }
+        
+        criteria = new PieceCriteria();
+        criteria.setClass(Minion.class);
+        
+        if (board.getPieces(criteria).size() > 50) {
             return true;
         }
         
@@ -136,5 +149,15 @@ public class GameController {
         }
         
         return players.get(index);
+    }
+    
+    private CameraChangeListener listener;
+
+    public void addCameraChangeListener(final CameraChangeListener listener) {
+        this.listener = listener;
+    }
+    
+    public void fireCameraChangeEvent(final CameraChangeEvent event) {
+        listener.fireCameraChangeEvent(event);
     }
 }

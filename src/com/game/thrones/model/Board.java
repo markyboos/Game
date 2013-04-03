@@ -96,6 +96,19 @@ public class Board {
 
         return Collections.unmodifiableList(borderingTerritories);
     }
+    
+    /**
+     * Should return a path.
+     * 
+     * @param start
+     * @param finish
+     * @return 
+     */    
+    public List<Territory> getPathToTerritory(Territory start, Territory finish) {
+        List<Territory> pathTerritories = new ArrayList<Territory>();
+        return Collections.unmodifiableList(pathTerritories);
+                
+    }
 
     /**
      * Retrieves a list of territories allied to a given house.

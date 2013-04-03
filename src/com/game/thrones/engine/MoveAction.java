@@ -1,6 +1,7 @@
 
 package com.game.thrones.engine;
 
+import com.game.thrones.activity.CameraChangeEvent;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.piece.Piece;
 
@@ -27,7 +28,8 @@ public class MoveAction extends AbstractAction {
 
     public void execute() {
         
-        //moves will not work if an attacking piece is blocking the way
+        GameController.getInstance().fireCameraChangeEvent(new CameraChangeEvent(territory));
+        
         GameController.getInstance()
                 .getBoard().movePiece(piece, territory);
     }

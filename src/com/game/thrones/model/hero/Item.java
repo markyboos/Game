@@ -7,7 +7,7 @@ package com.game.thrones.model.hero;
  */
 public class Item {
     
-    int power;
+    private final int power;
     
     public Item(int power) {
         this.power = power;

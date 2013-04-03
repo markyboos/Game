@@ -21,5 +21,10 @@ public class RumorsAction extends AbstractAction {
         
         hero.addItem(new Item(1));
     }
+    
+    @Override
+    public String toString() {
+        return "Listen to rumors";
+    }
 
 }

@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author James
  */
-public class MapView extends View {
+public class MapView extends View implements CameraChangeListener {
     
     private final static Paint GREEN;
     
@@ -249,4 +249,13 @@ public class MapView extends View {
         getContext().startActivity(intent);
     }
 
+    public void fireCameraChangeEvent(final CameraChangeEvent e) {
+        for (TerritoryTile tile : territoryTiles) {
+            if (tile.getTerritory().equals(e.getFocus())) {
+                camerax = TerritoryTile.SIZE - tile.getX();
+                cameray = TerritoryTile.SIZE - tile.getY();
+                return;
+            }
+        }
+    }
 }

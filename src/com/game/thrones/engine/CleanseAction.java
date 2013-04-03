@@ -28,5 +28,10 @@ public class CleanseAction extends AbstractAction {
             position.removeTaint();                        
         }
     }
+    
+    @Override
+    public String toString() {
+        return "Heal the land";
+    }
 
 }

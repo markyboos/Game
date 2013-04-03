@@ -4,7 +4,6 @@ package com.game.thrones.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -29,20 +28,23 @@ public class MapCanvasActivity extends Activity {
         
         mapView = findViewById(R.id.mapView);
         
+        GameController.getInstance().addCameraChangeListener((CameraChangeListener)mapView);
+        
         updateTextDashboard();
         
         Button buttonOne = (Button) findViewById(R.id.endTurnButton);
         buttonOne.setOnClickListener(new Button.OnClickListener() {
             public void onClick(final View v) {
-                GameController controller = GameController.getInstance();
                 
+                GameController controller = GameController.getInstance();
+
                 if (controller.endTurn()) {        
                     showLoseDialog();
                 }
                 
                 mapView.invalidate();
-                
-                updateTextDashboard();
+
+                updateTextDashboard();           
             }
         });
     }

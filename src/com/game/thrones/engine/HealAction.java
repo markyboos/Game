@@ -19,5 +19,10 @@ public class HealAction extends AbstractAction {
         
         hero.heal();
     }
+    
+    @Override
+    public String toString() {
+        return "Heal yourself";
+    }
 
 }

@@ -1,6 +1,7 @@
 
 package com.game.thrones.engine;
 
+import com.game.thrones.activity.CameraChangeEvent;
 import com.game.thrones.model.Board;
 import com.game.thrones.model.PieceCriteria;
 import com.game.thrones.model.Territory;
@@ -27,12 +28,11 @@ public class AddMinionAction implements Action {
 
     public void execute() {
         
-        final Board board = GameController.getInstance().getBoard();            
+        final Board board = GameController.getInstance().getBoard();
+        
+        GameController.getInstance().fireCameraChangeEvent(new CameraChangeEvent(territory));
         
         for (int i = 0; i < number; i++) {
-            
-            Minion minion = new Minion(3);
-            
             PieceCriteria criteria = new PieceCriteria();
             criteria.setClass(Minion.class);
             criteria.setTerritory(territory);
@@ -40,6 +40,8 @@ public class AddMinionAction implements Action {
             List<Piece> pieces = board.getPieces(criteria);
             
             if (pieces.size() < 3) {
+                
+                Minion minion = new Minion(3);
             
                 board.addPiece(minion);
                 
@@ -47,6 +49,33 @@ public class AddMinionAction implements Action {
             } else {
                 //taint the board
                 territory.taint();
+                
+                //and spread the minions (cause an overrun)
+                List<Territory> territories = board.getBorderingTerritories(territory);
+                
+                for (Territory bordering : territories) {
+                    
+                    criteria = new PieceCriteria();
+                    criteria.setClass(Minion.class);
+                    criteria.setTerritory(bordering);
+
+                    pieces = board.getPieces(criteria);
+
+                    if (pieces.size() < 3) {
+
+                        Minion minion = new Minion(3);
+
+                        board.addPiece(minion);
+
+                        minion.setPosition(bordering);
+                    } else {
+                        //taint the board
+                        bordering.taint();
+                        return;
+                        //dont do an overrun
+                    }                  
+                }
+                
                 return;
             }                        
         }
