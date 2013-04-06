@@ -6,6 +6,7 @@ import com.game.thrones.model.House.HouseType;
 import com.game.thrones.model.House.PlayerType;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
+import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.piece.Piece;
 
 import java.util.*;
@@ -157,8 +158,18 @@ public class GameInitialiser {
         General general = new General(name);
         
         general.setPosition(position);
-        
         pieces.add(general);
+        
+        //add 2 minions to the general
+        Minion minion = new Minion(3);
+        minion.setPosition(position);
+        
+        pieces.add(minion);
+        
+        minion = new Minion(3);
+        minion.setPosition(position);
+        
+        pieces.add(minion);
     }
 
     private void createHero(final String name, Territory position) {

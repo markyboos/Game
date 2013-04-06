@@ -60,4 +60,8 @@ public class Hero extends Piece {
         return actionsAvailable;
     }
 
+    public void damage() {
+        health -= 1;
+    }
+
 }

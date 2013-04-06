@@ -8,6 +8,7 @@ import com.game.thrones.model.piece.Piece;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * In charge of AI moves.
@@ -45,8 +46,12 @@ public class AIController {
         controller = GameController.getInstance();
         
         List<Orders> orders = new ArrayList<Orders>();
+        final Territory centralTerritory = controller.getBoard().getCentralTerritory();
         
         for (Territory t : controller.getBoard().getTerritories()) {
+            if (t.equals(centralTerritory)) {
+                continue;
+            }
             Orders order = new Orders();
             order.addAction(House.NO_ONE, new AddMinionAction(t, 2));
             order.addAction(House.NO_ONE, new AddMinionAction(t, 1));            
@@ -56,15 +61,23 @@ public class AIController {
         
         Piece general = controller.getBoard().getPiece(General.FATTY);
         
-        List<Territory> path = controller.getBoard()
-                .getPathToTerritory(general.getPosition(), controller.getBoard().getCentralTerritory());
+        Set<Territory> path = controller.getBoard()
+                .getPathToTerritory(general.getPosition(), centralTerritory);
         
         for (Territory t : path) {
             Orders order = new Orders();
             order.addAction(House.NO_ONE, new MoveAction(controller.getBoard().getPiece(General.FATTY), t));
 
             orders.add(order);
-        }    
+        }
+        
+        for (int i = 0; i < 2; i ++) {
+            
+            Orders order = new Orders();
+            order.addAction(House.NO_ONE, new MoveAlongPathAction(controller.getBoard().getPiece(General.FATTY), centralTerritory, 1));
+            
+            orders.add(order);
+        }
         
         return orders;
         

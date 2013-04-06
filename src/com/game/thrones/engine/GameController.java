@@ -50,6 +50,10 @@ public class GameController {
         return instance;
     }
     
+    public static void reset() {
+        instance = new GameController();
+    }
+    
     private AIController aiController;
     
     private Board board;
@@ -71,7 +75,20 @@ public class GameController {
     public boolean endTurn() {
                 
         //collect items
-        player.addItem(new Item(1));        
+        player.addItem(new Item(1));
+        
+        //if the hero is in a place with monsters then take life off
+        PieceCriteria criteria = new PieceCriteria();
+        criteria.setClass(Minion.class);
+        criteria.setTerritory(player.getPosition());
+        
+        List<Piece> minionsAtHero = board.getPieces(criteria);
+        
+        for(Piece pminion : minionsAtHero) {
+            Minion minion = (Minion)pminion;
+            //todo depending on the minion the player can take more damage
+            player.damage();
+        }        
         
         //take evil players turn
         aiController.takeTurn();
@@ -98,7 +115,7 @@ public class GameController {
             return true;
         }
         
-        PieceCriteria criteria = new PieceCriteria();
+        criteria = new PieceCriteria();
         criteria.setTerritory(centralTerritory);
         criteria.setClass(General.class);
         
@@ -109,7 +126,7 @@ public class GameController {
         criteria = new PieceCriteria();
         criteria.setClass(Minion.class);
         
-        if (board.getPieces(criteria).size() > 50) {
+        if (board.getPieces(criteria).size() > 25) {
             return true;
         }
         

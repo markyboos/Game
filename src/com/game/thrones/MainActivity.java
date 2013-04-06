@@ -19,6 +19,8 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
+        GameController.reset();
+        
         GameController.getInstance();
         
         //start the map activity
