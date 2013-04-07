@@ -10,6 +10,7 @@ import com.game.thrones.model.piece.Piece;
 public class General extends Piece {
     
     public static final String FATTY = "fatty";
+    public static final String DRAGON = "dragon";
     
     int rollToDamage;
     
@@ -31,6 +32,13 @@ public class General extends Piece {
 
     public boolean isDead() {
         return health <= 0;
+    }
+    
+    public void heal() {
+        health += 1;
+        if (health > maxHealth) {
+            health = maxHealth;
+        }
     }
     
     @Override

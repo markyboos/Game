@@ -1,12 +1,14 @@
 
 package com.game.thrones.engine;
 
+import com.game.thrones.activity.GameFinishedEvent;
+import com.game.thrones.model.Board;
+import com.game.thrones.model.PieceCriteria;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Item;
 import com.game.thrones.model.piece.Piece;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -56,9 +58,22 @@ public class AttackGeneralAction extends AbstractAction {
         }
         
         if (target.isDead()) {
-            GameController.getInstance().getBoard().removePiece(target);
+            
+            Board board = GameController.getInstance().getBoard();
+            
+            board.removePiece(target);
             
             //make the hero brilliant
+                        
+            
+            //victory condition check           
+            PieceCriteria criteria = new PieceCriteria();
+            criteria.setClass(General.class);
+            
+            if (board.getPieces(criteria).isEmpty()) {
+                GameController.getInstance().fireGameFinishedEvent(new GameFinishedEvent(GameFinished.GENERALS_ALL_DEAD));                
+            }
+            
         } else {
             //take off life or something
             

@@ -1,9 +1,10 @@
 
 package com.game.thrones.engine;
 
-import android.view.View;
 import com.game.thrones.activity.CameraChangeEvent;
 import com.game.thrones.activity.CameraChangeListener;
+import com.game.thrones.activity.GameFinishedEvent;
+import com.game.thrones.activity.GameFinishedListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,7 +73,7 @@ public class GameController {
     
     List<Item> items = new ArrayList<Item>();
     
-    public boolean endTurn() {
+    public void endTurn() {
                 
         //collect items
         player.addItem(new Item(1));
@@ -88,7 +89,7 @@ public class GameController {
             Minion minion = (Minion)pminion;
             //todo depending on the minion the player can take more damage
             player.damage();
-        }        
+        }
         
         //take evil players turn
         aiController.takeTurn();
@@ -102,7 +103,7 @@ public class GameController {
         Territory centralTerritory = board.getCentralTerritory();
         
         if (centralTerritory.getTainted() > 0) {
-            return true;
+            gameFinishedListener.fireGameFinishedEvent(new GameFinishedEvent(GameFinished.CENTRE_TAINTED));
         }
         
         int tainted = 0;
@@ -112,7 +113,7 @@ public class GameController {
         }
         
         if (tainted > 10) {
-            return true;
+            gameFinishedListener.fireGameFinishedEvent(new GameFinishedEvent(GameFinished.TOO_MUCH_TAINTED_LAND));
         }
         
         criteria = new PieceCriteria();
@@ -120,24 +121,31 @@ public class GameController {
         criteria.setClass(General.class);
         
         if (!board.getPieces(criteria).isEmpty()) {
-            return true;
+            gameFinishedListener.fireGameFinishedEvent(new GameFinishedEvent(GameFinished.GENERAL_REACHED_CENTRE));
         }
         
         criteria = new PieceCriteria();
         criteria.setClass(Minion.class);
         
         if (board.getPieces(criteria).size() > 25) {
-            return true;
+            gameFinishedListener.fireGameFinishedEvent(new GameFinishedEvent(GameFinished.TOO_MANY_MINIONS));
         }
         
+        //heal generals
+        criteria = new PieceCriteria();
+        criteria.setClass(General.class);
+        
+        for (Piece piece : board.getPieces(criteria)) {
+            General general = (General)piece;
+            general.heal();            
+        }
+        
+        //regain actions back based on health for next turn
         player.rest();
         
         //next player
         
         player = getNextPlayer();
-        
-        
-        return false;
     }
     
     public boolean takeMove(final Action action) {
@@ -176,5 +184,15 @@ public class GameController {
     
     public void fireCameraChangeEvent(final CameraChangeEvent event) {
         listener.fireCameraChangeEvent(event);
+    }
+    
+    private GameFinishedListener gameFinishedListener;
+
+    public void addGameFinishedListener(final GameFinishedListener listener) {
+        this.gameFinishedListener = listener;
+    }
+    
+    public void fireGameFinishedEvent(final GameFinishedEvent event) {
+        gameFinishedListener.fireGameFinishedEvent(event);
     }
 }

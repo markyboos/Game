@@ -4,6 +4,8 @@ package com.game.thrones.engine;
 import com.game.thrones.model.*;
 import com.game.thrones.model.House.HouseType;
 import com.game.thrones.model.House.PlayerType;
+import com.game.thrones.model.hero.Dragon;
+import com.game.thrones.model.hero.Fatty;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
@@ -42,9 +44,11 @@ public class GameInitialiser {
         addBorder(forest, bogland);
         addBorder(forest, winterfell);
         
-        createGeneral(General.FATTY, rock);
+        createGeneral(new Fatty(), rock);
+        createGeneral(new Dragon(), winterfell);
         
         createHero("godBoy", kingsLanding);
+        createHero("wahBoy", kingsLanding);
         
         //start with the king and 2 other major houses
         //to see how this goes
@@ -154,9 +158,7 @@ public class GameInitialiser {
         return new Board(borderMap, houses, pieces);
     }
 
-    private void createGeneral(final String name, Territory position) {
-        General general = new General(name);
-        
+    private void createGeneral(final General general, Territory position) {
         general.setPosition(position);
         pieces.add(general);
         

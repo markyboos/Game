@@ -16,7 +16,7 @@ import com.game.thrones.model.hero.Hero;
  *
  * @author James
  */
-public class MapCanvasActivity extends Activity {
+public class MapCanvasActivity extends Activity implements GameFinishedListener {
     
     private View mapView;
 
@@ -29,6 +29,7 @@ public class MapCanvasActivity extends Activity {
         mapView = findViewById(R.id.mapView);
         
         GameController.getInstance().addCameraChangeListener((CameraChangeListener)mapView);
+        GameController.getInstance().addGameFinishedListener(this);
         
         updateTextDashboard();
         
@@ -38,9 +39,7 @@ public class MapCanvasActivity extends Activity {
                 
                 GameController controller = GameController.getInstance();
 
-                if (controller.endTurn()) {        
-                    showLoseDialog();
-                }
+                controller.endTurn();
                 
                 mapView.invalidate();
 
@@ -69,12 +68,11 @@ public class MapCanvasActivity extends Activity {
         textView.setText("turn[" + player.getName() + "] moves left[" + player.getActionsAvailable() + "]");
         textView.invalidate();
     }
-    
-    private void showLoseDialog() {
-        //youve lost!
 
+    public void fireGameFinishedEvent(final GameFinishedEvent event) {
+        
         AlertDialog.Builder ab = new AlertDialog.Builder(this);
-        ab.setTitle("You lose obi wah kinobi");
+        ab.setTitle(event.getFinished().getDescription());
         ab.setCancelable(true);
         ab.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             
@@ -83,7 +81,7 @@ public class MapCanvasActivity extends Activity {
             }
         });
 
-        ab.show();      
+        ab.show();
     }
 
 }

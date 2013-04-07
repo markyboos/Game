@@ -25,7 +25,7 @@ public class AddMinionAction implements Action {
         this.territory = territory;
         this.number = number;        
     }
-
+    
     public void execute() {
         
         final Board board = GameController.getInstance().getBoard();

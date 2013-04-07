@@ -230,7 +230,7 @@ public class Board {
                 found = false;
             }
             
-            if (criteria.getType() != null && !piece.getClass().isAssignableFrom(criteria.getType())) {
+            if (criteria.getType() != null && !criteria.getType().isAssignableFrom(piece.getClass())) {
                 found = false;            
             }
             

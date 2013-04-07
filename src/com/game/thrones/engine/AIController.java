@@ -1,7 +1,9 @@
 
 package com.game.thrones.engine;
 
+import android.util.Log;
 import com.game.thrones.model.House;
+import com.game.thrones.model.PieceCriteria;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.piece.Piece;
@@ -45,6 +47,8 @@ public class AIController {
         
         controller = GameController.getInstance();
         
+        Log.d("AIController.createEvilActions", "Generating evil actions...");
+        
         List<Orders> orders = new ArrayList<Orders>();
         final Territory centralTerritory = controller.getBoard().getCentralTerritory();
         
@@ -59,24 +63,30 @@ public class AIController {
             orders.add(order);
         }
         
-        Piece general = controller.getBoard().getPiece(General.FATTY);
+        PieceCriteria criteria = new PieceCriteria();
+        criteria.setClass(General.class);
         
-        Set<Territory> path = controller.getBoard()
-                .getPathToTerritory(general.getPosition(), centralTerritory);
+        for (Piece piece : controller.getBoard().getPieces(criteria)) {
+            
+            General general = (General)piece;
         
-        for (Territory t : path) {
-            Orders order = new Orders();
-            order.addAction(House.NO_ONE, new MoveAction(controller.getBoard().getPiece(General.FATTY), t));
+            Set<Territory> path = controller.getBoard()
+                    .getPathToTerritory(general.getPosition(), centralTerritory);
 
-            orders.add(order);
-        }
-        
-        for (int i = 0; i < 2; i ++) {
-            
-            Orders order = new Orders();
-            order.addAction(House.NO_ONE, new MoveAlongPathAction(controller.getBoard().getPiece(General.FATTY), centralTerritory, 1));
-            
-            orders.add(order);
+            for (Territory t : path) {
+                Orders order = new Orders();
+                order.addAction(House.NO_ONE, new MoveAction(general, t));
+
+                orders.add(order);
+            }
+
+            for (int i = 0; i < 2; i ++) {
+
+                Orders order = new Orders();
+                order.addAction(House.NO_ONE, new MoveAlongPathAction(general, centralTerritory, 1));
+
+                orders.add(order);
+            }
         }
         
         return orders;
