@@ -27,6 +27,10 @@ public class AttackGeneralAction extends AbstractAction {
         this.target = target;        
     }
     
+    public General getTarget() {
+        return target;
+    }
+    
     public void setItemsToUse(final List<Item> items) {
         itemsToUse = items;
     }
@@ -40,6 +44,10 @@ public class AttackGeneralAction extends AbstractAction {
         int attacks = 0;
         
         for (Item item : itemsToUse) {
+            if (item.getTeam() != target.getTeam()) {
+                throw new AssertionError("Cannot use items against a general that arent of that team");                
+            }
+            
             attacks += item.getPower();                        
         }
         

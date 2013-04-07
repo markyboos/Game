@@ -16,11 +16,11 @@ public class Territory {
      */
     private final int value;
 
-    private House owner = House.NO_ONE;
+    private Team owner = Team.NO_ONE;
     
     private int tainted = 0;
 
-    public Territory(String name, int value, House ownedBy) {
+    public Territory(String name, int value, Team ownedBy) {
         this.name = name;
         this.value = value;
         this.owner = ownedBy;
@@ -49,11 +49,11 @@ public class Territory {
         return name;
     }
 
-    public House getOwner() {
+    public Team getOwner() {
         return owner;
     }
     
-    public void setOwner(final House house) {
+    public void setOwner(final Team house) {
         owner = house;
     }
     

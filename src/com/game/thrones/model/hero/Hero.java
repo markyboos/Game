@@ -1,6 +1,7 @@
 
 package com.game.thrones.model.hero;
 
+import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.piece.Piece;
 import java.util.ArrayList;
@@ -36,6 +37,17 @@ public class Hero extends Piece {
     public List<Item> getInventory() {
         return Collections.unmodifiableList(inventory);
     }
+    
+    public List<Item> getItemsForTeam(final Team team) {
+        List<Item> items = new ArrayList<Item>();
+        for (Item item : inventory) {
+            if (item.getTeam() == team) {
+                items.add(item);
+            }
+        }
+        
+        return Collections.unmodifiableList(items);        
+    }
 
     public void useAction() {
         actionsAvailable -= 1;
@@ -63,5 +75,9 @@ public class Hero extends Piece {
     public void damage() {
         health -= 1;
     }
-
+    
+    @Override
+    public String toString() {
+        return name + " [" + health + "/" + maxHealth + "]";
+    }
 }

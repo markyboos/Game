@@ -4,6 +4,7 @@ package com.game.thrones.engine;
 import com.game.thrones.activity.CameraChangeEvent;
 import com.game.thrones.model.Board;
 import com.game.thrones.model.PieceCriteria;
+import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.piece.Piece;
@@ -19,11 +20,12 @@ public class AddMinionAction implements Action {
     
     private int number;
     
-    private int type;
+    private Team team;
     
-    public AddMinionAction(Territory territory, int number) {
+    public AddMinionAction(Territory territory, int number, Team team) {
         this.territory = territory;
-        this.number = number;        
+        this.number = number;  
+        this.team = team;
     }
     
     public void execute() {
@@ -36,12 +38,13 @@ public class AddMinionAction implements Action {
             PieceCriteria criteria = new PieceCriteria();
             criteria.setClass(Minion.class);
             criteria.setTerritory(territory);
+            criteria.setOwner(team);            
             
             List<Piece> pieces = board.getPieces(criteria);
             
             if (pieces.size() < 3) {
                 
-                Minion minion = new Minion(3);
+                Minion minion = new Minion(team);
             
                 board.addPiece(minion);
                 
@@ -58,12 +61,13 @@ public class AddMinionAction implements Action {
                     criteria = new PieceCriteria();
                     criteria.setClass(Minion.class);
                     criteria.setTerritory(bordering);
+                    criteria.setOwner(team);
 
                     pieces = board.getPieces(criteria);
 
                     if (pieces.size() < 3) {
 
-                        Minion minion = new Minion(3);
+                        Minion minion = new Minion(team);
 
                         board.addPiece(minion);
 

@@ -1,6 +1,7 @@
 
 package com.game.thrones.model.hero;
 
+import com.game.thrones.model.Team;
 import com.game.thrones.model.piece.Piece;
 
 /**
@@ -9,9 +10,20 @@ import com.game.thrones.model.piece.Piece;
  */
 public class Minion extends Piece {
     
-    public Minion(int roll) {
+    public Minion(Team team) {
         name = Double.toString(Math.random());
-        rollToDamage = roll;
+        super.team = team;
+        
+        switch(team) {
+            case ORCS:
+                rollToDamage = 3;
+                break;
+            case DRAGONS:
+                rollToDamage = 5;
+                break;
+            default:
+                throw new AssertionError(team.name());
+        }
     }
     
     int rollToDamage;
@@ -22,7 +34,7 @@ public class Minion extends Piece {
     
     @Override
     public String toString() {
-        return "Evil minion";
+        return "Evil minion " + super.getTeam();
     }
 
 }

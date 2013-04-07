@@ -9,8 +9,8 @@ import com.game.thrones.model.piece.Piece;
  */
 public class General extends Piece {
     
-    public static final String FATTY = "fatty";
-    public static final String DRAGON = "dragon";
+    public static final String FATTY = "FATTY";
+    public static final String DRAGON = "DRAGON";
     
     int rollToDamage;
     

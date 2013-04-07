@@ -2,8 +2,6 @@
 package com.game.thrones.engine;
 
 import com.game.thrones.model.*;
-import com.game.thrones.model.House.HouseType;
-import com.game.thrones.model.House.PlayerType;
 import com.game.thrones.model.hero.Dragon;
 import com.game.thrones.model.hero.Fatty;
 import com.game.thrones.model.hero.General;
@@ -19,21 +17,20 @@ import java.util.*;
  */
 public class GameInitialiser {
     
-    private Set<House> houses = new HashSet<House>();
     private Set<Piece> pieces = new HashSet<Piece>();
     private Map<Territory, Set<Territory>> borderMap = new HashMap<Territory, Set<Territory>>();
     
     private void initialise() {
         
         // territories        
-        Territory kingsLanding = createTerritory(Territory.KINGS_LANDING);
-        Territory winterfell = createTerritory("Winterfell");
-        Territory rock = createTerritory("Castle rock");
-        Territory bogland = createTerritory("Bogland");
-        Territory desert = createTerritory("Desert");
-        Territory coast = createTerritory("Coastal city");
-        Territory forest = createTerritory("Forest town");
-        Territory outlands = createTerritory("Outlands");
+        Territory kingsLanding = createTerritory(Territory.KINGS_LANDING, Team.NO_ONE);
+        Territory winterfell = createTerritory("Winterfell", Team.DRAGONS);
+        Territory rock = createTerritory("Castle rock", Team.ORCS);
+        Territory bogland = createTerritory("Bogland", Team.ORCS);
+        Territory desert = createTerritory("Desert", Team.ORCS);
+        Territory coast = createTerritory("Coastal city", Team.DRAGONS);
+        Territory forest = createTerritory("Forest town", Team.ORCS);
+        Territory outlands = createTerritory("Outlands", Team.DRAGONS);
         
         //conecting territories
         addBorder(kingsLanding, bogland);
@@ -44,8 +41,8 @@ public class GameInitialiser {
         addBorder(forest, bogland);
         addBorder(forest, winterfell);
         
-        createGeneral(new Fatty(), rock);
-        createGeneral(new Dragon(), winterfell);
+        createGeneral(new Fatty(), Team.ORCS, rock);
+        createGeneral(new Dragon(), Team.DRAGONS, winterfell);
         
         createHero("godBoy", kingsLanding);
         createHero("wahBoy", kingsLanding);
@@ -112,31 +109,9 @@ public class GameInitialiser {
         
         
     }
-    
-    private House createHumanHouse(String name, HouseType hType, House serves) {
-        House house = new House(name, hType, PlayerType.HUMAN);
-        house.setServes(serves);
 
-        houses.add(house);
-        
-        return house;
-    }
-    
-    private House createHouse(String name, HouseType hType, House serves) {
-        House house = new House(name, hType);
-        house.setServes(serves);
-
-        houses.add(house);
-        
-        return house;
-    }
-    
-    private House createHouse(String name, HouseType type) {
-        return createHouse(name, type, null);        
-    }
-
-    private Territory createTerritory(String name) {
-        Territory t1 = new Territory(name, 0, House.NO_ONE);
+    private Territory createTerritory(String name, Team team) {
+        Territory t1 = new Territory(name, 0, team);
 
         borderMap.put(t1, new HashSet<Territory>());
 
@@ -155,20 +130,20 @@ public class GameInitialiser {
     public Board createBoard() {
         initialise();
 
-        return new Board(borderMap, houses, pieces);
+        return new Board(borderMap, pieces);
     }
 
-    private void createGeneral(final General general, Territory position) {
+    private void createGeneral(final General general, final Team team, Territory position) {
         general.setPosition(position);
         pieces.add(general);
         
         //add 2 minions to the general
-        Minion minion = new Minion(3);
+        Minion minion = new Minion(team);
         minion.setPosition(position);
         
         pieces.add(minion);
         
-        minion = new Minion(3);
+        minion = new Minion(team);
         minion.setPosition(position);
         
         pieces.add(minion);

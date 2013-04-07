@@ -5,7 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import com.game.thrones.model.House;
+import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.piece.Piece;
 import java.util.List;
@@ -66,7 +66,7 @@ public class TerritoryTile {
         int i = 20;
         
         for (Piece piece : pieces) {
-            canvas.drawText(piece.toString(), this.x * SIZE + camerax, i + y * SIZE + cameray, getHouseColour(piece.getHouse()));
+            canvas.drawText(piece.toString(), this.x * SIZE + camerax, i + y * SIZE + cameray, getHouseColour(piece.getTeam()));
             i += 20;
         }
                 
@@ -83,14 +83,18 @@ public class TerritoryTile {
         return bounds.contains(clickedx, clickedy);        
     }
     
-    private Paint getHouseColour(final House house) {        
+    private Paint getHouseColour(final Team team) {        
         final Paint paint = new Paint();
         
          paint.setColor(Color.BLACK);
         
         
-        if (house.getName().equals(House.PLAYER_ONE)) {
+        if (team == Team.DRAGONS) {
             paint.setColor(Color.BLUE);
+        } else if (team == Team.ORCS) {
+            paint.setColor(Color.GREEN);
+        } else if (team == Team.NO_ONE) {
+            paint.setColor(Color.GRAY);
         }
                 
         return paint;

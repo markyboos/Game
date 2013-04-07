@@ -20,7 +20,6 @@ import java.util.*;
 public class Board {
 
     final private List<Territory> territories;
-    final private Set<House> houses;
     final private Set<Piece> pieces;
 
     /**
@@ -38,7 +37,7 @@ public class Board {
      * @param houses A set of all the houses on the board.
      * @param pieces A set of all the pieces on the board.
      */
-    public Board(Map<Territory, Set<Territory>> landMap, Set<House> houses, Set<Piece> pieces) {
+    public Board(Map<Territory, Set<Territory>> landMap, Set<Piece> pieces) {
 
         this.borders = new int[landMap.size()][landMap.size()];
         territories = Collections.unmodifiableList(new ArrayList<Territory>(landMap.keySet()));
@@ -72,7 +71,6 @@ public class Board {
             }
         }
 
-        this.houses = houses;
         this.pieces = pieces;
     }
 
@@ -158,24 +156,6 @@ public class Board {
     }
 
     /**
-     * Retrieves a list of territories allied to a given house.
-     * An allied territory is either owned by the house, or owned by a house that serves it.
-     * @param house The house to retrieve a list of owned territories for.
-     * @return A list of owned territories.
-     */
-    public List<Territory> getAlliedTerritories(House house) {
-        List<Territory> alliedTerritories = new ArrayList<Territory>();
-
-        for(Territory t : territories) {
-            if(t.getOwner() == house || t.getOwner().getServes() == house) {
-                alliedTerritories.add(t);
-            }
-        }
-
-        return Collections.unmodifiableList(alliedTerritories);
-    }
-
-    /**
      * Determine if two territories are bordering.
      * @param t1 1st territory to compare
      * @param t2 2nd territory to compare.
@@ -234,10 +214,6 @@ public class Board {
                 found = false;            
             }
             
-            if (criteria.getOwner() != null && !piece.getHouse().equals(criteria.getOwner())) {
-                found = false;
-            }
-            
             if (found) {
                 Log.d("Board:getPieces", "Found " + piece);
                 foundPieces.add(piece);
@@ -281,19 +257,6 @@ public class Board {
         
         throw new IllegalStateException("No kings landing territory");
     }
-            
-    public Set<House> getHouses() {
-        return Collections.unmodifiableSet(houses);
-    }
-    
-    public House getHouse(final String name) {
-        for (House house : houses) {
-            if (house.getName().equals(name)) {
-                return house;
-            }
-        }
-        throw new IllegalArgumentException("Invalid house name");
-    }
     
     public Piece getPiece(final String name) {
         for (Piece piece : pieces) {
@@ -303,17 +266,5 @@ public class Board {
         }
         
         throw new IllegalArgumentException("Invalid piece name");        
-    }
-    
-    public Set<Piece> getPieces(House house) {        
-        Set<Piece> housePieces = new HashSet<Piece>();
-        
-        for (Piece piece : pieces) {
-            if (piece.getHouse().equals(house)) {
-                housePieces.add(piece);                
-            }
-        }        
-        
-        return housePieces;
     }
 }

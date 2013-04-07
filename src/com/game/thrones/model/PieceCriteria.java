@@ -10,7 +10,7 @@ import com.game.thrones.model.piece.Piece;
 public class PieceCriteria<P extends Piece> {
     
     private Territory territory;
-    private House owner;
+    private Team owner;
     private Class clazz;
     
     public void setTerritory(Territory territory) {
@@ -21,11 +21,11 @@ public class PieceCriteria<P extends Piece> {
         return territory;
     }
 
-    public void setOwner(House owner) {
+    public void setOwner(Team owner) {
         this.owner = owner;
     }
     
-    public House getOwner() {
+    public Team getOwner() {
         return owner;
     }
     

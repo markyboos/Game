@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.game.thrones.model.Board;
 import com.game.thrones.model.PieceCriteria;
+import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
@@ -76,7 +77,7 @@ public class GameController {
     public void endTurn() {
                 
         //collect items
-        player.addItem(new Item(1));
+        player.addItem(new Item(1, Team.DRAGONS));
         
         //if the hero is in a place with monsters then take life off
         PieceCriteria criteria = new PieceCriteria();

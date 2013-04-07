@@ -1,6 +1,6 @@
 package com.game.thrones.model.piece;
 
-import com.game.thrones.model.House;
+import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 
 /**
@@ -14,12 +14,10 @@ public abstract class Piece {
     protected String name;
 
     //who they are fighting for
-    private House house = House.NO_ONE;
+    protected Team team;
 
     //where they are
     private Territory position;
-    
-    private boolean prisoner;
 
     /**
      * @return the name
@@ -27,19 +25,9 @@ public abstract class Piece {
     public String getName() {
         return name;
     }
-
-    /**
-     * @return the house
-     */
-    public House getHouse() {
-        return house;
-    }
-
-    /**
-     * @param house the house to set
-     */
-    public void setHouse(House house) {
-        this.house = house;
+    
+    public Team getTeam() {
+        return team;
     }
 
     /**
@@ -54,14 +42,6 @@ public abstract class Piece {
      */
     public void setPosition(Territory position) {
         this.position = position;
-    }
-    
-    public boolean isPrisoner() {
-        return prisoner;
-    }
-    
-    public void setPrisoned() {
-        prisoner = true;
     }
 
     /**
@@ -83,6 +63,6 @@ public abstract class Piece {
     
     @Override
     public String toString() {
-        return name + " of house " + house.getName() + " at " + position;
+        return name + " at " + position;
     }
 }
