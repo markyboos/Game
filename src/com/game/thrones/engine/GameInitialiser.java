@@ -25,11 +25,11 @@ public class GameInitialiser {
         // territories        
         Territory kingsLanding = createTerritory(Territory.KINGS_LANDING, Team.NO_ONE);
         Territory winterfell = createTerritory("Winterfell", Team.DRAGONS);
-        Territory rock = createTerritory("Castle rock", Team.ORCS);
+        Territory rock = createTerritory("Castle Rock", Team.ORCS);
         Territory bogland = createTerritory("Bogland", Team.ORCS);
         Territory desert = createTerritory("Desert", Team.ORCS);
-        Territory coast = createTerritory("Coastal city", Team.DRAGONS);
-        Territory forest = createTerritory("Forest town", Team.ORCS);
+        Territory coast = createTerritory("Coastal City", Team.DRAGONS);
+        Territory forest = createTerritory("Forest Town", Team.ORCS);
         Territory outlands = createTerritory("Outlands", Team.DRAGONS);
         
         //conecting territories

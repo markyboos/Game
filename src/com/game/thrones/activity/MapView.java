@@ -5,10 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Point;
+import android.graphics.*;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,17 +22,20 @@ import java.util.List;
  */
 public class MapView extends View implements CameraChangeListener {
     
-    private final static Paint GREEN;
-    
+    private final static Paint GREEN = new Paint();
+    private final static Paint BACKGROUND = new Paint();
+    private final static Paint BLACK = new Paint();
+
     static {
-        GREEN = new Paint();
         GREEN.setColor(Color.GREEN);
+        BACKGROUND.setColor(Color.rgb(200, 180, 120));
+        BLACK.setColor(Color.BLACK);
     }
         
     private GameController controller;
     
-    private int camerax = 0;
-    private int cameray = 0;    
+    private int cameraX = 0;
+    private int cameraY = 0;
     
     private final Point startPosition = new Point();
     
@@ -47,7 +47,7 @@ public class MapView extends View implements CameraChangeListener {
     
     Territory[][] map = new Territory[6][6];
     
-    public List<TerritoryTile> createTerritoryTiles(List<Territory> territory) {
+    public List<TerritoryTile> createTerritoryTiles() {
         
         List<TerritoryTile> tiles = new ArrayList<TerritoryTile>();
         
@@ -90,8 +90,6 @@ public class MapView extends View implements CameraChangeListener {
             if (alreadyInMap(t)) {
                 continue;
             }
-            
-            //System.out.println(t.getName());
             
             populateClosestTile(x, y, t);
             
@@ -136,20 +134,26 @@ public class MapView extends View implements CameraChangeListener {
     @Override
     public void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
+
+        canvas.drawRect(new Rect(0, 0, canvas.getWidth(), canvas.getHeight()), BACKGROUND);
         
-        territoryTiles = createTerritoryTiles(controller.getBoard().getTerritories());
-                
+        territoryTiles = createTerritoryTiles();
+
+        // todo draw the borders first, then the tiles so that they display correctly.
+        // This bit looks really inefficient, should be re-done.
         for (TerritoryTile tile : territoryTiles) {
-            tile.draw(canvas, camerax, cameray);
-                        
             for (Territory t : controller.getBoard().getBorderingTerritories(tile.getTerritory())) {
-                
+
                 for (TerritoryTile border : territoryTiles)  {
                     if (t.equals(border.getTerritory())) {
-                        canvas.drawLine(border.getX() + camerax, border.getY() + cameray, tile.getX() + camerax, tile.getY() + cameray, GREEN);
+                        canvas.drawLine(border.getX() + cameraX, border.getY() + cameraY, tile.getX() + cameraX, tile.getY() + cameraY, BLACK);
                     }
                 }
             }
+        }
+
+        for (TerritoryTile tile : territoryTiles) {
+            tile.draw(canvas, cameraX, cameraY);
         }
     }
     
@@ -161,8 +165,8 @@ public class MapView extends View implements CameraChangeListener {
             return true;
         } else if(event.getAction() == MotionEvent.ACTION_MOVE) {
 
-            camerax = (int)event.getX() - startPosition.x + camerax;
-            cameray = (int)event.getY() - startPosition.y + cameray;
+            cameraX = (int)event.getX() - startPosition.x + cameraX;
+            cameraY = (int)event.getY() - startPosition.y + cameraY;
             
             startPosition.x = (int)event.getX();            
             startPosition.y = (int)event.getY();
@@ -175,7 +179,7 @@ public class MapView extends View implements CameraChangeListener {
             TerritoryTile clicked = null;
             
             for (TerritoryTile territory : territoryTiles) {
-                if (territory.hasClicked((int)event.getX() - camerax, (int)event.getY() - cameray)) {
+                if (territory.hasClicked((int)event.getX() - cameraX, (int)event.getY() - cameraY)) {
                     clicked = territory;
                     System.out.println("clicked");
                     break;
@@ -252,8 +256,8 @@ public class MapView extends View implements CameraChangeListener {
     public void fireCameraChangeEvent(final CameraChangeEvent e) {
         for (TerritoryTile tile : territoryTiles) {
             if (tile.getTerritory().equals(e.getFocus())) {
-                camerax = TerritoryTile.SIZE - tile.getX();
-                cameray = TerritoryTile.SIZE - tile.getY();
+                cameraX = TerritoryTile.SIZE - tile.getX();
+                cameraY = TerritoryTile.SIZE - tile.getY();
                 return;
             }
         }

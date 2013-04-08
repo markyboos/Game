@@ -7,7 +7,7 @@ package com.game.thrones.model;
  */
 public class Territory {
     
-    public static final String KINGS_LANDING = "Kings landing";
+    public static final String KINGS_LANDING = "Kings Landing";
     
     private final String name;
 

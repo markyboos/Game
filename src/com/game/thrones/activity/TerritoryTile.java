@@ -17,16 +17,22 @@ import java.util.List;
  */
 public class TerritoryTile {
     
-    public static final int SIZE = 150;
+    public static final int SIZE = 100;
     
-    private final static Paint WHITE;
-    private final static Paint BLACK;
-    
+    private final static Paint WHITE = new Paint();
+    private final static Paint BLACK = new Paint();
+    private final static Paint TERRITORY_TEXT = new Paint();
+
     static {
-        WHITE = new Paint();
         WHITE.setColor(Color.WHITE);
-        BLACK = new Paint();
+        WHITE.setAntiAlias(true);
+
         BLACK.setColor(Color.BLACK);
+
+        TERRITORY_TEXT.setColor(Color.BLACK);
+        TERRITORY_TEXT.setFakeBoldText(true);
+        TERRITORY_TEXT.setAntiAlias(true);
+        TERRITORY_TEXT.setTextSize(SIZE / 10);
     }
     
     private final int x;
@@ -55,30 +61,31 @@ public class TerritoryTile {
         return territory;
     }
     
-    public void draw(final Canvas canvas, int camerax, int cameray) {
-        
-        canvas.drawRect(new Rect(x * SIZE + camerax, y * SIZE + cameray, x * SIZE + SIZE + camerax, y * SIZE + SIZE + cameray), WHITE);
-        
-        canvas.drawText(territory.getName() + " [" + territory.getTainted() + "]", x * SIZE + camerax, 10 + y * SIZE + cameray, getHouseColour(territory.getOwner()));
-        
-        canvas.drawCircle(getX() + camerax, getY() + cameray, 2, BLACK);
+    public void draw(final Canvas canvas, int cameraX, int cameraY) {
+        //Territory Team Colour
+        canvas.drawCircle(x * SIZE + cameraX + (SIZE / 2), y * SIZE + cameraY + (SIZE / 2), SIZE / 2, getHouseColour(territory.getOwner()));
+
+        //Territory
+        canvas.drawCircle(x * SIZE + cameraX + (SIZE / 2), y * SIZE + cameraY + (SIZE / 2), SIZE / 2.1f, WHITE);
+
+        //Name
+        canvas.drawText(territory.getName(), x * SIZE + (SIZE / 4) + cameraX, (y+1) * SIZE + cameraY + (SIZE / 10), TERRITORY_TEXT);
+
         
         int i = 20;
         
         for (Piece piece : pieces) {
-            canvas.drawText(piece.toString(), this.x * SIZE + camerax, i + y * SIZE + cameray, getHouseColour(piece.getTeam()));
+            canvas.drawText(piece.toString(), this.x * SIZE + cameraX, i + y * SIZE + cameraY, getHouseColour(piece.getTeam()));
             i += 20;
         }
-                
     }
 
     public boolean hasClicked(final int clickedx, final int clickedy) {
         
         System.out.println(clickedx + "," + clickedy);
         
-        Rect bounds = new Rect(x * SIZE, y * SIZE, x * SIZE + SIZE, y * SIZE + SIZE );
-        
-        System.out.println(bounds.toShortString());
+        Rect bounds = new Rect(x * SIZE, y * SIZE, x * SIZE + SIZE, y * SIZE + SIZE);
+
         
         return bounds.contains(clickedx, clickedy);        
     }
@@ -86,8 +93,8 @@ public class TerritoryTile {
     private Paint getHouseColour(final Team team) {        
         final Paint paint = new Paint();
         
-         paint.setColor(Color.BLACK);
-        
+        paint.setColor(Color.BLACK);
+        paint.setAntiAlias(true);
         
         if (team == Team.DRAGONS) {
             paint.setColor(Color.BLUE);

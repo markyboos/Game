@@ -31,7 +31,7 @@ public class MapCanvasActivity extends Activity implements GameFinishedListener 
         GameController.getInstance().addCameraChangeListener((CameraChangeListener)mapView);
         GameController.getInstance().addGameFinishedListener(this);
         
-        updateTextDashboard();
+        updateHUD();
         
         Button buttonOne = (Button) findViewById(R.id.endTurnButton);
         buttonOne.setOnClickListener(new Button.OnClickListener() {
@@ -43,7 +43,7 @@ public class MapCanvasActivity extends Activity implements GameFinishedListener 
                 
                 mapView.invalidate();
 
-                updateTextDashboard();           
+                updateHUD();
             }
         });
     }
@@ -53,12 +53,12 @@ public class MapCanvasActivity extends Activity implements GameFinishedListener 
         super.onWindowFocusChanged(hasFocus);
         
         if (hasFocus) {
-            updateTextDashboard();
+            updateHUD();
         }
         
     }
     
-    private void updateTextDashboard() {
+    private void updateHUD() {
         
         TextView textView = (TextView)findViewById(R.id.dashBoard);
         
@@ -75,7 +75,7 @@ public class MapCanvasActivity extends Activity implements GameFinishedListener 
         ab.setTitle(event.getFinished().getDescription());
         ab.setCancelable(true);
         ab.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            
+
             public void onClick(DialogInterface arg0, int x) {
                 MapCanvasActivity.this.finish();
             }
