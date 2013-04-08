@@ -3,13 +3,13 @@ package com.game.thrones.engine;
 
 import android.util.Log;
 import com.game.thrones.model.PieceCriteria;
-import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.piece.Piece;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Set;
 
 /**
@@ -21,7 +21,9 @@ public class AIController {
     
     private GameController controller;
     
-    private List<Orders> evilActions;
+    private Set<Orders> discardPile = new HashSet<Orders>();
+    
+    private Queue<Orders> evilActions;
     
     public void takeTurn() {
         
@@ -29,10 +31,12 @@ public class AIController {
             evilActions = createEvilActions();
         }
         
-        //shuffle and pick one
-        Collections.shuffle(evilActions);
+        Orders orders = evilActions.poll();
         
-        Orders orders = evilActions.get(0);
+        if (orders == null) {
+            recreateDeckFromDiscardPile();
+            orders = evilActions.poll();
+        }
         
         //add minions to places        
         //add taint        
@@ -41,15 +45,30 @@ public class AIController {
             action.execute();            
         }
         
+        discardPile.add(orders);
+        
     }
     
-    private List<Orders> createEvilActions() {
+    private void recreateDeckFromDiscardPile() {
+        
+        Log.d("AIController:recreateDeck", "Recreating the deck...");
+        
+        LinkedList<Orders> newActions = new LinkedList<Orders>(discardPile);
+        
+        discardPile.clear();
+        
+        Collections.shuffle(newActions);
+        
+        evilActions = newActions;        
+    }
+    
+    private Queue<Orders> createEvilActions() {
         
         controller = GameController.getInstance();
         
         Log.d("AIController:createEvilActions", "Generating evil actions...");
         
-        List<Orders> orders = new ArrayList<Orders>();
+        LinkedList<Orders> orders = new LinkedList<Orders>();
         final Territory centralTerritory = controller.getBoard().getCentralTerritory();
                 
         for (Territory t : controller.getBoard().getTerritories()) {
@@ -86,6 +105,8 @@ public class AIController {
                 orders.add(order);
             }
         }
+        
+        Collections.shuffle(orders);
         
         return orders;
         

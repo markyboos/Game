@@ -2,6 +2,7 @@
 package com.game.thrones.engine;
 
 import com.game.thrones.model.*;
+import com.game.thrones.model.hero.Barbarian;
 import com.game.thrones.model.hero.Dragon;
 import com.game.thrones.model.hero.Fatty;
 import com.game.thrones.model.hero.General;
@@ -44,8 +45,8 @@ public class GameInitialiser {
         createGeneral(new Fatty(), Team.ORCS, rock);
         createGeneral(new Dragon(), Team.DRAGONS, winterfell);
         
-        createHero("godBoy", kingsLanding);
-        createHero("wahBoy", kingsLanding);
+        createHero(new Barbarian(), kingsLanding);
+        createHero(new Hero("wahBoy"), kingsLanding);
         
         //start with the king and 2 other major houses
         //to see how this goes
@@ -149,8 +150,7 @@ public class GameInitialiser {
         pieces.add(minion);
     }
 
-    private void createHero(final String name, Territory position) {
-        Hero hero = new Hero(name);
+    private void createHero(Hero hero, Territory position) {
         
         hero.setPosition(position);
         
