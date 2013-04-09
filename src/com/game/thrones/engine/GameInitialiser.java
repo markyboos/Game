@@ -24,14 +24,14 @@ public class GameInitialiser {
     private void initialise() {
         
         // territories        
-        Territory kingsLanding = createTerritory(Territory.KINGS_LANDING, Team.NO_ONE);
-        Territory winterfell = createTerritory("Winterfell", Team.DRAGONS);
-        Territory rock = createTerritory("Castle Rock", Team.ORCS);
-        Territory bogland = createTerritory("Bogland", Team.ORCS);
-        Territory desert = createTerritory("Desert", Team.ORCS);
-        Territory coast = createTerritory("Coastal City", Team.DRAGONS);
-        Territory forest = createTerritory("Forest Town", Team.ORCS);
-        Territory outlands = createTerritory("Outlands", Team.DRAGONS);
+        Territory kingsLanding = createTerritory(Territory.KINGS_LANDING, 0, Team.NO_ONE);
+        Territory winterfell = createTerritory("Winterfell", 2, Team.DRAGONS);
+        Territory rock = createTerritory("Castle Rock", 2, Team.ORCS);
+        Territory bogland = createTerritory("Bogland", 1, Team.ORCS);
+        Territory desert = createTerritory("Desert", 1, Team.ORCS);
+        Territory coast = createTerritory("Coastal City", 1, Team.DRAGONS);
+        Territory forest = createTerritory("Forest Town", 2, Team.ORCS);
+        Territory outlands = createTerritory("Outlands", 2, Team.DRAGONS);
         
         //conecting territories
         addBorder(kingsLanding, bogland);
@@ -111,8 +111,8 @@ public class GameInitialiser {
         
     }
 
-    private Territory createTerritory(String name, Team team) {
-        Territory t1 = new Territory(name, 0, team);
+    private Territory createTerritory(String name, int value, Team team) {
+        Territory t1 = new Territory(name, value, team);
 
         borderMap.put(t1, new HashSet<Territory>());
 
@@ -138,8 +138,13 @@ public class GameInitialiser {
         general.setPosition(position);
         pieces.add(general);
         
-        //add 2 minions to the general
+        //add 3 minions to the general
         Minion minion = new Minion(team);
+        minion.setPosition(position);
+        
+        pieces.add(minion);
+        
+        minion = new Minion(team);
         minion.setPosition(position);
         
         pieces.add(minion);

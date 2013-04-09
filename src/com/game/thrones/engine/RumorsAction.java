@@ -22,16 +22,26 @@ public class RumorsAction extends AbstractAction {
         this.team = team;        
     }    
 
-    public void execute() {
-        
+    public void execute() {        
         Hero hero = (Hero)piece;
         
-        hero.addItem(new Item(1, team));
+        //checks the 2 top items in the deck
+        listen(hero);
+        listen(hero);        
     }
     
     @Override
     public String toString() {
         return "Listen to rumors";
+    }
+
+    private void listen(final Hero hero) {        
+        Item item = GameController.getInstance().getItemController().getTopItem();
+        
+        //if its the same add it to the stash
+        if (item.getTeam() == team) {
+            hero.addItem(item);
+        }
     }
 
 }

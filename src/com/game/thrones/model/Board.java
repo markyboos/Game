@@ -1,6 +1,7 @@
 package com.game.thrones.model;
 
 import android.util.Log;
+import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.piece.Piece;
 import java.lang.annotation.Target;
 
@@ -244,6 +245,39 @@ public class Board {
         return randomChoice.get(0);
     }
     
+    public List<Territory> getTerritories(TerritoryCriteria criteria) {
+        
+        List<Territory> foundTerritories = new ArrayList<Territory>();
+        
+        for (Territory territory : territories) {
+            
+            Set<Piece> piecesAtTerritory = getPieces(territory);
+                        
+            if (criteria.getMinionCount() != null && piecesAtTerritory.size() != criteria.getMinionCount()) {
+                continue;
+            }
+            
+            if (criteria.getOwner() != null && territory.getOwner() != criteria.getOwner()) {
+                continue;
+            }
+            
+            if (criteria.getMinionTeam() != null) {
+                       
+                for (Piece piece : piecesAtTerritory) {
+                    if (piece instanceof Minion && piece.getTeam() != criteria.getMinionTeam()) {
+                        continue;
+                    }
+                }
+            }
+            
+            Log.d("Board:getTerritories", "Found " + territory);
+            foundTerritories .add(territory);
+        }
+        
+        return Collections.unmodifiableList(foundTerritories );  
+        
+    }
+    
     public List<Territory> getTerritories() {
         return Collections.unmodifiableList(territories);
     }
@@ -266,5 +300,36 @@ public class Board {
         }
         
         throw new IllegalArgumentException("Invalid piece name");        
+    }
+    
+    public void addMinionToTerritory(final Territory territory, final Team team,
+            final boolean overrun) {
+        PieceCriteria criteria = new PieceCriteria();
+        criteria.setClass(Minion.class);
+        criteria.setTerritory(territory);
+        criteria.setOwner(team);
+        
+        List<Piece> pieces = getPieces(criteria);
+        if (pieces.size() < 3) {
+            Minion minion = new Minion(team);
+        
+            addPiece(minion);
+            
+            minion.setPosition(territory);
+        } else {
+            //taint the board
+            territory.taint();
+            
+            if (!overrun) {
+                return;
+            }
+            
+            //and spread the minions (cause an overrun)
+            List<Territory> territories = getBorderingTerritories(territory);
+            for (Territory bordering : territories) {
+                
+                addMinionToTerritory(bordering, team, false);
+            }
+        }
     }
 }

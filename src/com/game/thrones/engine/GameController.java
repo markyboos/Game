@@ -43,6 +43,12 @@ public class GameController {
         
         player = players.get(0);
         aiController = new AIController();
+        
+        itemController = new ItemController();
+        
+        //todo        
+        //pick 3 random territories and add 2 minions to each        
+        //pick 3 random territories and add 1 minion to each
     }
     
     public static GameController getInstance() {
@@ -57,6 +63,12 @@ public class GameController {
     }
     
     private AIController aiController;
+    
+    private ItemController itemController;
+    
+    public ItemController getItemController() {
+        return itemController;
+    }
     
     private Board board;
     
@@ -77,7 +89,8 @@ public class GameController {
     public void endTurn() {
                 
         //collect items
-        player.addItem(new Item(1, Team.DRAGONS));
+        player.addItem(itemController.getTopItem());
+        player.addItem(itemController.getTopItem());
         
         //if the hero is in a place with monsters then take life off
         PieceCriteria criteria = new PieceCriteria();

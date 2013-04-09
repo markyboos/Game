@@ -3,7 +3,9 @@ package com.game.thrones.engine;
 
 import android.util.Log;
 import com.game.thrones.model.PieceCriteria;
+import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
+import com.game.thrones.model.TerritoryCriteria;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.piece.Piece;
 import java.util.Collections;
@@ -83,6 +85,7 @@ public class AIController {
         PieceCriteria criteria = new PieceCriteria();
         criteria.setClass(General.class);
         
+        /**        
         for (Piece piece : controller.getBoard().getPieces(criteria)) {
             
             General general = (General)piece;
@@ -105,11 +108,34 @@ public class AIController {
                 orders.add(order);
             }
         }
+        */
+        
+        TerritoryCriteria territoryCriteria = new TerritoryCriteria();
+        territoryCriteria.setMinionCount(1);
+        territoryCriteria.setMinionTeam(Team.ORCS);
+        
+        orders.add(createOrcPatrols(territoryCriteria));
+        
+        territoryCriteria = new TerritoryCriteria();
+        territoryCriteria.setMinionCount(0);
+        territoryCriteria.setOwner(Team.ORCS);
+        
+        orders.add(createOrcPatrols(territoryCriteria));
         
         Collections.shuffle(orders);
         
         return orders;
         
+    }
+
+    //orc patrols
+    private Orders createOrcPatrols(TerritoryCriteria territoryCriteria) {
+        
+        Orders order = new Orders();
+        
+        order.addAction(new OrcPatrolsAction(territoryCriteria));
+        
+        return order;        
     }
 
 }

@@ -4,6 +4,7 @@ package com.game.thrones.engine;
 import com.game.thrones.activity.GameFinishedEvent;
 import com.game.thrones.model.Board;
 import com.game.thrones.model.PieceCriteria;
+import com.game.thrones.model.Team;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Item;
