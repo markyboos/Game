@@ -84,8 +84,7 @@ public class AIController {
         
         PieceCriteria criteria = new PieceCriteria();
         criteria.setClass(General.class);
-        
-        /**        
+             
         for (Piece piece : controller.getBoard().getPieces(criteria)) {
             
             General general = (General)piece;
@@ -108,7 +107,6 @@ public class AIController {
                 orders.add(order);
             }
         }
-        */
         
         TerritoryCriteria territoryCriteria = new TerritoryCriteria();
         territoryCriteria.setMinionCount(1);
