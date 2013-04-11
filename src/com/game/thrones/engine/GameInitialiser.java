@@ -25,13 +25,17 @@ public class GameInitialiser {
         
         // territories        
         Territory kingsLanding = createTerritory(Territory.KINGS_LANDING, 0, Team.NO_ONE);
+        Territory marshland = createTerritory("Marshland", 1, Team.ORCS);
         Territory winterfell = createTerritory("Winterfell", 2, Team.DRAGONS);
+        Territory village = createTerritory("Village", 2, Team.ORCS);
         Territory rock = createTerritory("Castle Rock", 2, Team.ORCS);
-        Territory bogland = createTerritory("Bogland", 1, Team.ORCS);
+        Territory bogland = createTerritory("Bogland", 1, Team.DRAGONS);
         Territory desert = createTerritory("Desert", 1, Team.ORCS);
         Territory coast = createTerritory("Coastal City", 1, Team.DRAGONS);
         Territory forest = createTerritory("Forest Town", 2, Team.ORCS);
         Territory outlands = createTerritory("Outlands", 2, Team.DRAGONS);
+        
+        //Territory inn = createTerritory("Stinky Tavern", 0, Team.NO_ONE);
         
         //conecting territories
         addBorder(kingsLanding, bogland);
@@ -39,7 +43,12 @@ public class GameInitialiser {
         addBorder(kingsLanding, outlands);
         addBorder(coast, desert);
         addBorder(coast, rock);
+        addBorder(coast, marshland);
+        addBorder(marshland, rock);
         addBorder(forest, bogland);
+        addBorder(bogland, village);
+        addBorder(village, winterfell);
+        
         addBorder(forest, winterfell);
         
         createGeneral(new Fatty(), Team.ORCS, rock);

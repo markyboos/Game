@@ -11,6 +11,7 @@ import com.game.thrones.model.piece.Piece;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
@@ -72,7 +73,7 @@ public class AIController {
         
         LinkedList<Orders> orders = new LinkedList<Orders>();
         final Territory centralTerritory = controller.getBoard().getCentralTerritory();
-                
+        
         for (Territory t : controller.getBoard().getTerritories()) {
             if (t.equals(centralTerritory)) {
                 continue;
@@ -89,7 +90,7 @@ public class AIController {
             
             General general = (General)piece;
         
-            Set<Territory> path = controller.getBoard()
+            List<Territory> path = controller.getBoard()
                     .getPathToTerritory(general.getPosition(), centralTerritory);
 
             for (Territory t : path) {

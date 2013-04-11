@@ -20,6 +20,10 @@ public class AddMinionAction implements Action {
     private Team team;
     
     public AddMinionAction(Territory territory, int number, Team team) {
+        
+        if (team == Team.NO_ONE) {
+            throw new AssertionError("add minion action must have a valid minion team was [" + team + "]");
+        }
         this.territory = territory;
         this.number = number;  
         this.team = team;

@@ -2,7 +2,9 @@
 package com.game.thrones.engine;
 
 import com.game.thrones.activity.CameraChangeEvent;
+import com.game.thrones.model.Board;
 import com.game.thrones.model.Territory;
+import com.game.thrones.model.hero.General;
 import com.game.thrones.model.piece.Piece;
 
 /**
@@ -27,11 +29,19 @@ public class MoveAction extends AbstractAction {
     }
 
     public void execute() {
+        final Board board = GameController.getInstance().getBoard();
+        
+        //generals can never move away from the centre of the map
+        if (piece instanceof General) {
+            if (!board.getPathToTerritory(piece.getPosition(), 
+                    board.getCentralTerritory()).contains(territory)) {
+                return;
+            }                            
+        }
         
         GameController.getInstance().fireCameraChangeEvent(new CameraChangeEvent(territory));
         
-        GameController.getInstance()
-                .getBoard().movePiece(piece, territory);
+        board.movePiece(piece, territory);
     }
     
     @Override

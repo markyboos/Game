@@ -97,6 +97,8 @@ public class Board {
         return Collections.unmodifiableList(borderingTerritories);
     }
     
+    private PathFinder pathFinder = new DijkstraPathFinder(this);
+    
     /**
      * Should return a path.
      * 
@@ -104,54 +106,14 @@ public class Board {
      * @param finish
      * @return 
      */    
-    public Set<Territory> getPathToTerritory(Territory start, Territory finish) {
+    public List<Territory> getPathToTerritory(Territory start, Territory finish) {      
         
-        Queue<Territory> queue = new LinkedList<Territory>();
-        Set<Territory> visited = new HashSet<Territory>();
-        Map<Territory, Territory> route = new LinkedHashMap<Territory, Territory>();
-        queue.add(start);
+        List<Territory> path = pathFinder.getPathToTerritory(start, finish);
         
-        while (queue.isEmpty() == false) {
-            
-            Territory current = queue.poll();
-            
-            if (current == finish) {
-                return extractPathFromMap(route, finish);
-            }
-            
-            visited.add(current);
-        
-            for (Territory border : getBorderingTerritories(current)) {
-                if (visited.contains(border)) {
-                    continue;
-                }
-                
-                queue.add(border);
-                route.put(border, current);
-            }
-        }
-        
-        throw new IllegalStateException("No path found");
-    }
-    
-    private Set<Territory> extractPathFromMap(final Map<Territory, Territory> route, final Territory finish) {
-        Set<Territory> path = new LinkedHashSet<Territory>();
-        
-        Territory current = finish;
-        path.add(current);
-        
-        while(true) {
-            current = route.get(current);
-            if (current == null) {
-                break;
-            }
-            path.add(current);
-        }
-        
-        System.out.println("found path....");
-        for (Territory visit : path) {
-            System.out.println("visited :" + visit);
-        }
+        //Log.d("board:getPathToTerritory", start.getName() + " -> " + finish.getName());
+        //for (Territory p : path) {
+        //    Log.d("board:getPathToTerritory", p.getName());
+        //}
         
         return path;
     }
@@ -216,7 +178,7 @@ public class Board {
             }
             
             if (found) {
-                Log.d("Board:getPieces", "Found " + piece);
+                //Log.d("Board:getPieces", "Found " + piece);
                 foundPieces.add(piece);
             }
         }
@@ -270,7 +232,7 @@ public class Board {
                 }
             }
             
-            Log.d("Board:getTerritories", "Found " + territory);
+            //Log.d("Board:getTerritories", "Found " + territory);
             foundTerritories .add(territory);
         }
         
@@ -309,8 +271,8 @@ public class Board {
         criteria.setTerritory(territory);
         criteria.setOwner(team);
         
-        List<Piece> pieces = getPieces(criteria);
-        if (pieces.size() < 3) {
+        List<Piece> minions = getPieces(criteria);
+        if (minions.size() < 3) {
             Minion minion = new Minion(team);
         
             addPiece(minion);
@@ -325,10 +287,10 @@ public class Board {
             }
             
             //and spread the minions (cause an overrun)
-            List<Territory> territories = getBorderingTerritories(territory);
-            for (Territory bordering : territories) {
+            List<Territory> bordering = getBorderingTerritories(territory);
+            for (Territory border : bordering) {
                 
-                addMinionToTerritory(bordering, team, false);
+                addMinionToTerritory(border, team, false);
             }
         }
     }
