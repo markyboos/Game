@@ -2,6 +2,7 @@
 package com.game.thrones.engine;
 
 import com.game.thrones.model.PieceCriteria;
+import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.TerritoryCriteria;
 import com.game.thrones.model.hero.Barbarian;
@@ -68,14 +69,23 @@ public class ActionCreator {
                 actions.add(new CleanseAction(hero));
             }
             
-            //this should be at the an inn
-            if (position.getName().equals(Territory.KINGS_LANDING)) {            
+            int listenedActions = 0;
+            
+            for (Action action : controller.getActionsTaken()) {
+                if (action instanceof RumorsAction) {
+                    listenedActions ++;
+                }                
+            }
+                        
+            if (listenedActions < 2 && position.getOwner() == Team.NO_ONE && 
+                    !position.getName().equals(Territory.KINGS_LANDING)) {            
                 actions.add(new RumorsAction(hero));
             }
-        }
-        
-        if (piece instanceof Ranger) {
-            actions.addAll(createRangedAttackActions((Hero)piece));
+            
+            //hero specific actions            
+            if (piece instanceof Ranger) {
+                actions.addAll(createRangedAttackActions(hero));
+            }
         }
         
         return actions;

@@ -75,9 +75,11 @@ public class AIController {
         final Territory centralTerritory = controller.getBoard().getCentralTerritory();
         
         for (Territory t : controller.getBoard().getTerritories()) {
-            if (t.equals(centralTerritory)) {
+            
+            if (t.equals(centralTerritory) || t.getOwner() == Team.NO_ONE) {
                 continue;
             }
+            
             Orders order = new Orders();
             order.addAction(new AddMinionAction(t, 2, t.getOwner()));
             orders.add(order);
@@ -109,6 +111,8 @@ public class AIController {
             }
         }
         
+        //orc patrols
+        
         TerritoryCriteria territoryCriteria = new TerritoryCriteria();
         territoryCriteria.setMinionCount(1);
         territoryCriteria.setMinionTeam(Team.ORCS);
@@ -120,6 +124,15 @@ public class AIController {
         territoryCriteria.setOwner(Team.ORCS);
         
         orders.add(createOrcPatrols(territoryCriteria));
+        
+        //assault on the centre
+        
+        orders.add(createAssaultAction(centralTerritory));
+        
+        //all quiet
+        for (int i = 0; i < 3; i ++) {
+            orders.add(allQuiet());
+        }
         
         Collections.shuffle(orders);
         
@@ -135,6 +148,19 @@ public class AIController {
         order.addAction(new OrcPatrolsAction(territoryCriteria));
         
         return order;        
+    }
+
+    private Orders createAssaultAction(Territory centre) {
+        Orders order = new Orders();
+                
+        order.addAction(new AddMinionAction(centre, 1, Team.ORCS));
+        order.addAction(new AddMinionAction(centre, 1, Team.DRAGONS));
+        
+        return order;
+    }
+    
+    private Orders allQuiet() {
+        return new Orders();
     }
 
 }

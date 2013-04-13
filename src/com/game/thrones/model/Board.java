@@ -318,6 +318,10 @@ public class Board {
             List<Territory> bordering = getBorderingTerritories(territory);
             for (Territory border : bordering) {
                 
+                if (border.getOwner() == Team.NO_ONE && !border.equals(getCentralTerritory())) {
+                    continue;
+                }
+                
                 addMinionToTerritory(border, team, false);
             }
         }

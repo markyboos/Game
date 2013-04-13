@@ -13,9 +13,9 @@ import com.game.thrones.model.PieceCriteria;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
-import com.game.thrones.model.hero.Item;
 import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.piece.Piece;
+import java.util.Collections;
 
 /**
  * Singleton of the board
@@ -83,7 +83,11 @@ public class GameController {
         return player;
     }
     
-    List<Item> items = new ArrayList<Item>();
+    private List<Action> actionsTaken = new ArrayList<Action>();    
+    
+    public List<Action> getActionsTaken() {
+        return Collections.unmodifiableList(actionsTaken);
+    }
     
     public void endTurn() {
                 
@@ -170,6 +174,8 @@ public class GameController {
         
         player = getNextPlayer();
         
+        actionsTaken.clear();
+        
         player.modifyActions();
     }
     
@@ -177,6 +183,8 @@ public class GameController {
         
         //take the turn for that hero
         action.execute();
+        
+        actionsTaken.add(action);
         
         player.useAction();
         

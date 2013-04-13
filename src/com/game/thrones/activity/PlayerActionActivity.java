@@ -107,10 +107,16 @@ public class PlayerActionActivity extends ListActivity {
     }
 
     private void chooseTeam(final RumorsAction action) {
-        String[] items = new String[Team.values().length];
+        String[] items = new String[Team.values().length - 1];
 
         for (int i = 0; i < Team.values().length; i++) {
-            items[i] = Team.values()[i].name();
+            final Team team = Team.values()[i];
+            
+            if (team == Team.NO_ONE) {
+                continue;
+            }
+            
+            items[i] = team.name();
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
