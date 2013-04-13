@@ -1,5 +1,6 @@
 package com.game.thrones.model;
 
+import android.util.Log;
 import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.piece.Piece;
 

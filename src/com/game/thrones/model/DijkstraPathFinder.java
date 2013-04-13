@@ -24,8 +24,17 @@ public class DijkstraPathFinder implements PathFinder {
     public DijkstraPathFinder(final Board board) {
         this.board = board;    
     }
+    
+    private void init() {
+        settledNodes.clear();
+        unSettledNodes.clear();
+        predecessors.clear();
+        distance.clear();        
+    }
 
     public List<Territory> getPathToTerritory(Territory start, Territory finish) {
+        
+        init();
         
         if (start.equals(finish)) {
             return Collections.emptyList();
@@ -107,7 +116,7 @@ public class DijkstraPathFinder implements PathFinder {
         }
         // Put it into the correct order
         Collections.reverse(path);
-        path.remove(0);
+        path.remove(0);        
         return path;
     }
 }
