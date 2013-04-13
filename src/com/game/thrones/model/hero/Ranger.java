@@ -16,13 +16,19 @@ public class Ranger extends Hero {
     @Override
     public int modifyAttack() {
         
-        if (super.getPosition().getOwner() == Team.ORCS) {
+        if (getPosition().getOwner() == Team.ORCS) {
             return 1;
         }
         
         return 0;
     }
     
-    
+    @Override
+    public void modifyActions() {
+        
+        if (getPosition().getOwner() == Team.ORCS) {
+            actionsAvailable += 1;       
+        }        
+    }
 
 }

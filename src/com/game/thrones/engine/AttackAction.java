@@ -3,7 +3,6 @@ package com.game.thrones.engine;
 
 import com.game.thrones.model.PieceCriteria;
 import com.game.thrones.model.Territory;
-import com.game.thrones.model.hero.Barbarian;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.piece.Piece;
@@ -49,28 +48,10 @@ public class AttackAction extends AbstractAction<Hero> {
             }
         }
         
-        if (killed >= 2 && piece instanceof Barbarian) {
-            //remove 1 piece from all surrounding territories
-            
-            List<Territory> bordering = GameController.getInstance().getBoard()
-                    .getBorderingTerritories(attackingTerritory);
-            
-            for (Territory border : bordering) {
-                criteria = new PieceCriteria();
-                criteria.setClass(Minion.class);
-                criteria.setTerritory(border);
-                
-                List<Piece> pieces = GameController.getInstance().getBoard().getPieces(criteria);
-                
-                if (pieces.isEmpty()) {
-                    continue;
-                }
-                
-                GameController.getInstance().getBoard().removePiece(pieces.get(0));
-            }
-            
-        }
+        execute(killed);
     }
+    
+    protected void execute(int killed) {}
     
     protected int modifyAttack() {
         return piece.modifyAttack();

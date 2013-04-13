@@ -10,7 +10,6 @@ import java.util.List;
 
 import com.game.thrones.model.Board;
 import com.game.thrones.model.PieceCriteria;
-import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
@@ -160,6 +159,8 @@ public class GameController {
         //next player
         
         player = getNextPlayer();
+        
+        player.modifyActions();
     }
     
     public boolean takeMove(final Action action) {

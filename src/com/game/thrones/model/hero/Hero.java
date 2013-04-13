@@ -18,7 +18,7 @@ public class Hero extends Piece {
     
     private int health = maxHealth;
     
-    private int actionsAvailable = health;
+    protected int actionsAvailable = health;
     
     private List<Item> inventory = new ArrayList<Item>();
     
@@ -75,6 +75,11 @@ public class Hero extends Piece {
     public void damage() {
         health -= 1;
     }
+    
+    /**
+     * Override this method to modify actions at the begging of the turn.
+     */    
+    public void modifyActions() {}
     
     /**
      * Override this method for attack modifications.

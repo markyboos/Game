@@ -4,6 +4,7 @@ package com.game.thrones.engine;
 import com.game.thrones.model.PieceCriteria;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.TerritoryCriteria;
+import com.game.thrones.model.hero.Barbarian;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
@@ -45,7 +46,12 @@ public class ActionCreator {
             Hero hero = (Hero)piece;
             
             if (minionsAtHero) {
-                actions.add(new AttackAction(hero));
+                if (piece instanceof Barbarian) {
+                    actions.add(new BarbarianAttackAction(hero));
+                    
+                } else {
+                    actions.add(new AttackAction(hero));
+                }
             }
             
             if (generalAtHero) {

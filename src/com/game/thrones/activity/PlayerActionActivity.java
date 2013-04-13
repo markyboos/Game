@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import com.game.thrones.engine.Action;
 import com.game.thrones.engine.ActionCreator;
 import com.game.thrones.engine.AttackGeneralAction;
+import com.game.thrones.engine.BarbarianAttackAction;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.engine.RumorsAction;
 import com.game.thrones.model.Team;
@@ -72,17 +74,22 @@ public class PlayerActionActivity extends ListActivity {
         Action selected = (Action) l.getItemAtPosition(position);
 
         if (selected instanceof AttackGeneralAction) {
-            AttackGeneralAction action = (AttackGeneralAction) selected;
-
+            
             //make a choice about the items to use
-            chooseItems(action);
+            chooseItems((AttackGeneralAction) selected);
+            
+            return;            
+        }
+        
+        if (selected instanceof BarbarianAttackAction) {
+            
+            chooseExtraActions((BarbarianAttackAction)selected);
             
             return;            
         }
         if (selected instanceof RumorsAction) {
-            RumorsAction action = (RumorsAction) selected;
 
-            chooseTeam(action);
+            chooseTeam((RumorsAction) selected);
             
             return;
         }
@@ -117,6 +124,32 @@ public class PlayerActionActivity extends ListActivity {
         });
 
         builder.show();
+    }
+    
+    private void chooseExtraActions(final BarbarianAttackAction action) {
+        
+        final EditText input = new EditText(this);
+
+        new AlertDialog.Builder(this)
+        .setTitle("Choose extra actions to attack with")
+        .setView(input)
+        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {                
+                int extraAttacks;
+                
+                try {
+                    extraAttacks = Integer.parseInt(input.getText().toString());
+                } catch (NumberFormatException ex) {
+                    return;
+                }
+                
+                action.setExtraAttacks(Math.min(extraAttacks, action.getPiece().getActionsAvailable() - 1));
+                
+                takeMove(action);
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {}
+        }).show();
     }
     
     private void chooseItems(final AttackGeneralAction action) {
