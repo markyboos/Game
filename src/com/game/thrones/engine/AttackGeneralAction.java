@@ -62,14 +62,14 @@ public class AttackGeneralAction extends AbstractAction<Hero> {
             }
         }
         
+        Board board = GameController.getInstance().getBoard();
+        
         if (target.isDead()) {
-            
-            Board board = GameController.getInstance().getBoard();
             
             board.removePiece(target);
             
             //make the hero brilliant
-                        
+            piece.addItem(new Item(target.getTeam()));
             
             //victory condition check           
             PieceCriteria criteria = new PieceCriteria();
@@ -81,6 +81,8 @@ public class AttackGeneralAction extends AbstractAction<Hero> {
             
         } else {
             //take off life or something
+            
+            piece.setPosition(board.getCentralTerritory()); 
             
         }
     }

@@ -38,6 +38,20 @@ public class Hero extends Piece {
         return Collections.unmodifiableList(inventory);
     }
     
+    public void clearInventory() {
+        inventory.clear();
+    }
+    
+    public boolean isSlayer(final Team team) {
+        for (Item item : inventory) {
+            if (item.getItemType() == Item.ItemType.SLAYER && item.getTeam() == team) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     public List<Item> getItemsForTeam(final Team team) {
         List<Item> items = new ArrayList<Item>();
         for (Item item : inventory) {
@@ -74,6 +88,17 @@ public class Hero extends Piece {
 
     public void damage() {
         health -= 1;
+        if (health < 0) {
+            health = 0;
+        }
+    }
+    
+    public boolean isAtMaxHealth() {
+        return health == maxHealth;
+    }
+    
+    public boolean isDead() {
+        return health == 0;
     }
     
     /**

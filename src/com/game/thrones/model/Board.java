@@ -1,9 +1,7 @@
 package com.game.thrones.model;
 
-import android.util.Log;
 import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.piece.Piece;
-import java.lang.annotation.Target;
 
 import java.util.*;
 
@@ -251,7 +249,7 @@ public class Board {
             if (criteria.getMinionTeam() != null) {
                        
                 for (Piece piece : piecesAtTerritory) {
-                    if (piece instanceof Minion && piece.getTeam() != criteria.getMinionTeam()) {
+                    if (piece.getTeam() != criteria.getMinionTeam()) {
                         continue;
                     }
                 }

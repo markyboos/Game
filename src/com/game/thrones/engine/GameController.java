@@ -104,6 +104,17 @@ public class GameController {
             player.damage();
         }
         
+        Territory centralTerritory = board.getCentralTerritory();
+        
+        if (player.isDead()) {
+            //put them back on kings landing
+            player.clearInventory();
+            
+            player.setPosition(centralTerritory);
+            
+            player.heal();
+        }
+        
         //take evil players turn
         aiController.takeTurn();
         
@@ -113,7 +124,6 @@ public class GameController {
         //there are too many minions on the map
         //the centre has taint
         //or the taint has spread too far then its game over
-        Territory centralTerritory = board.getCentralTerritory();
         
         if (centralTerritory.getTainted() > 0) {
             gameFinishedListener.fireGameFinishedEvent(new GameFinishedEvent(GameFinished.CENTRE_TAINTED));
@@ -125,7 +135,7 @@ public class GameController {
             tainted += territory.getTainted();
         }
         
-        if (tainted > 10) {
+        if (tainted > 11) {
             gameFinishedListener.fireGameFinishedEvent(new GameFinishedEvent(GameFinished.TOO_MUCH_TAINTED_LAND));
         }
         

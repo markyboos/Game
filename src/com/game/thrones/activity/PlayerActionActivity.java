@@ -129,6 +129,7 @@ public class PlayerActionActivity extends ListActivity {
     private void chooseExtraActions(final BarbarianAttackAction action) {
         
         final EditText input = new EditText(this);
+        input.setText("0");
 
         new AlertDialog.Builder(this)
         .setTitle("Choose extra actions to attack with")

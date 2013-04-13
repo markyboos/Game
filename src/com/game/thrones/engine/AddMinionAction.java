@@ -5,7 +5,6 @@ import com.game.thrones.activity.CameraChangeEvent;
 import com.game.thrones.model.Board;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
-import com.game.thrones.model.piece.Piece;
 
 /**
  *

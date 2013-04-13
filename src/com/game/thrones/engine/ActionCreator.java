@@ -60,7 +60,7 @@ public class ActionCreator {
             
             Territory position = piece.getPosition();
             
-            if (!minionsAtHero && !generalAtHero) {
+            if (!minionsAtHero && !generalAtHero && !hero.isAtMaxHealth()) {
                 actions.add(new HealAction(hero));
             }
             

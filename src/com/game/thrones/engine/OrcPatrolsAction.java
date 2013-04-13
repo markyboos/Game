@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author James
  */
-class OrcPatrolsAction implements Action {
+public class OrcPatrolsAction implements Action {
     
     private TerritoryCriteria criteria;
 

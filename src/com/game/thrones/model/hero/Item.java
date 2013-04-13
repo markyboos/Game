@@ -9,12 +9,24 @@ import com.game.thrones.model.Team;
  */
 public class Item implements CharSequence{
     
+    public enum ItemType {CARD, SLAYER}
+    
+    private final ItemType type;
+    
     private final int power;
     
     private final Team team;
     
     public Item(int power, Team team) {
         this.power = power;
+        this.team = team;
+        type = ItemType.CARD;
+    }
+    
+    public Item(Team team) {
+        power = 0;
+        
+        type = ItemType.SLAYER;
         this.team = team;
     }
 
@@ -24,6 +36,10 @@ public class Item implements CharSequence{
     
     public Team getTeam() {
         return team;
+    }
+    
+    public ItemType getItemType() {
+        return type;
     }
 
     public int length() {
