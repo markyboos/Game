@@ -2,17 +2,18 @@
 package com.game.thrones.engine;
 
 import com.game.thrones.model.Territory;
+import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.piece.Piece;
 
 /**
  *
  * @author James
  */
-public class CleanseAction extends AbstractAction {
+public class CleanseAction extends AbstractAction<Hero> {
     
     final Territory position;
     
-    public CleanseAction(final Piece piece) {
+    public CleanseAction(final Hero piece) {
         super(piece);
         
         position = piece.getPosition();

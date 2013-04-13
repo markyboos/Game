@@ -76,6 +76,14 @@ public class Hero extends Piece {
         health -= 1;
     }
     
+    /**
+     * Override this method for attack modifications.
+     * @return 
+     */    
+    public int modifyAttack() {
+        return 0;
+    }
+    
     @Override
     public String toString() {
         return name + " [" + health + "/" + maxHealth + "]";

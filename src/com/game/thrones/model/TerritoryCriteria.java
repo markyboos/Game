@@ -7,11 +7,17 @@ package com.game.thrones.model;
  */
 public class TerritoryCriteria {
     
+    public enum Operator {LESS_THAN, MORE_THAN, EQUAL};
+    
     private Integer minions;
     
     private Team minionTeam;
     
     private Team owner;
+    
+    private Territory bordering;
+    
+    private Operator minionCountOperator = Operator.EQUAL;
 
     /**
      * @return the minions
@@ -25,6 +31,14 @@ public class TerritoryCriteria {
      */
     public void setMinionCount(int minions) {
         this.minions = minions;
+    }
+    
+    public Operator getMinionCountOperator() {
+        return minionCountOperator;
+    }
+    
+    public void setMinionCountOperator(Operator operator) {
+        minionCountOperator = operator;
     }
 
     /**
@@ -49,4 +63,14 @@ public class TerritoryCriteria {
         return owner;
     }
 
+    public Territory getBordering() {
+        return bordering;
+    }
+
+    /**
+     * @param bordering the bordering to set
+     */
+    public void setBordering(Territory bordering) {
+        this.bordering = bordering;
+    }
 }

@@ -3,9 +3,11 @@ package com.game.thrones.engine;
 
 import com.game.thrones.model.PieceCriteria;
 import com.game.thrones.model.Territory;
+import com.game.thrones.model.TerritoryCriteria;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
+import com.game.thrones.model.hero.Ranger;
 import com.game.thrones.model.piece.Piece;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,28 +42,34 @@ public class ActionCreator {
         
         if (piece instanceof Hero) {
             
+            Hero hero = (Hero)piece;
+            
             if (minionsAtHero) {
-                actions.add(new AttackAction(piece));
+                actions.add(new AttackAction(hero));
             }
             
             if (generalAtHero) {
-                actions.add(new AttackGeneralAction(piece, (General)pieces.get(0)));
+                actions.add(new AttackGeneralAction(hero, (General)pieces.get(0)));
             }
             
             Territory position = piece.getPosition();
             
             if (!minionsAtHero && !generalAtHero) {
-                actions.add(new HealAction(piece));
+                actions.add(new HealAction(hero));
             }
             
             if (position.getTainted() > 0) {
-                actions.add(new CleanseAction(piece));
+                actions.add(new CleanseAction(hero));
             }
             
             //this should be at the an inn
             if (position.getName().equals(Territory.KINGS_LANDING)) {            
-                actions.add(new RumorsAction(piece));
+                actions.add(new RumorsAction(hero));
             }
+        }
+        
+        if (piece instanceof Ranger) {
+            actions.addAll(createRangedAttackActions((Hero)piece));
         }
         
         return actions;
@@ -77,6 +85,24 @@ public class ActionCreator {
         
         for (Territory territory : territories) {
             actions.add(new MoveAction(piece, territory));
+        }
+        
+        return actions;
+    }
+
+    private List<Action> createRangedAttackActions(final Hero piece) {
+        
+        List<Action> actions = new ArrayList<Action>();
+        
+        TerritoryCriteria criteria = new TerritoryCriteria();
+        criteria.setBordering(piece.getPosition());
+        criteria.setMinionCountOperator(TerritoryCriteria.Operator.MORE_THAN);
+        criteria.setMinionCount(0);
+        
+        List<Territory> territories = controller.getBoard().getTerritories(criteria);
+        
+        for (Territory territory : territories) {
+            actions.add(new RangedAttackAction(piece, territory));
         }
         
         return actions;

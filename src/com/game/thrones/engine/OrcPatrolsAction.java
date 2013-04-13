@@ -4,7 +4,6 @@ package com.game.thrones.engine;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.TerritoryCriteria;
-import com.game.thrones.model.piece.Piece;
 import java.util.List;
 
 /**
@@ -28,10 +27,6 @@ class OrcPatrolsAction implements Action {
             GameController.getInstance().
                 getBoard().addMinionToTerritory(territory, Team.ORCS, true);
         }
-    }
-
-    public Piece getPiece() {
-        return null;
     }
 
 }

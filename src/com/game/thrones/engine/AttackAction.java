@@ -13,15 +13,14 @@ import java.util.List;
  *
  * @author James
  */
-class AttackAction extends AbstractAction {
+public class AttackAction extends AbstractAction<Hero> {
     
+    protected Territory attackingTerritory;
 
-    public AttackAction(final Piece piece) {
+    public AttackAction(final Hero piece) {
         super(piece);
         
-        if (!(piece instanceof Hero)) {
-            throw new IllegalArgumentException("Needs to be a knight piece");                            
-        }
+        attackingTerritory = piece.getPosition();
     }
     
     private Dice dice = new Dice();
@@ -29,19 +28,19 @@ class AttackAction extends AbstractAction {
     public void execute() {
         
         PieceCriteria criteria = new PieceCriteria<Minion>();
-        criteria.setTerritory(piece.getPosition());
+        criteria.setTerritory(attackingTerritory);
         criteria.setClass(Minion.class);
         
         List<Piece> minions = GameController.getInstance().getBoard().getPieces(criteria);
         
         int killed = 0;
         
-        for (Piece piece : minions) {
+        for (Piece minionPiece : minions) {
             
-            Minion minion = (Minion) piece;
+            Minion minion = (Minion) minionPiece;
             
             //roll the dice
-            int roll = dice.roll();
+            int roll = dice.roll() + modifyAttack();
             
             if (roll > minion.getRollToDamage()) {
                 //remove the minion
@@ -50,16 +49,16 @@ class AttackAction extends AbstractAction {
             }
         }
         
-        if (killed >= 2 && (Hero)piece instanceof Barbarian) {
+        if (killed >= 2 && piece instanceof Barbarian) {
             //remove 1 piece from all surrounding territories
             
             List<Territory> bordering = GameController.getInstance().getBoard()
-                    .getBorderingTerritories(piece.getPosition());
+                    .getBorderingTerritories(attackingTerritory);
             
-            for (Territory territory : bordering) {
+            for (Territory border : bordering) {
                 criteria = new PieceCriteria();
                 criteria.setClass(Minion.class);
-                criteria.setTerritory(territory);
+                criteria.setTerritory(border);
                 
                 List<Piece> pieces = GameController.getInstance().getBoard().getPieces(criteria);
                 
@@ -71,6 +70,10 @@ class AttackAction extends AbstractAction {
             }
             
         }
+    }
+    
+    protected int modifyAttack() {
+        return piece.modifyAttack();
     }
     
     @Override

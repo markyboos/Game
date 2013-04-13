@@ -39,12 +39,4 @@ public class AddMinionAction implements Action {
             board.addMinionToTerritory(territory, team, true);
         }
     }
-
-    public Piece getPiece() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public Integer executionStep() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

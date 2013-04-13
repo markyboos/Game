@@ -4,11 +4,9 @@ package com.game.thrones.engine;
 import com.game.thrones.activity.GameFinishedEvent;
 import com.game.thrones.model.Board;
 import com.game.thrones.model.PieceCriteria;
-import com.game.thrones.model.Team;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Item;
-import com.game.thrones.model.piece.Piece;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,13 +14,13 @@ import java.util.List;
  *
  * @author James
  */
-public class AttackGeneralAction extends AbstractAction {
+public class AttackGeneralAction extends AbstractAction<Hero> {
     
     private List<Item> itemsToUse;
     private General target;
     private Dice dice = new Dice();
     
-    public AttackGeneralAction(final Piece hero, final General target) {
+    public AttackGeneralAction(final Hero hero, final General target) {
         super(hero);
         
         this.target = target;        
@@ -52,16 +50,14 @@ public class AttackGeneralAction extends AbstractAction {
             attacks += item.getPower();                        
         }
         
-        Hero hero = (Hero)piece;
-        
         List<Item> items = new ArrayList<Item>(itemsToUse);
         
         for (Item item : items) {
-            hero.useItem(item);
+            piece.useItem(item);
         }
         
         for (int i = 0; i < attacks; i++) {
-            if (dice.roll() > target.getRollToDamage()) {
+            if (dice.roll() + piece.modifyAttack() > target.getRollToDamage()) {
                 target.damage();
             }
         }

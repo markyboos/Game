@@ -209,14 +209,39 @@ public class Board {
     
     public List<Territory> getTerritories(TerritoryCriteria criteria) {
         
-        List<Territory> foundTerritories = new ArrayList<Territory>();
+        List<Territory> foundTerritories = new ArrayList<Territory>();        
         
         for (Territory territory : territories) {
             
-            Set<Piece> piecesAtTerritory = getPieces(territory);
+            PieceCriteria pieceCriteria = new PieceCriteria();
+            pieceCriteria.setClass(Minion.class);
+            pieceCriteria.setTerritory(territory);
+            
+            List<Piece> piecesAtTerritory = getPieces(pieceCriteria);
                         
-            if (criteria.getMinionCount() != null && piecesAtTerritory.size() != criteria.getMinionCount()) {
-                continue;
+            if (criteria.getMinionCount() != null) {                
+                int actual = piecesAtTerritory.size();
+                int shouldBe = criteria.getMinionCount();
+                
+                //Log.d("Board:getTerritories", territory.getName() + " " + actual + " " + criteria.getMinionCountOperator() + " " + shouldBe);
+                switch (criteria.getMinionCountOperator()) {
+                    case LESS_THAN:
+                        if (shouldBe <= actual) {
+                            continue;
+                        }
+                        break;
+                    case MORE_THAN:
+                        //Log.d("Board:getTerritories", "checking more than");
+                        if (shouldBe >= actual) {
+                            continue;
+                        }
+                        break;
+                    case EQUAL:
+                        if (actual != shouldBe) {
+                            continue;
+                        }
+                        break;
+                }
             }
             
             if (criteria.getOwner() != null && territory.getOwner() != criteria.getOwner()) {
@@ -230,6 +255,11 @@ public class Board {
                         continue;
                     }
                 }
+            }
+            
+            if (criteria.getBordering() != null && 
+                    !getBorderingTerritories(territory).contains(criteria.getBordering())) {
+                continue;                                                
             }
             
             //Log.d("Board:getTerritories", "Found " + territory);

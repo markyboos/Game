@@ -4,17 +4,16 @@ package com.game.thrones.engine;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Item;
-import com.game.thrones.model.piece.Piece;
 
 /**
  *
  * @author James
  */
-public class RumorsAction extends AbstractAction {
+public class RumorsAction extends AbstractAction<Hero> {
     
     private Team team;
     
-    public RumorsAction(final Piece piece) {
+    public RumorsAction(final Hero piece) {
         super(piece);
     }
     
@@ -22,12 +21,11 @@ public class RumorsAction extends AbstractAction {
         this.team = team;        
     }    
 
-    public void execute() {        
-        Hero hero = (Hero)piece;
+    public void execute() {
         
         //checks the 2 top items in the deck
-        listen(hero);
-        listen(hero);        
+        listen(piece);
+        listen(piece);        
     }
     
     @Override

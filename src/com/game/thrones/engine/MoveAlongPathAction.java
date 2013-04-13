@@ -3,11 +3,7 @@ package com.game.thrones.engine;
 
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.piece.Piece;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
  *

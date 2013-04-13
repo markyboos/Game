@@ -7,7 +7,7 @@ import com.game.thrones.model.piece.Piece;
  *
  * @author James
  */
-public abstract class AbstractAction implements Action {
+public abstract class AbstractAction<P extends Piece> implements PieceAction<P> {
     
     public static final int DO_NOTHING_ACTION = 0;
     public static final int ASSASSINATE_ACTION = DO_NOTHING_ACTION + 1;
@@ -18,14 +18,14 @@ public abstract class AbstractAction implements Action {
     public static final int DISBAND_ACTION = PERSUADE_ACTION + 1;
     public static final int RECRUIT_ACTION = DISBAND_ACTION + 1;
     
-    protected Piece piece;
+    protected P piece;
     
 
-    public AbstractAction(Piece piece) {
+    public AbstractAction(P piece) {
         this.piece = piece;
     }
 
-    public Piece getPiece() {
+    public P getPiece() {
         return piece;
     }
     
