@@ -2,6 +2,7 @@
 package com.game.thrones.engine;
 
 import com.game.thrones.model.Territory;
+import com.game.thrones.model.hero.Fatty;
 import com.game.thrones.model.piece.Piece;
 import java.util.List;
 
@@ -24,7 +25,11 @@ public class MoveAlongPathAction extends AbstractAction {
         
         if (finish == piece.getPosition()) {
             return;
-        }        
+        }
+        
+        if (piece instanceof Fatty && ((Fatty)piece).isHeavilyWounded()) {
+            return;            
+        }
         
         final GameController instance = GameController.getInstance();
         

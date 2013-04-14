@@ -5,6 +5,7 @@ import com.game.thrones.activity.CameraChangeEvent;
 import com.game.thrones.model.Board;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
+import com.game.thrones.model.hero.Fatty;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Sorceress;
 import com.game.thrones.model.piece.Piece;
@@ -38,7 +39,12 @@ public class MoveAction extends AbstractAction {
             if (!board.getPathToTerritory(piece.getPosition(), 
                     board.getCentralTerritory()).contains(territory)) {
                 return;
-            }                            
+            }
+            
+            //dont move if they are heavily wounded
+            if (piece instanceof Fatty && ((Fatty)piece).isHeavilyWounded()) {
+                return;            
+            }
         }
         
         if (piece instanceof Sorceress) {

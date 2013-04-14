@@ -11,6 +11,7 @@ import java.util.List;
 import com.game.thrones.model.Board;
 import com.game.thrones.model.PieceCriteria;
 import com.game.thrones.model.Territory;
+import com.game.thrones.model.hero.Fatty;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
@@ -164,6 +165,13 @@ public class GameController {
         
         for (Piece piece : board.getPieces(criteria)) {
             General general = (General)piece;
+            if (general instanceof Fatty) {
+                Fatty fatty = (Fatty)general;
+                //wait a round of players before healing
+                if (fatty.isHeavilyWounded() && fatty.getAttackedBy() != player) {
+                    continue;
+                }
+            }
             general.heal();            
         }
         

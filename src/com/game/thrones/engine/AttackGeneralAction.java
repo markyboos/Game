@@ -4,6 +4,7 @@ package com.game.thrones.engine;
 import com.game.thrones.activity.GameFinishedEvent;
 import com.game.thrones.model.Board;
 import com.game.thrones.model.PieceCriteria;
+import com.game.thrones.model.hero.Fatty;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Item;
@@ -84,6 +85,9 @@ public class AttackGeneralAction extends AbstractAction<Hero> {
             
             piece.setPosition(board.getCentralTerritory()); 
             
+            if (target instanceof Fatty) {
+                ((Fatty)target).setAttackedBy(piece);
+            }            
         }
     }
     
