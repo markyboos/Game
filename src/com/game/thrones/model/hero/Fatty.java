@@ -32,4 +32,12 @@ public class Fatty extends General {
     public Hero getAttackedBy() {
         return attackedBy;        
     }
+
+    @Override
+    public void inflictPenalty(final Hero hero) {
+        hero.takeDamage(2);
+        
+        //todo take away 2 cards
+        hero.setCardsToRemove(hero.getCardsToRemove() + 2);
+    }
 }

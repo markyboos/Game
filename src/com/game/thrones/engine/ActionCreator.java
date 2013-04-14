@@ -116,6 +116,11 @@ public class ActionCreator {
         List<Action> actions = new ArrayList<Action>();
         
         for (Territory territory : territories) {
+            if (piece instanceof Sorceress) {
+                if (territory.getOwner() == Team.NO_ONE && ((Sorceress)piece).getShape() != Team.NO_ONE) {
+                    continue;
+                }
+            }
             actions.add(new MoveAction(piece, territory));
         }
         

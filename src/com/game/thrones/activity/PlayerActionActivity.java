@@ -235,8 +235,60 @@ public class PlayerActionActivity extends ListActivity {
         builder.show();
     }
     
+    private void chooseItemsToRemove(final int total) {
+        
+        final List<Item> options = hero.getInventory();
+        
+        final int toRemove = Math.min(total, options.size());
+        
+        final List<Item> selectedItems = new ArrayList<Item>();
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose which items to discard");
+        builder.setMultiChoiceItems(options.toArray(new Item[options.size()]), null,
+                   new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which,
+                    boolean isChecked) {
+
+                Item selected = options.get(which);
+                if (isChecked) {
+                    selectedItems.add(selected);
+                } else if (selectedItems.contains(selected)) {
+                    selectedItems.remove(selected);
+                }
+            }
+        })
+        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                if (selectedItems.size() != toRemove) {
+                    //todo keep trying
+                    return;
+                }
+                
+                for (Item item : selectedItems) {
+                    hero.useItem(item);
+                }
+                
+                PlayerActionActivity.this.finish();
+            }
+        });
+        builder.show();
+        
+    }
+    
     private void takeMove(final Action action) {
         controller.takeMove(action);
+            
+        if (hero.getCardsToRemove() > 0) {
+            
+            chooseItemsToRemove(hero.getCardsToRemove());
+            
+            hero.setCardsToRemove(0);
+            return;
+        } 
+        
         this.finish();
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author James
  */
-public class Hero extends Piece {
+public abstract class Hero extends Piece {
     
     protected int maxHealth = 5;
     
@@ -21,6 +21,8 @@ public class Hero extends Piece {
     protected int actionsAvailable = health;
     
     private List<Item> inventory = new ArrayList<Item>();
+    
+    private int cardsToRemove;
     
     public Hero(final String name) {
         this.name = name;
@@ -55,12 +57,25 @@ public class Hero extends Piece {
     public List<Item> getItemsForTeam(final Team team) {
         List<Item> items = new ArrayList<Item>();
         for (Item item : inventory) {
-            if (item.getTeam() == team) {
+            
+            if (item.getItemType() != Item.ItemType.CARD) {
+                continue;                
+            }
+            
+            if (item.getTeam() == team || item.getTeam() == Team.NO_ONE) {
                 items.add(item);
             }
         }
         
         return Collections.unmodifiableList(items);        
+    }
+    
+    public void setCardsToRemove(int cardsToRemove) {
+        this.cardsToRemove = cardsToRemove;        
+    }
+    
+    public int getCardsToRemove() {
+        return cardsToRemove;
     }
 
     public void useAction() {
@@ -87,11 +102,31 @@ public class Hero extends Piece {
     }
 
     /**
-     * Take damage from a minion.
+     * Take damage from minions.
      * @param minion the minion you are taking damage from
      */
-    public void takeDamage(Minion minion) {
-        health -= 1;
+    public void takeDamage(final List<Minion> minions) {
+        
+        int damage = 0;
+        
+        for (Minion minion : minions) {
+            damage += takeDamage(minion);            
+        }
+        
+        takeDamage(damage);
+    }
+    
+    protected int takeDamage(Minion minion) {
+        return 1;
+    }
+    
+    public void takeDamage(int damage) {
+        
+        if (damage <= 0) {
+            return;
+        }
+        
+        health -= damage;
         if (health < 0) {
             health = 0;
         }

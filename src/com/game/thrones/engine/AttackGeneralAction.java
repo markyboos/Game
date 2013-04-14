@@ -70,7 +70,13 @@ public class AttackGeneralAction extends AbstractAction<Hero> {
             board.removePiece(target);
             
             //make the hero brilliant
+            //slayer
             piece.addItem(new Item(target.getTeam()));
+            
+            //add 3 hero cards
+            for (int i = 0 ; i < 3; i ++) {
+                piece.addItem(GameController.getInstance().getItemController().getTopItem());
+            }
             
             //victory condition check           
             PieceCriteria criteria = new PieceCriteria();
@@ -81,7 +87,7 @@ public class AttackGeneralAction extends AbstractAction<Hero> {
             }
             
         } else {
-            //take off life or something
+            target.inflictPenalty(piece);
             
             piece.setPosition(board.getCentralTerritory()); 
             

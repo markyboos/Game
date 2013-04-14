@@ -7,7 +7,7 @@ import com.game.thrones.model.piece.Piece;
  *
  * @author James
  */
-public class General extends Piece {
+public abstract class General extends Piece {
     
     public static final String FATTY = "FATTY";
     public static final String DRAGON = "DRAGON";
@@ -40,6 +40,8 @@ public class General extends Piece {
             health = maxHealth;
         }
     }
+    
+    public abstract void inflictPenalty(final Hero piece);
     
     @Override
     public String toString() {

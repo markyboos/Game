@@ -62,12 +62,13 @@ public class Sorceress extends Hero {
     }
     
     @Override
-    public void takeDamage(Minion minion) {
-        if (minion.getTeam() == shape) {
-            return;
-        }
+    public int takeDamage(final Minion minion) {
         
-        super.takeDamage(minion);
+        if (minion.getTeam() == shape) {
+            return 0;
+        }
+
+        return 1;            
     }
     
     @Override

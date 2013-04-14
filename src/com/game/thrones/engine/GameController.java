@@ -101,13 +101,17 @@ public class GameController {
         criteria.setClass(Minion.class);
         criteria.setTerritory(player.getPosition());
         
-        List<Piece> minionsAtHero = board.getPieces(criteria);
+        List<Piece> piecesAtHero = board.getPieces(criteria);
         
-        for(Piece pminion : minionsAtHero) {
-            Minion minion = (Minion)pminion;
-            //todo depending on the minion the player can take more damage
-            player.takeDamage(minion);
+        //todo crappy work around
+        
+        List<Minion> minionsAtHero = new ArrayList<Minion>();
+        
+        for (Piece piece : piecesAtHero) {
+            minionsAtHero.add((Minion)piece);
         }
+                
+        player.takeDamage(minionsAtHero);
         
         Territory centralTerritory = board.getCentralTerritory();
         
