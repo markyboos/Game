@@ -1,6 +1,7 @@
 
 package com.game.thrones.engine;
 
+import android.util.Log;
 import java.util.Random;
 
 /**
@@ -14,6 +15,15 @@ public class Dice {
     public int roll() {
         
         return random.nextInt(6) + 1;
+    }
+    
+    public boolean roll(int amount) {
+        
+        final int rolled = roll();
+        
+        Log.d("Dice", "Require [" + amount + "], rolled [" + rolled + "]");
+        
+        return rolled >= amount;
     }
 
 }

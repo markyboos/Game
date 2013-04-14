@@ -4,7 +4,6 @@ package com.game.thrones.model;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -64,11 +63,6 @@ public class SimplePathFinder implements PathFinder {
                 break;
             }
             path.add(current);
-        }
-        
-        System.out.println("found path....");
-        for (Territory visit : path) {
-            System.out.println("visited :" + visit);
         }
         
         return path;

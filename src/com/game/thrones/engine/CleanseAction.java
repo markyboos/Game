@@ -3,7 +3,8 @@ package com.game.thrones.engine;
 
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.hero.Hero;
-import com.game.thrones.model.piece.Piece;
+import com.game.thrones.model.hero.Item;
+import com.game.thrones.model.hero.Sorceress;
 
 /**
  *
@@ -11,7 +12,8 @@ import com.game.thrones.model.piece.Piece;
  */
 public class CleanseAction extends AbstractAction<Hero> {
     
-    final Territory position;
+    private final Territory position;
+    private Item itemToUse;
     
     public CleanseAction(final Hero piece) {
         super(piece);
@@ -20,12 +22,23 @@ public class CleanseAction extends AbstractAction<Hero> {
     }
     
     Dice dice = new Dice();
+    
+    public void setItemToUse(Item item) {
+        itemToUse = item;        
+    }
 
     public void execute() {
         
         //use a card
+        piece.useItem(itemToUse);
         
-        if (dice.roll() > 5 || dice.roll() > 5) {
+        int toRoll = 5;
+        
+        if (piece instanceof Sorceress) {
+            toRoll = 4;
+        }
+        
+        if (dice.roll(toRoll) || dice.roll(toRoll)) {
             position.removeTaint();                        
         }
     }

@@ -40,7 +40,7 @@ public class AttackAction extends AbstractAction<Hero> {
             //roll the dice
             
             if (piece.isSlayer(minion.getTeam()) || 
-                    getRoll() > minion.getRollToDamage()) {
+                    getRoll(minion) >= minion.getRollToDamage()) {
                 //remove the minion
                 GameController.getInstance().getBoard().removePiece(minion);
                 killed ++;
@@ -48,16 +48,18 @@ public class AttackAction extends AbstractAction<Hero> {
         }
         
         execute(killed);
+        
+        piece.finishAttack();
     }
     
-    private int getRoll() {
-        return dice.roll() + modifyAttack();
+    private int getRoll(Minion minion) {
+        return dice.roll() + modifyAttack(minion);
     }
     
     protected void execute(int killed) {}
     
-    protected int modifyAttack() {
-        return piece.modifyAttack();
+    protected int modifyAttack(Minion minion) {
+        return piece.modifyAttack(minion);
     }
     
     @Override

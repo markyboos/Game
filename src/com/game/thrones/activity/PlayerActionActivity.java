@@ -13,8 +13,11 @@ import com.game.thrones.engine.Action;
 import com.game.thrones.engine.ActionCreator;
 import com.game.thrones.engine.AttackGeneralAction;
 import com.game.thrones.engine.BarbarianAttackAction;
+import com.game.thrones.engine.CleanseAction;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.engine.RumorsAction;
+import com.game.thrones.engine.ShapeShiftAction;
+import com.game.thrones.engine.TeamSelectAction;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Item;
@@ -80,6 +83,12 @@ public class PlayerActionActivity extends ListActivity {
             
             return;            
         }
+        if (selected instanceof CleanseAction) {
+            
+            chooseItem((CleanseAction)selected);
+            
+            return;
+        }
         
         if (selected instanceof BarbarianAttackAction) {
             
@@ -89,7 +98,13 @@ public class PlayerActionActivity extends ListActivity {
         }
         if (selected instanceof RumorsAction) {
 
-            chooseTeam((RumorsAction) selected);
+            chooseTeam((TeamSelectAction)selected, false);
+            
+            return;
+        }
+        if (selected instanceof ShapeShiftAction) {
+
+            chooseTeam((TeamSelectAction)selected, true);
             
             return;
         }
@@ -106,13 +121,13 @@ public class PlayerActionActivity extends ListActivity {
         }
     }
 
-    private void chooseTeam(final RumorsAction action) {
-        String[] items = new String[Team.values().length - 1];
+    private void chooseTeam(final TeamSelectAction action, final boolean includeNoone) {
+        String[] items = new String[includeNoone ? Team.values().length : Team.values().length - 1];
 
         for (int i = 0; i < Team.values().length; i++) {
             final Team team = Team.values()[i];
             
-            if (team == Team.NO_ONE) {
+            if (team == Team.NO_ONE && !includeNoone) {
                 continue;
             }
             
@@ -159,6 +174,35 @@ public class PlayerActionActivity extends ListActivity {
         }).show();
     }
     
+    private Item selectedItem;
+    
+    private void chooseItem(final CleanseAction action) {
+        
+        final List<Item> options = hero.getItemsForTeam(hero.getPosition().getOwner());
+        
+        selectedItem = options.get(0);
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose which item to use");
+        builder.setSingleChoiceItems(options.toArray(new Item[options.size()]), 0,
+                   new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                PlayerActionActivity.this.selectedItem = options.get(which);
+            }
+        })
+        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                action.setItemToUse(PlayerActionActivity.this.selectedItem);
+                takeMove(action);
+            }
+        });
+
+        builder.show();
+    }
+    
     private void chooseItems(final AttackGeneralAction action) {
         
         final List<Item> options = hero.getItemsForTeam(action.getTarget().getTeam());        
@@ -188,7 +232,7 @@ public class PlayerActionActivity extends ListActivity {
             }
         });
 
-        builder.show();        
+        builder.show();
     }
     
     private void takeMove(final Action action) {

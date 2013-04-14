@@ -10,6 +10,7 @@ import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.hero.Ranger;
+import com.game.thrones.model.hero.Sorceress;
 import com.game.thrones.model.piece.Piece;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,19 +66,12 @@ public class ActionCreator {
                 actions.add(new HealAction(hero));
             }
             
-            if (position.getTainted() > 0) {
+            if (position.getTainted() > 0 
+                    && !hero.getItemsForTeam(hero.getPosition().getOwner()).isEmpty()) {
                 actions.add(new CleanseAction(hero));
             }
-            
-            int listenedActions = 0;
-            
-            for (Action action : controller.getActionsTaken()) {
-                if (action instanceof RumorsAction) {
-                    listenedActions ++;
-                }                
-            }
                         
-            if (listenedActions < 2 && position.getOwner() == Team.NO_ONE && 
+            if (actionsSoFar(RumorsAction.class) < 2 && position.getOwner() == Team.NO_ONE && 
                     !position.getName().equals(Territory.KINGS_LANDING)) {            
                 actions.add(new RumorsAction(hero));
             }
@@ -86,10 +80,32 @@ public class ActionCreator {
             if (piece instanceof Ranger) {
                 actions.addAll(createRangedAttackActions(hero));
             }
+            
+            if ((piece instanceof Sorceress) && isFirstAction() 
+                    && actionsSoFar(ShapeShiftAction.class) == 0) {
+                actions.add(new ShapeShiftAction((Sorceress)hero));
+            }
         }
         
         return actions;
         
+    }
+    
+    private boolean isFirstAction() {
+        return controller.getActionsTaken().isEmpty();
+    }
+    
+    private int actionsSoFar(Class clazz) {
+        
+        int actions = 0;
+            
+        for (Action action : controller.getActionsTaken()) {
+            if (clazz.isAssignableFrom(action.getClass())) {
+                actions ++;
+            }                
+        }
+        
+        return actions;
     }
     
     private List<Action> createMoveActions(final Piece piece) {

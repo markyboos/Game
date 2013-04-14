@@ -3,8 +3,10 @@ package com.game.thrones.engine;
 
 import com.game.thrones.activity.CameraChangeEvent;
 import com.game.thrones.model.Board;
+import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.hero.General;
+import com.game.thrones.model.hero.Sorceress;
 import com.game.thrones.model.piece.Piece;
 
 /**
@@ -37,6 +39,12 @@ public class MoveAction extends AbstractAction {
                     board.getCentralTerritory()).contains(territory)) {
                 return;
             }                            
+        }
+        
+        if (piece instanceof Sorceress) {
+            if (territory.getOwner() == Team.NO_ONE && ((Sorceress)piece).getShape() != Team.NO_ONE) {
+                throw new IllegalStateException("A sorceress cannot move to an inn or the central territory");
+            }
         }
         
         GameController.getInstance().fireCameraChangeEvent(new CameraChangeEvent(territory));

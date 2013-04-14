@@ -55,8 +55,8 @@ public class BarbarianAttackAction extends AttackAction {
     }
     
     @Override
-    protected int modifyAttack() {
-        return super.modifyAttack() + extraAttacks;        
+    protected int modifyAttack(Minion minion) {
+        return super.modifyAttack(minion) + extraAttacks;        
     }
     
     

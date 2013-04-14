@@ -14,13 +14,13 @@ public class Ranger extends Hero {
     }
     
     @Override
-    public int modifyAttack() {
-        
-        if (getPosition().getOwner() == Team.ORCS) {
-            return 1;
-        }
-        
-        return 0;
+    public int modifyAttack(Minion minion) {        
+        return modifyAttack();
+    }
+    
+    @Override
+    public int modifyAttack(General general) {
+        return modifyAttack();
     }
     
     @Override
@@ -29,6 +29,10 @@ public class Ranger extends Hero {
         if (getPosition().getOwner() == Team.ORCS) {
             actionsAvailable += 1;       
         }        
+    }
+
+    private int modifyAttack() {
+        return getPosition().getOwner() == Team.ORCS ? 1 : 0;
     }
 
 }

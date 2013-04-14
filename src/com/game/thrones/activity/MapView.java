@@ -181,7 +181,7 @@ public class MapView extends View implements CameraChangeListener {
             for (TerritoryTile territory : territoryTiles) {
                 if (territory.hasClicked((int)event.getX() - cameraX, (int)event.getY() - cameraY)) {
                     clicked = territory;
-                    System.out.println("clicked");
+                    //System.out.println("clicked");
                     break;
                 }                
             }

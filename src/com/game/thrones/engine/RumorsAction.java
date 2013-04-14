@@ -9,7 +9,7 @@ import com.game.thrones.model.hero.Item;
  *
  * @author James
  */
-public class RumorsAction extends AbstractAction<Hero> {
+public class RumorsAction extends AbstractAction<Hero> implements TeamSelectAction {
     
     private Team team;
     

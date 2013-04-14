@@ -82,7 +82,7 @@ public class TerritoryTile {
 
     public boolean hasClicked(final int clickedx, final int clickedy) {
         
-        System.out.println(clickedx + "," + clickedy);
+        //System.out.println(clickedx + "," + clickedy);
         
         Rect bounds = new Rect(x * SIZE, y * SIZE, x * SIZE + SIZE, y * SIZE + SIZE);
 

@@ -105,7 +105,7 @@ public class GameController {
         for(Piece pminion : minionsAtHero) {
             Minion minion = (Minion)pminion;
             //todo depending on the minion the player can take more damage
-            player.damage();
+            player.takeDamage(minion);
         }
         
         Territory centralTerritory = board.getCentralTerritory();

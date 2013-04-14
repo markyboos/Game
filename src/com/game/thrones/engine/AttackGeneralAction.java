@@ -57,7 +57,7 @@ public class AttackGeneralAction extends AbstractAction<Hero> {
         }
         
         for (int i = 0; i < attacks; i++) {
-            if (dice.roll() + piece.modifyAttack() > target.getRollToDamage()) {
+            if (dice.roll() + piece.modifyAttack(target) >= target.getRollToDamage()) {
                 target.damage();
             }
         }

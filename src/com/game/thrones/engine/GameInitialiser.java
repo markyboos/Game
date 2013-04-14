@@ -9,6 +9,7 @@ import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.hero.Ranger;
+import com.game.thrones.model.hero.Sorceress;
 import com.game.thrones.model.piece.Piece;
 
 import java.util.*;
@@ -57,8 +58,9 @@ public class GameInitialiser {
         createGeneral(new Fatty(), Team.ORCS, rock);
         createGeneral(new Dragon(), Team.DRAGONS, winterfell);
         
-        createHero(new Barbarian(), kingsLanding);
+        //createHero(new Barbarian(), kingsLanding);
         createHero(new Ranger(), kingsLanding);
+        createHero(new Sorceress(), kingsLanding);
         
         //start with the king and 2 other major houses
         //to see how this goes

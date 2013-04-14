@@ -3,6 +3,7 @@ package com.game.thrones.engine;
 
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.hero.Hero;
+import com.game.thrones.model.hero.Minion;
 
 /**
  *
@@ -16,7 +17,7 @@ public class RangedAttackAction extends AttackAction {
     }
     
     @Override
-    protected int modifyAttack() {
+    protected int modifyAttack(Minion minion) {
         return 0;
     }
     

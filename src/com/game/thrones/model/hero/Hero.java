@@ -14,9 +14,9 @@ import java.util.List;
  */
 public class Hero extends Piece {
     
-    private int maxHealth = 5;
+    protected int maxHealth = 5;
     
-    private int health = maxHealth;
+    protected int health = maxHealth;
     
     protected int actionsAvailable = health;
     
@@ -86,7 +86,11 @@ public class Hero extends Piece {
         return actionsAvailable;
     }
 
-    public void damage() {
+    /**
+     * Take damage from a minion.
+     * @param minion the minion you are taking damage from
+     */
+    public void takeDamage(Minion minion) {
         health -= 1;
         if (health < 0) {
             health = 0;
@@ -107,12 +111,25 @@ public class Hero extends Piece {
     public void modifyActions() {}
     
     /**
-     * Override this method for attack modifications.
+     * Override this method for attack modifications against minions.
      * @return 
      */    
-    public int modifyAttack() {
+    public int modifyAttack(Minion minion) {
         return 0;
     }
+    
+    /**
+     * Override this method for attack modifications against generals.
+     * @return 
+     */ 
+    public int modifyAttack(General general) {
+        return 0;
+    }
+    
+    /**
+     * Override this method for finished attack modifications.
+     */
+    public void finishAttack() {}
     
     @Override
     public String toString() {
