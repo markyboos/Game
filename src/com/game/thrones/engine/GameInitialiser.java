@@ -26,7 +26,7 @@ public class GameInitialiser {
     private void initialise() {
         
         // territories        
-        Territory kingsLanding = createTerritory(Territory.KINGS_LANDING, 0, Team.NO_ONE);
+        Territory kingsLanding = createTerritory(Territory.KINGS_LANDING, 1, Team.NO_ONE);
         Territory marshland = createTerritory("Marshland", 1, Team.ORCS);
         Territory winterfell = createTerritory("Winterfell", 2, Team.DRAGONS);
         Territory village = createTerritory("Village", 2, Team.ORCS);
@@ -37,8 +37,8 @@ public class GameInitialiser {
         Territory forest = createTerritory("Forest Town", 2, Team.ORCS);
         Territory outlands = createTerritory("Outlands", 2, Team.DRAGONS);
         
-        Territory inn = createTerritory("Stinky Tavern", 0, Team.NO_ONE);
-        Territory innTwo = createTerritory("Smelly Tavern", 0, Team.NO_ONE);
+        Territory inn = createTerritory("Stinky Tavern", 1, Team.NO_ONE);
+        Territory innTwo = createTerritory("Smelly Tavern", 1, Team.NO_ONE);
         
         //conecting territories
         addBorder(kingsLanding, bogland);

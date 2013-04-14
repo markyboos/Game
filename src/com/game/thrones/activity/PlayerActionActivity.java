@@ -3,6 +3,7 @@ package com.game.thrones.activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -49,7 +50,7 @@ public class PlayerActionActivity extends ListActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         //this ensures that the volume control is for music rather than ringtone
-        //setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         Bundle extras = getIntent().getExtras();
 

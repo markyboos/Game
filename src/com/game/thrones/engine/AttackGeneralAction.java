@@ -4,6 +4,7 @@ package com.game.thrones.engine;
 import com.game.thrones.activity.GameFinishedEvent;
 import com.game.thrones.model.Board;
 import com.game.thrones.model.PieceCriteria;
+import com.game.thrones.model.Team;
 import com.game.thrones.model.hero.Fatty;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
@@ -44,7 +45,7 @@ public class AttackGeneralAction extends AbstractAction<Hero> {
         int attacks = 0;
         
         for (Item item : itemsToUse) {
-            if (item.getTeam() != target.getTeam()) {
+            if (item.getTeam() != target.getTeam() && item.getTeam() != Team.NO_ONE) {
                 throw new AssertionError("Cannot use items against a general that arent of that team");                
             }
             

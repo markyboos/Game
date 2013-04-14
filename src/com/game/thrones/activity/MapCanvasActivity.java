@@ -1,13 +1,13 @@
 
 package com.game.thrones.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import com.game.thrones.AbstractMenuActivity;
 import com.game.thrones.R;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.model.hero.Hero;
@@ -16,7 +16,7 @@ import com.game.thrones.model.hero.Hero;
  *
  * @author James
  */
-public class MapCanvasActivity extends Activity implements GameFinishedListener {
+public class MapCanvasActivity extends AbstractMenuActivity implements GameFinishedListener {
     
     private View mapView;
 
