@@ -275,7 +275,7 @@ public class Board {
     
     public Territory getCentralTerritory() {
         for (Territory territory : territories) {
-            if (territory.getName().equals(Territory.KINGS_LANDING)) {
+            if (territory.getName().equals(Territory.CENTRAL_TERRITORY)) {
                 return territory;                
             }
         }
@@ -307,6 +307,11 @@ public class Board {
             addPiece(minion);
             
             minion.setPosition(territory);
+            
+            if (minions.size() == 2 && allMinionsAreDemons(minions, minion)) {
+                territory.taint();
+            }
+            
         } else {
             //taint the board
             territory.taint();
@@ -326,5 +331,21 @@ public class Board {
                 addMinionToTerritory(border, team, false);
             }
         }
+    }
+
+    private boolean allMinionsAreDemons(final List<Piece> minions, Minion added) {
+                
+        //if all the minions are demons taint it
+        for (Piece p : minions) {
+            if (p.getTeam() != Team.DEMONS) {
+                return false;
+            }
+        }
+        
+        if (added.getTeam() != Team.DEMONS) {
+            return false;
+        }
+        
+        return true;
     }
 }

@@ -21,6 +21,12 @@ public class Minion extends Piece {
             case DRAGONS:
                 rollToDamage = 5;
                 break;
+            case DEMONS:
+                rollToDamage = 4;
+                break;
+            case UNDEAD:
+                rollToDamage = 4;
+                break;
             default:
                 throw new AssertionError(team.name());
         }

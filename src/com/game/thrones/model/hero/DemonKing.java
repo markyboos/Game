@@ -1,31 +1,42 @@
 
 package com.game.thrones.model.hero;
 
+import com.game.thrones.engine.Dice;
 import com.game.thrones.model.Team;
 
 /**
  *
  * @author James
  */
-public class Fatty extends General implements Woundable {
+public class DemonKing extends General implements Woundable {
     
-    private int wounded = 2;
-    
+    private int wounded = 1;
     private Hero attackedBy;
     
-    public Fatty() {
-        super(General.FATTY);
-        this.rollToDamage = 3;
-        this.team = Team.ORCS;        
+    public DemonKing() {
+        super("Demon");
+        
+        this.team = Team.DEMONS;
+        this.rollToDamage = 4;
+        
         maxHealth = 6;    
         health = 6;
+    }
+
+    @Override
+    public void inflictPenalty(Hero hero) {
+        Dice dice = new Dice();
+        hero.takeDamage(dice.roll() / 2);
+        
+        //lose all hero cards
+        hero.clearInventory();
     }
     
     @Override
     public boolean isHeavilyWounded() {
         return health <= wounded;
     }
-    
+
     @Override
     public void setAttackedBy(Hero attackedBy) {
         this.attackedBy = attackedBy;        
@@ -36,11 +47,4 @@ public class Fatty extends General implements Woundable {
         return attackedBy;        
     }
 
-    @Override
-    public void inflictPenalty(final Hero hero) {
-        hero.takeDamage(2);
-        
-        //todo take away 2 cards
-        hero.setCardsToRemove(hero.getCardsToRemove() + 2);
-    }
 }

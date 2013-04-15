@@ -72,7 +72,7 @@ public class ActionCreator {
             }
                         
             if (actionsSoFar(RumorsAction.class) < 2 && position.getOwner() == Team.NO_ONE && 
-                    !position.getName().equals(Territory.KINGS_LANDING)) {            
+                    !position.getName().equals(Territory.CENTRAL_TERRITORY)) {            
                 actions.add(new RumorsAction(hero));
             }
             

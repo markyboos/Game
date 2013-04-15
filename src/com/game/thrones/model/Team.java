@@ -12,5 +12,7 @@ public enum Team {
     
     ORCS,
     DRAGONS,
+    DEMONS,
+    UNDEAD,
     NO_ONE;
 }

@@ -45,6 +45,11 @@ public class Sorceress extends Hero {
             return 0;
         }
         
+        //undead general is great
+        if (general.getTeam() == Team.UNDEAD) {
+            return 0;
+        }
+        
         return general.getTeam() == shape ? 1 : 0;      
     }
     
@@ -69,6 +74,11 @@ public class Sorceress extends Hero {
         }
 
         return 1;            
+    }
+    
+    @Override
+    protected boolean affectedByUndead() {
+        return shape != Team.UNDEAD;
     }
     
     @Override

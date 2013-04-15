@@ -5,10 +5,10 @@ import com.game.thrones.activity.GameFinishedEvent;
 import com.game.thrones.model.Board;
 import com.game.thrones.model.PieceCriteria;
 import com.game.thrones.model.Team;
-import com.game.thrones.model.hero.Fatty;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Item;
+import com.game.thrones.model.hero.Woundable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +49,11 @@ public class AttackGeneralAction extends AbstractAction<Hero> {
                 throw new AssertionError("Cannot use items against a general that arent of that team");                
             }
             
+            //red cards get corrupted for the demon
+            if (item.getTeam() == Team.DEMONS && target.getTeam() == Team.DEMONS
+                    && dice.roll(1)) {
+                continue;
+            }            
             attacks += item.getPower();                        
         }
         
@@ -92,8 +97,8 @@ public class AttackGeneralAction extends AbstractAction<Hero> {
             
             piece.setPosition(board.getCentralTerritory()); 
             
-            if (target instanceof Fatty) {
-                ((Fatty)target).setAttackedBy(piece);
+            if (target instanceof Woundable) {
+                ((Woundable)target).setAttackedBy(piece);
             }            
         }
     }

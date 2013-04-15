@@ -41,7 +41,7 @@ public abstract class General extends Piece {
         }
     }
     
-    public abstract void inflictPenalty(final Hero piece);
+    public abstract void inflictPenalty(final Hero hero);
     
     @Override
     public String toString() {

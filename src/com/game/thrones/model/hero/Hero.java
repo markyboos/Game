@@ -83,7 +83,7 @@ public abstract class Hero extends Piece {
     }
     
     public void heal() {
-        if (getPosition().getName().equals(Territory.KINGS_LANDING)) {
+        if (getPosition().getName().equals(Territory.CENTRAL_TERRITORY)) {
             health = maxHealth;
         } else {
             health += 2;
@@ -108,12 +108,21 @@ public abstract class Hero extends Piece {
     public void takeDamage(final List<Minion> minions) {
         
         int damage = 0;
+        boolean undead = false;
         
         for (Minion minion : minions) {
-            damage += takeDamage(minion);            
+            damage += takeDamage(minion);
+            if (minion.getTeam() == Team.UNDEAD) {
+                undead = true;
+            }
         }
         
-        takeDamage(damage);
+        takeDamage(undead && affectedByUndead() ? damage + 1 : damage);       
+        
+    }
+    
+    protected boolean affectedByUndead() {
+        return true;
     }
     
     protected int takeDamage(Minion minion) {

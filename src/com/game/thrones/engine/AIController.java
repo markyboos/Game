@@ -155,6 +155,8 @@ public class AIController {
                 
         order.addAction(new AddMinionAction(centre, 1, Team.ORCS));
         order.addAction(new AddMinionAction(centre, 1, Team.DRAGONS));
+        order.addAction(new AddMinionAction(centre, 1, Team.DEMONS));
+        order.addAction(new AddMinionAction(centre, 1, Team.UNDEAD));
         
         return order;
     }

@@ -3,13 +3,16 @@ package com.game.thrones.engine;
 
 import com.game.thrones.model.*;
 import com.game.thrones.model.hero.Barbarian;
+import com.game.thrones.model.hero.DemonKing;
 import com.game.thrones.model.hero.Dragon;
+import com.game.thrones.model.hero.Dwarf;
 import com.game.thrones.model.hero.Fatty;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.hero.Ranger;
 import com.game.thrones.model.hero.Sorceress;
+import com.game.thrones.model.hero.UndeadKing;
 import com.game.thrones.model.piece.Piece;
 
 import java.util.*;
@@ -19,14 +22,14 @@ import java.util.*;
  * @author James
  */
 public class GameInitialiser {
-    
+
     private Set<Piece> pieces = new HashSet<Piece>();
     private Map<Territory, Set<Territory>> borderMap = new HashMap<Territory, Set<Territory>>();
-    
+
     private void initialise() {
-        
-        // territories        
-        Territory kingsLanding = createTerritory(Territory.KINGS_LANDING, 1, Team.NO_ONE);
+
+        // territories
+        Territory kingsLanding = createTerritory(Territory.CENTRAL_TERRITORY, 1, Team.NO_ONE);
         Territory marshland = createTerritory("Marshland", 1, Team.ORCS);
         Territory winterfell = createTerritory("Winterfell", 2, Team.DRAGONS);
         Territory village = createTerritory("Village", 2, Team.ORCS);
@@ -36,10 +39,10 @@ public class GameInitialiser {
         Territory coast = createTerritory("Coastal City", 1, Team.DRAGONS);
         Territory forest = createTerritory("Forest Town", 2, Team.ORCS);
         Territory outlands = createTerritory("Outlands", 2, Team.DRAGONS);
-        
+
         Territory inn = createTerritory("Stinky Tavern", 1, Team.NO_ONE);
         Territory innTwo = createTerritory("Smelly Tavern", 1, Team.NO_ONE);
-        
+
         //conecting territories
         addBorder(kingsLanding, bogland);
         addBorder(kingsLanding, desert);
@@ -54,75 +57,187 @@ public class GameInitialiser {
         addBorder(village, winterfell);
         addBorder(forest, winterfell);
         addBorder(innTwo, forest);
-        
-        createGeneral(new Fatty(), Team.ORCS, rock);
-        createGeneral(new Dragon(), Team.DRAGONS, winterfell);
-        
+
+        createGeneral(new Fatty(), rock);
+        createGeneral(new Dragon(), winterfell);
+
         //createHero(new Barbarian(), kingsLanding);
         createHero(new Ranger(), kingsLanding);
-        createHero(new Sorceress(), kingsLanding);
+        createHero(new Sorceress(), kingsLanding);        
+    }
+    
+    private void initialiseBigMap() {
+        // territories
+        Territory centre = createTerritory(Territory.CENTRAL_TERRITORY, 1, Team.NO_ONE);
+
+        Territory inn = createTerritory("Stinky Tavern", 1, Team.NO_ONE);
+        Territory innTwo = createTerritory("Smelly Tavern", 1, Team.NO_ONE);
+        Territory innThree = createTerritory("Fragrent Tavern", 1, Team.NO_ONE);
+
+        //orcs
+        Territory goldenOakForest = createTerritory("Golden Oak Forest", 1, Team.ORCS);
+        Territory fatherOakForest = createTerritory("Father Oak Forest", 1, Team.ORCS);
+        Territory ravenForest = createTerritory("Raven Forest", 1, Team.ORCS);
+        Territory unicornForest = createTerritory("Unicorn Forest", 1, Team.ORCS);
+        Territory minotaurForest = createTerritory("Minotaur Forest", 2, Team.ORCS);
+        Territory gryphonForest = createTerritory("Gryphon Forest", 2, Team.ORCS);
+        Territory whisperingWoods = createTerritory("Whispering Woods", 1, Team.ORCS);
+        Territory heavensGlade = createTerritory("Heavens Glade", 2, Team.ORCS);
+        Territory thornyWoods = createTerritory("Thorny Woods", 2, Team.ORCS);
+        Territory greenLeafVillage = createTerritory("Green Leaf Village", 2, Team.ORCS);
+        Territory wyvernForest = createTerritory("Wyvern Forest", 2, Team.ORCS);
+
+        //undead
+        Territory darkWoods = createTerritory("Dark Woods", 2, Team.UNDEAD);
+        Territory enchantedGlade = createTerritory("Enchanted Glade", 1, Team.UNDEAD);
+        Territory seaBirdPort = createTerritory("Seabird Port", 1 , Team.UNDEAD);
+        Territory brookDaleVillage = createTerritory("Brook Dale Village", 1, Team.UNDEAD);
+        Territory angelTearFalls = createTerritory("Angel Tear Falls", 2, Team.UNDEAD);        
+        Territory fireRiver = createTerritory("Fire River", 1 , Team.UNDEAD);
+        Territory mcCornHighlands = createTerritory("Mc'Corn Highlands", 1, Team.UNDEAD);
+        Territory dancingStone = createTerritory("Dancing Stone", 2, Team.UNDEAD);        
+        Territory landOfAmazons = createTerritory("Land of Amazons", 1, Team.UNDEAD);
+        Territory mermaidHarbour = createTerritory("Mermaid Harbour", 2, Team.UNDEAD);
+
+        //demons
+        Territory windyPass = createTerritory("Windy Pass", 2, Team.DEMONS);
+        Territory bloodFlats = createTerritory("Blood Flats", 1, Team.DEMONS);
+        Territory pleasentHills = createTerritory("Pleasent Hills", 1, Team.DEMONS);
+        Territory scorpionCanyon = createTerritory("Scorpion Canyon", 1, Team.DEMONS);        
+        Territory orcValley = createTerritory("Orc Valley", 1, Team.DEMONS);
+        Territory serpentSwamp = createTerritory("Serpent Swamp", 1, Team.DEMONS);
+        Territory ghostMarsh = createTerritory("Ghost Marsh", 2, Team.DEMONS);
+        Territory ancientRuins = createTerritory("Ancient Ruins", 2, Team.DEMONS);
+        Territory witheredHills = createTerritory("Withered Hills", 2, Team.DEMONS);
+        Territory cursedPlateau = createTerritory("Cursed Plateau", 2, Team.DEMONS);        
         
-        //start with the king and 2 other major houses
-        //to see how this goes
-        /**
-        House kingsHouse = createHouse("The kings house", HouseType.KING);                
-        House minorOne = createHouse("Scumbag Minor One", HouseType.MINOR, kingsHouse);        
-        House minorTwo = createHouse("Honorable Minor One", HouseType.MINOR, kingsHouse);
-                
-        House majorOne = createHumanHouse(House.PLAYER_ONE, HouseType.MAJOR, kingsHouse);        
-        House minorThree = createHouse("Honorable Minor Two", HouseType.MINOR, majorOne);
-                
-        House majorTwo = createHouse("Player Two", HouseType.MAJOR, kingsHouse);
-        House minorFour = createHouse("Honorable Minor Three", HouseType.MINOR, majorTwo);  
+        //dragons
+        Territory rockBridgePass = createTerritory("Rock Bridge Pass", 1, Team.DRAGONS);        
+        Territory bountyBay = createTerritory("Bounty Bay", 2, Team.DRAGONS);        
+        Territory dragonsTeethRange = createTerritory("Dragons Teeth Range", 2, Team.DRAGONS);
+        Territory wolfPass = createTerritory("Wolf Pass", 1, Team.DRAGONS);
+        Territory crystalHills = createTerritory("Crystal Hills", 2, Team.DRAGONS);
+        Territory mountainsOfMist = createTerritory("Mountains Of Mist", 1, Team.DRAGONS);
+        Territory blizzardMountains = createTerritory("Blizzard Moutains", 1, Team.DRAGONS);
+        Territory amarakPeak = createTerritory("Amarak Peak", 2, Team.DRAGONS);
+        Territory eaglePeakPass = createTerritory("Eagle Peak Pass ", 2, Team.DRAGONS);
+        Territory seagullLagoon = createTerritory("Seagull Lagoon", 1, Team.DRAGONS);
         
-        //this house is completly neutral
-        House neutralMinor = createHouse("Wild men", HouseType.MINOR);
+        addBorder(centre, fatherOakForest);
+        addBorder(centre, wolfPass);
+        addBorder(centre, orcValley);
+        addBorder(centre, dancingStone);
+        addBorder(centre, greenLeafVillage);
+        addBorder(centre, bountyBay);
         
-        // territories        
-        Territory kingsLanding = createTerritory(Territory.KINGS_LANDING, 20, kingsHouse);
-        Territory winterfell = createTerritory("Winterfell", 10, majorOne);
-        Territory rock = createTerritory("Castle rock", 10, majorTwo);
-        Territory bogland = createTerritory("Bogland", 2, minorOne);
-        Territory desert = createTerritory("Desert", 2, minorTwo);
-        Territory coast = createTerritory("Coastal city", 4, minorThree);
-        Territory forest = createTerritory("Forest town", 3, minorFour);
-        Territory outlands = createTerritory("Outlands", 1, neutralMinor);
+        addBorder(fatherOakForest, pleasentHills);
+        addBorder(fatherOakForest, brookDaleVillage);
+        addBorder(fatherOakForest, seaBirdPort);
+        addBorder(fatherOakForest, wolfPass);
         
-        //conecting territories
-        addBorder(kingsLanding, bogland);
-        addBorder(kingsLanding, desert);
-        addBorder(kingsLanding, outlands);
-        addBorder(coast, desert);
-        addBorder(coast, rock);
-        addBorder(forest, bogland);
-        addBorder(forest, winterfell);
+        addBorder(wolfPass, minotaurForest);
+        addBorder(wolfPass, seagullLagoon);
+        addBorder(wolfPass, orcValley);
         
-        //heroes
-        createLord("The King", kingsHouse, kingsLanding);
-        createEmissary("Sneaky", minorOne, kingsLanding);
-        createKnight("Champy", minorTwo, kingsLanding);
+        addBorder(orcValley, dancingStone);
+        addBorder(orcValley, eaglePeakPass);
         
-        createLord("Player one", majorOne, winterfell);
-        createKnight("The cruncher", minorThree, winterfell);
+        addBorder(dancingStone, whisperingWoods);
+        addBorder(dancingStone, greenLeafVillage);
         
-        createLord("Player two", majorTwo, rock);
-        createKnight("Goldy", minorTwo, rock);
+        addBorder(greenLeafVillage, ancientRuins);
+        addBorder(greenLeafVillage, mountainsOfMist);
+        addBorder(greenLeafVillage, bountyBay);
         
-        createKnight("smelly", neutralMinor, outlands);
+        addBorder(bountyBay, mermaidHarbour);
+        addBorder(bountyBay, angelTearFalls);
         
-        //standings
-        for (House house : houses) {
-            for (House other : houses) {
-                if (house.equals(other)) {
-                    continue;
-                }
-                
-                house.addHouseStanding(other, new Standing());                
-            }
-        }
-        */
+        addBorder(pleasentHills, angelTearFalls);
+        addBorder(pleasentHills, ravenForest);
+        addBorder(pleasentHills, brookDaleVillage);
         
+        addBorder(brookDaleVillage, rockBridgePass);
+        addBorder(brookDaleVillage, seaBirdPort);
+        addBorder(brookDaleVillage, unicornForest);
         
+        addBorder(seaBirdPort, rockBridgePass);
+        addBorder(seaBirdPort, windyPass);
+        
+        addBorder(minotaurForest, seagullLagoon);
+        
+        addBorder(seagullLagoon, gryphonForest);
+        
+        addBorder(eaglePeakPass, whisperingWoods);
+        addBorder(eaglePeakPass, amarakPeak);
+        
+        addBorder(whisperingWoods, heavensGlade);
+        addBorder(whisperingWoods, ancientRuins);
+        
+        addBorder(ancientRuins, heavensGlade);
+        
+        addBorder(mountainsOfMist, witheredHills);
+        addBorder(mountainsOfMist, landOfAmazons);
+        
+        addBorder(mermaidHarbour, landOfAmazons);
+        addBorder(mermaidHarbour, wyvernForest);
+        addBorder(mermaidHarbour, crystalHills);
+        addBorder(mermaidHarbour, fireRiver);
+        
+        addBorder(angelTearFalls, dragonsTeethRange);
+        addBorder(angelTearFalls, fireRiver);
+        addBorder(angelTearFalls, ravenForest);
+        
+        addBorder(ravenForest, scorpionCanyon);
+        addBorder(ravenForest, bloodFlats);
+        
+        addBorder(rockBridgePass, enchantedGlade);
+        addBorder(rockBridgePass, goldenOakForest);
+        addBorder(rockBridgePass, windyPass);
+        
+        addBorder(unicornForest, bloodFlats);
+        addBorder(unicornForest, enchantedGlade);
+        
+        addBorder(windyPass, darkWoods);
+        
+        addBorder(gryphonForest, inn);
+        addBorder(gryphonForest, serpentSwamp);
+        
+        addBorder(amarakPeak, mcCornHighlands);
+        addBorder(amarakPeak, ghostMarsh);
+        addBorder(amarakPeak, thornyWoods);
+        
+        addBorder(heavensGlade, thornyWoods);
+        addBorder(heavensGlade, blizzardMountains);
+        
+        addBorder(witheredHills, blizzardMountains);
+        addBorder(witheredHills, innTwo);
+        addBorder(witheredHills, cursedPlateau);
+        
+        addBorder(landOfAmazons, cursedPlateau);
+        addBorder(landOfAmazons, wyvernForest);
+        
+        addBorder(wyvernForest, cursedPlateau);
+        addBorder(wyvernForest, crystalHills);
+        
+        addBorder(crystalHills, fireRiver);
+        
+        addBorder(scorpionCanyon, bloodFlats);
+        
+        addBorder(enchantedGlade, innThree);
+        
+        addBorder(goldenOakForest, darkWoods);
+        
+        addBorder(serpentSwamp, mcCornHighlands);
+
+        createGeneral(new Fatty(), thornyWoods);
+        createGeneral(new Dragon(), blizzardMountains);
+        createGeneral(new UndeadKing(), darkWoods);
+        createGeneral(new DemonKing(), scorpionCanyon);
+
+        createHero(new Barbarian(), centre);
+        createHero(new Ranger(), centre);
+        createHero(new Sorceress(), centre);
+        createHero(new Dwarf(), centre);
     }
 
     private Territory createTerritory(String name, int value, Team team) {
@@ -148,31 +263,37 @@ public class GameInitialiser {
         return new Board(borderMap, pieces);
     }
 
-    private void createGeneral(final General general, final Team team, Territory position) {
+    private void createGeneral(final General general, Territory position) {
         general.setPosition(position);
         pieces.add(general);
         
+        Team team = general.getTeam();
+
         //add 3 minions to the general
         Minion minion = new Minion(team);
         minion.setPosition(position);
-        
+
         pieces.add(minion);
-        
+
         minion = new Minion(team);
         minion.setPosition(position);
-        
+
         pieces.add(minion);
-        
+
         minion = new Minion(team);
         minion.setPosition(position);
-        
+
         pieces.add(minion);
+        
+        if (team == Team.DEMONS) {
+            position.taint();
+        }
     }
 
     private void createHero(Hero hero, Territory position) {
-        
+
         hero.setPosition(position);
-        
+
         pieces.add(hero);
     }
 
