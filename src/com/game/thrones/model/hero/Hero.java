@@ -1,6 +1,7 @@
 
 package com.game.thrones.model.hero;
 
+import com.game.thrones.model.Quest;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.piece.Piece;
@@ -23,6 +24,10 @@ public abstract class Hero extends Piece {
     private List<Item> inventory = new ArrayList<Item>();
     
     private int cardsToRemove;
+    
+    private Quest quest;
+    
+    private List<Quest> questsCompleted = new ArrayList<Quest>();
     
     public Hero(final String name) {
         this.name = name;
@@ -76,6 +81,22 @@ public abstract class Hero extends Piece {
     
     public int getCardsToRemove() {
         return cardsToRemove;
+    }
+    
+    public Quest getQuest() {
+        return quest;
+    }
+    
+    public void setQuest(Quest quest) {
+        this.quest = quest;
+    }
+    
+    public void competeQuest() {        
+        questsCompleted.add(quest);
+    }
+    
+    public List<Quest> getCompletedQuests() {
+        return Collections.unmodifiableList(questsCompleted);
     }
 
     public void useAction() {
@@ -152,7 +173,14 @@ public abstract class Hero extends Piece {
     /**
      * Override this method to modify actions at the begging of the turn.
      */    
-    public void modifyActions() {}
+    public void modifyActions() {
+        //if you have the boots of speed you go mega fast
+        for (Item item : inventory) {
+            if (item.getItemType() == Item.ItemType.BOOTS_OF_SPEED) {
+                actionsAvailable += item.getPower();
+            }
+        }
+    }
     
     /**
      * Override this method for attack modifications against minions.
@@ -171,6 +199,14 @@ public abstract class Hero extends Piece {
     }
     
     /**
+     * Override this method for quest roll modifications.
+     * @return 
+     */
+    public int modifyQuestRoll() {
+        return 0;
+    }
+    
+    /**
      * Override this method for finished attack modifications.
      */
     public void finishAttack() {}
@@ -178,5 +214,5 @@ public abstract class Hero extends Piece {
     @Override
     public String toString() {
         return name + " [" + health + "/" + maxHealth + "]";
-    }
+    }    
 }

@@ -27,29 +27,7 @@ public class GameController {
     
     private static GameController instance;
     
-    private GameController(){
-        
-        GameInitialiser initialiser = new GameInitialiser();
-        board = initialiser.createBoard();
-        
-        PieceCriteria criteria = new PieceCriteria();
-        criteria.setClass(Hero.class);
-        
-        players = new ArrayList<Hero>();
-        
-        for (Piece piece : board.getPieces(criteria)) {
-            players.add((Hero)piece);
-        }        
-        
-        player = players.get(0);
-        aiController = new AIController();
-        
-        itemController = new ItemController();
-        
-        //todo        
-        //pick 3 random territories and add 2 minions to each        
-        //pick 3 random territories and add 1 minion to each
-    }
+    private GameController(){}
     
     public static GameController getInstance() {
         if (instance == null) {
@@ -58,13 +36,15 @@ public class GameController {
         return instance;
     }
     
-    public static void reset() {
-        instance = new GameController();
-    }
-    
     private AIController aiController;
     
     private ItemController itemController;
+    
+    private QuestController questController;
+    
+    public QuestController getQuestController() {
+        return questController;
+    }
     
     public ItemController getItemController() {
         return itemController;
@@ -88,6 +68,34 @@ public class GameController {
     
     public List<Action> getActionsTaken() {
         return Collections.unmodifiableList(actionsTaken);
+    }
+    
+    public void initialise() {
+        
+        GameInitialiser initialiser = new GameInitialiser();
+        board = initialiser.createBoard();
+        
+        PieceCriteria criteria = new PieceCriteria();
+        criteria.setClass(Hero.class);
+        
+        players = new ArrayList<Hero>();
+        
+        for (Piece piece : board.getPieces(criteria)) {
+            players.add((Hero)piece);
+        }        
+        
+        player = players.get(0);
+        
+        aiController = new AIController();
+        
+        itemController = new ItemController();
+        
+        questController = new QuestController();
+        
+        //deal out quest cards        
+        for (Hero hero : players) {
+            hero.setQuest(questController.getTopQuest());
+        }        
     }
     
     public void endTurn() {

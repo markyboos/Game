@@ -22,9 +22,8 @@ public class MainActivity extends AbstractMenuActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        GameController.reset();
-        
-        GameController.getInstance();
+        GameController controller = GameController.getInstance();
+        controller.initialise();
         
         loadSoundManager();
         loadVibrationHandler();

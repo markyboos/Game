@@ -25,6 +25,7 @@ public class Ranger extends Hero {
     
     @Override
     public void modifyActions() {
+        super.modifyActions();
         
         if (getPosition().getOwner() == Team.ORCS) {
             actionsAvailable += 1;       

@@ -31,8 +31,6 @@ public abstract class AbstractMenuActivity extends Activity {
     @Override
     public void onPause() {
         super.onPause();
-        
-        SoundManager.getSingleton().stop();
     }    
     
     @Override

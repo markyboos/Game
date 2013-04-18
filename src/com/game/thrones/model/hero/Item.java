@@ -4,19 +4,20 @@ package com.game.thrones.model.hero;
 import com.game.thrones.model.Team;
 
 /**
- *
+ * todo this is poop
+ * 
  * @author James
  */
-public class Item implements CharSequence{
+public class Item implements CharSequence {
     
-    public enum ItemType {CARD, SLAYER}
+    public enum ItemType {CARD, SLAYER, BOOTS_OF_SPEED, DISPOSABLE}
     
     private final ItemType type;
     
     private final int power;
     
-    private final Team team;
-    
+    private final Team team;    
+     
     public Item(int power, Team team) {
         this.power = power;
         this.team = team;
@@ -28,6 +29,18 @@ public class Item implements CharSequence{
         
         type = ItemType.SLAYER;
         this.team = team;
+    }
+    
+    public Item(int power) {
+        type = ItemType.BOOTS_OF_SPEED;
+        this.power = power;
+        this.team = Team.NO_ONE;        
+    }
+    
+    public Item() {
+        this.power = 1;
+        this.team = Team.NO_ONE;
+        type = ItemType.DISPOSABLE;        
     }
 
     public int getPower() {

@@ -8,6 +8,9 @@ package com.game.thrones.model;
 public class Territory {
     
     public static final String CENTRAL_TERRITORY = "Monarch City";
+    public static final String THORNY_WOODS = "Castle Rock";
+    public static final String DRAGON_RANGE = "Dragon Range";
+    public static final String OLD_FATHER_WOOD = "Old Father Wood";
     
     private final String name;
 

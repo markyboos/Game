@@ -110,6 +110,7 @@ public class SoundManager {
     public void releaseResources() {
         soundPool.release();
         mediaPlayer.release();
+        mediaPlayer = null;
     }
 
     private float getVolume() {

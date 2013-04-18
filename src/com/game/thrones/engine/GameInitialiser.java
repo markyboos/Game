@@ -31,13 +31,13 @@ public class GameInitialiser {
         // territories
         Territory kingsLanding = createTerritory(Territory.CENTRAL_TERRITORY, 1, Team.NO_ONE);
         Territory marshland = createTerritory("Marshland", 1, Team.ORCS);
-        Territory winterfell = createTerritory("Winterfell", 2, Team.DRAGONS);
+        Territory winterfell = createTerritory(Territory.DRAGON_RANGE, 2, Team.DRAGONS);
         Territory village = createTerritory("Village", 2, Team.ORCS);
-        Territory rock = createTerritory("Castle Rock", 2, Team.ORCS);
+        Territory rock = createTerritory(Territory.THORNY_WOODS, 2, Team.ORCS);
         Territory bogland = createTerritory("Bogland", 1, Team.DRAGONS);
         Territory desert = createTerritory("Desert", 1, Team.ORCS);
         Territory coast = createTerritory("Coastal City", 1, Team.DRAGONS);
-        Territory forest = createTerritory("Forest Town", 2, Team.ORCS);
+        Territory forest = createTerritory(Territory.OLD_FATHER_WOOD, 2, Team.ORCS);
         Territory outlands = createTerritory("Outlands", 2, Team.DRAGONS);
 
         Territory inn = createTerritory("Stinky Tavern", 1, Team.NO_ONE);
@@ -76,14 +76,14 @@ public class GameInitialiser {
 
         //orcs
         Territory goldenOakForest = createTerritory("Golden Oak Forest", 1, Team.ORCS);
-        Territory fatherOakForest = createTerritory("Father Oak Forest", 1, Team.ORCS);
+        Territory fatherOakForest = createTerritory(Territory.OLD_FATHER_WOOD, 1, Team.ORCS);
         Territory ravenForest = createTerritory("Raven Forest", 1, Team.ORCS);
         Territory unicornForest = createTerritory("Unicorn Forest", 1, Team.ORCS);
         Territory minotaurForest = createTerritory("Minotaur Forest", 2, Team.ORCS);
         Territory gryphonForest = createTerritory("Gryphon Forest", 2, Team.ORCS);
         Territory whisperingWoods = createTerritory("Whispering Woods", 1, Team.ORCS);
         Territory heavensGlade = createTerritory("Heavens Glade", 2, Team.ORCS);
-        Territory thornyWoods = createTerritory("Thorny Woods", 2, Team.ORCS);
+        Territory thornyWoods = createTerritory(Territory.THORNY_WOODS, 2, Team.ORCS);
         Territory greenLeafVillage = createTerritory("Green Leaf Village", 2, Team.ORCS);
         Territory wyvernForest = createTerritory("Wyvern Forest", 2, Team.ORCS);
 
@@ -114,7 +114,7 @@ public class GameInitialiser {
         //dragons
         Territory rockBridgePass = createTerritory("Rock Bridge Pass", 1, Team.DRAGONS);        
         Territory bountyBay = createTerritory("Bounty Bay", 2, Team.DRAGONS);        
-        Territory dragonsTeethRange = createTerritory("Dragons Teeth Range", 2, Team.DRAGONS);
+        Territory dragonsTeethRange = createTerritory(Territory.DRAGON_RANGE, 2, Team.DRAGONS);
         Territory wolfPass = createTerritory("Wolf Pass", 1, Team.DRAGONS);
         Territory crystalHills = createTerritory("Crystal Hills", 2, Team.DRAGONS);
         Territory mountainsOfMist = createTerritory("Mountains Of Mist", 1, Team.DRAGONS);

@@ -274,13 +274,18 @@ public class Board {
     }
     
     public Territory getCentralTerritory() {
+        return getTerritory(Territory.CENTRAL_TERRITORY);
+    }
+    
+    public Territory getTerritory(final String name) {
         for (Territory territory : territories) {
-            if (territory.getName().equals(Territory.CENTRAL_TERRITORY)) {
+            if (territory.getName().equals(name)) {
                 return territory;                
             }
         }
         
-        throw new IllegalStateException("No kings landing territory");
+        throw new IllegalStateException("No territory called [" + name + "]");
+        
     }
     
     public Piece getPiece(final String name) {

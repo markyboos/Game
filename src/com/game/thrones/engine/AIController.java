@@ -22,7 +22,7 @@ import java.util.Set;
  */
 public class AIController {
     
-    private GameController controller;
+    private GameController controller = GameController.getInstance();
     
     private Set<Orders> discardPile = new HashSet<Orders>();
     
@@ -66,8 +66,6 @@ public class AIController {
     }
     
     private Queue<Orders> createEvilActions() {
-        
-        controller = GameController.getInstance();
         
         Log.d("AIController:createEvilActions", "Generating evil actions...");
         

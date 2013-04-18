@@ -54,6 +54,11 @@ public class Sorceress extends Hero {
     }
     
     @Override
+    public int modifyQuestRoll() {
+        return 1;
+    }
+    
+    @Override
     public void setPosition(Territory position) {
         
         ambushing = true;

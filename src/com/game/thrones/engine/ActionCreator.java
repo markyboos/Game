@@ -1,6 +1,7 @@
 
 package com.game.thrones.engine;
 
+import android.util.Log;
 import com.game.thrones.model.PieceCriteria;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
@@ -46,6 +47,12 @@ public class ActionCreator {
         if (piece instanceof Hero) {
             
             Hero hero = (Hero)piece;
+            
+            Log.d("ActionCreator:createActions", hero.getQuest() == null ? "No quest" : hero.getQuest().toString());
+            
+            if (hero.getQuest() != null && hero.getPosition().equals(hero.getQuest().getTerritory())) {
+                actions.add(new QuestAction(hero));
+            }
             
             if (minionsAtHero) {
                 if (piece instanceof Barbarian) {
