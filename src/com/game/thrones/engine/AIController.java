@@ -22,13 +22,41 @@ import java.util.Set;
  */
 public class AIController {
     
+    /**
+     * Increases as generals die.
+     */
+    private enum WarStatus {
+        
+        START(1), EARLY_MID(2), LATE_MID(2), LATE(3);
+        
+        private int cardsToDraw;
+        private WarStatus(int total) {
+            cardsToDraw = total;
+        }
+        
+        public int getCardsToDraw() {
+            return cardsToDraw;
+        }
+    }
+    
+    private WarStatus warStatus = WarStatus.START;
+    
     private GameController controller = GameController.getInstance();
     
     private Set<Orders> discardPile = new HashSet<Orders>();
     
     private Queue<Orders> evilActions;
     
-    public void takeTurn() {
+    public void increaseWarStatus() {
+        if (warStatus.ordinal() == WarStatus.values().length) {
+            return;
+        }
+        
+        warStatus 
+                = WarStatus.values()[warStatus.ordinal() + 1];
+    }
+    
+    public Orders takeTopCard() {
         
         if (evilActions == null) {
             evilActions = createEvilActions();
@@ -37,22 +65,33 @@ public class AIController {
         Orders orders = evilActions.poll();
         
         if (orders == null) {
-            recreateDeckFromDiscardPile();
+            reshuffleDeck();
             orders = evilActions.poll();
         }
         
+        discardPile.add(orders);
+        
+        return orders;
+    }
+    
+    public void takeTurn() {        
+        for (int i = 0; i < warStatus.getCardsToDraw(); i++) {
+            drawAndUseCard();
+        }
+    }
+    
+    private void drawAndUseCard() {
+        Orders orders = takeTopCard();
+
         //add minions to places        
         //add taint        
         //possibly move general
         for (Action action : orders.getActions()) {
             action.execute();            
         }
-        
-        discardPile.add(orders);
-        
     }
     
-    private void recreateDeckFromDiscardPile() {
+    public void reshuffleDeck() {
         
         Log.d("AIController:recreateDeck", "Recreating the deck...");
         
@@ -150,11 +189,13 @@ public class AIController {
 
     private Orders createAssaultAction(Territory centre) {
         Orders order = new Orders();
-                
-        order.addAction(new AddMinionAction(centre, 1, Team.ORCS));
-        order.addAction(new AddMinionAction(centre, 1, Team.DRAGONS));
-        order.addAction(new AddMinionAction(centre, 1, Team.DEMONS));
-        order.addAction(new AddMinionAction(centre, 1, Team.UNDEAD));
+        
+        for (Team team : Team.values()) {
+            if (team == Team.NO_ONE) {
+                continue;
+            }
+            order.addAction(new AddMinionAction(centre, 1, team));
+        }
         
         return order;
     }

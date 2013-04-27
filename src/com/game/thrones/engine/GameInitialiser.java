@@ -63,7 +63,7 @@ public class GameInitialiser {
 
         //createHero(new Barbarian(), kingsLanding);
         createHero(new Ranger(), kingsLanding);
-        createHero(new Sorceress(), kingsLanding);        
+        createHero(new Sorceress(), kingsLanding);
     }
     
     private void initialiseBigMap() {

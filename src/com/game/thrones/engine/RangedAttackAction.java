@@ -22,6 +22,11 @@ public class RangedAttackAction extends AttackAction {
     }
     
     @Override
+    protected boolean isSlayer(Minion minion) {
+        return false;
+    }
+    
+    @Override
     public String toString() {
         return "Fire at the minions at " + attackingTerritory.getName();
     }

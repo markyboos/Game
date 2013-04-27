@@ -10,7 +10,7 @@ import com.game.thrones.model.Territory;
  *
  * An abstract class defining the commonalities between pieces
  */
-public abstract class Piece {
+public abstract class Piece implements CharSequence {
     protected String name;
 
     //who they are fighting for
@@ -64,5 +64,21 @@ public abstract class Piece {
     @Override
     public String toString() {
         return name + " at " + position;
+    }
+    
+    /**
+     * Char sequence stuff
+     */
+    
+    public int length() {
+        return toString().length();
+    }
+
+    public char charAt(int arg0) {
+        return toString().charAt(arg0);
+    }
+
+    public CharSequence subSequence(int arg0, int arg1) {
+        return toString().subSequence(arg0, arg1);
     }
 }

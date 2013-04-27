@@ -28,6 +28,10 @@ public class AddMinionAction implements Action {
         this.team = team;
     }
     
+    public Territory getTerritory() {
+        return territory;
+    }
+    
     public void execute() {
         
         final Board board = GameController.getInstance().getBoard();

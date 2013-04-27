@@ -12,13 +12,10 @@ import com.game.thrones.model.hero.Sorceress;
  */
 public class CleanseAction extends AbstractAction<Hero> {
     
-    private final Territory position;
     private Item itemToUse;
     
     public CleanseAction(final Hero piece) {
         super(piece);
-        
-        position = piece.getPosition();
     }
     
     Dice dice = new Dice();
@@ -39,7 +36,7 @@ public class CleanseAction extends AbstractAction<Hero> {
         }
         
         if (dice.roll(toRoll) || dice.roll(toRoll)) {
-            position.removeTaint();                        
+            piece.getPosition().removeTaint();                        
         }
     }
     

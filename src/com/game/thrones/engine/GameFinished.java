@@ -13,7 +13,7 @@ public enum GameFinished {
     GENERAL_REACHED_CENTRE("A general has reached kings landing"),
     TOO_MANY_MINIONS("There are too many minions across the land"),
     TOO_MUCH_TAINTED_LAND("Too much land is tainted"),
-    CENTRE_TAINTED("The centre has been tainted"),
+    CENTRE_OVERRUN("The centre has been overrun"),
     GENERALS_ALL_DEAD("All generals are dead, you win!");
     
     private String description;

@@ -12,11 +12,11 @@ public class Item implements CharSequence {
     
     public enum ItemType {CARD, SLAYER, BOOTS_OF_SPEED, DISPOSABLE}
     
-    private final ItemType type;
+    protected ItemType type;
     
-    private final int power;
+    protected int power;
     
-    private final Team team;    
+    protected Team team;    
      
     public Item(int power, Team team) {
         this.power = power;

@@ -63,8 +63,13 @@ public class ActionCreator {
                 }
             }
             
-            if (generalAtHero) {
-                actions.add(new AttackGeneralAction(hero, (General)pieces.get(0)));
+            if (generalAtHero && !minionsAtHero) {
+                General general = (General)pieces.get(0);
+                
+                //not allowed to attack the general if they have no items                
+                if (!hero.getItemsForTeam(general.getTeam()).isEmpty()) {
+                    actions.add(new AttackGeneralAction(hero, general));
+                }                
             }
             
             Territory position = piece.getPosition();

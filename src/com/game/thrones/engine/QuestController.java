@@ -7,6 +7,7 @@ import com.game.thrones.model.ItemReward;
 import com.game.thrones.model.Quest;
 import com.game.thrones.model.Reward;
 import com.game.thrones.model.Territory;
+import com.game.thrones.model.hero.ActionItem;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Item;
 import com.game.thrones.model.hero.Minion;
@@ -55,7 +56,7 @@ public class QuestController {
         //roll 4 dice, get a 6
         //todo discard to remove any single taint
         quests.add(new Quest("The Old Tree Bloke", oldFatherTreeBloke,
-                new DiceRequirement(4, 6), new ItemReward(new Item())));
+                new DiceRequirement(4, 6), new ItemReward(new ActionItem(new RemoveTaintAction()))));
     }
 
     private Reward createDukesReward(final Territory territory) {

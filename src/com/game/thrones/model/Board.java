@@ -1,6 +1,7 @@
 package com.game.thrones.model;
 
 import android.util.Log;
+import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.piece.Piece;
 
@@ -306,14 +307,17 @@ public class Board {
         criteria.setOwner(team);
         
         List<Piece> minions = getPieces(criteria);
-        if (minions.size() < 3) {
+        boolean isCentre = territory.equals(getCentralTerritory());
+        
+        if (minions.size() < 3 || isCentre) {
             Minion minion = new Minion(team);
         
             addPiece(minion);
             
             minion.setPosition(territory);
             
-            if (minions.size() == 2 && allMinionsAreDemons(minions, minion)) {
+            if (minions.size() == 2 && allMinionsAreDemons(minions, minion) 
+                    && !isCentre) {
                 territory.taint();
             }
             
