@@ -2,12 +2,11 @@
 package com.game.thrones.engine;
 
 import android.util.Log;
-import com.game.thrones.model.PieceCriteria;
+import com.game.thrones.model.AllFilter;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.TerritoryCriteria;
 import com.game.thrones.model.hero.General;
-import com.game.thrones.model.piece.Piece;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -121,14 +120,9 @@ public class AIController {
             order.addAction(new AddMinionAction(t, 2, t.getOwner()));
             orders.add(order);
         }
-        
-        PieceCriteria criteria = new PieceCriteria();
-        criteria.setClass(General.class);
              
-        for (Piece piece : controller.getBoard().getPieces(criteria)) {
-            
-            General general = (General)piece;
-        
+        for (General general : controller.getBoard().getPieces(AllFilter.INSTANCE, General.class)) {
+                    
             List<Territory> path = controller.getBoard()
                     .getPathToTerritory(general.getPosition(), centralTerritory);
 

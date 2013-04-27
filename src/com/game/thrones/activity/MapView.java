@@ -10,8 +10,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import com.game.thrones.engine.GameController;
-import com.game.thrones.model.PieceCriteria;
+import com.game.thrones.model.AllFilter;
 import com.game.thrones.model.Territory;
+import com.game.thrones.model.TerritoryFilter;
 import com.game.thrones.model.piece.Piece;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,7 @@ public class MapView extends View implements CameraChangeListener {
         
         populateNeighbours(3, 3, map[3][3]);
         
-        List<Piece> pieces = controller.getBoard().getPieces(new PieceCriteria());
+        List<Piece> pieces = controller.getBoard().getPieces(AllFilter.INSTANCE, Piece.class);
         
         for (int i = 0 ; i < map.length ; i ++) {
             for (int j = 0; j < map[0].length; j ++) {
@@ -188,10 +189,8 @@ public class MapView extends View implements CameraChangeListener {
             
             if (clicked != null) {
                 
-                PieceCriteria criteria = new PieceCriteria();
-                criteria.setTerritory(clicked.getTerritory());
-                
-                final List<Piece> pieceOptions = controller.getBoard().getPieces(criteria);
+                final List<Piece> pieceOptions = controller.getBoard().getPieces(
+                        new TerritoryFilter(clicked.getTerritory()), Piece.class);
                 
                 if (pieceOptions.contains(controller.getPlayer())) {
                     if (controller.getPlayer().getActionsAvailable() == 0) {

@@ -1,7 +1,6 @@
 package com.game.thrones.model;
 
 import android.util.Log;
-import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.piece.Piece;
 
@@ -162,28 +161,20 @@ public class Board {
         return Collections.unmodifiableSet(territoryPieces);
     }
     
-    public List<Piece> getPieces(final PieceCriteria criteria) {
-        List<Piece> foundPieces = new ArrayList<Piece>();
+    public <P extends Piece> List<P> getPieces(final PieceFilter filter, final Class<P> klass) {
+        List<P> foundPieces = new ArrayList<P>();
         
+        //Log.d("getPieces", "Doing search....");
+
         for (Piece piece : pieces) {
-            
-            boolean found = true;
-            
-            if (criteria.getTerritory() != null && !piece.getPosition().equals(criteria.getTerritory())) {
-                found = false;
-            }
-            
-            if (criteria.getType() != null && !criteria.getType().isAssignableFrom(piece.getClass())) {
-                found = false;            
-            }
-            
-            if (found) {
-                //Log.d("Board:getPieces", "Found " + piece);
-                foundPieces.add(piece);
+            if (klass.isAssignableFrom(piece.getClass())
+                    && filter.valid(piece)) {
+                //Log.d("getPieces", piece + " is valid  at position [" + piece.getPosition() + "] and team [" + piece.getTeam() + "]");
+                foundPieces.add((P) piece);
             }
         }
-        
-        return Collections.unmodifiableList(foundPieces);        
+
+        return foundPieces;
     }
     
     public void removePiece(final Piece pice) {
@@ -213,11 +204,7 @@ public class Board {
         
         for (Territory territory : territories) {
             
-            PieceCriteria pieceCriteria = new PieceCriteria();
-            pieceCriteria.setClass(Minion.class);
-            pieceCriteria.setTerritory(territory);
-            
-            List<Piece> piecesAtTerritory = getPieces(pieceCriteria);
+            List<Minion> piecesAtTerritory = getPieces(new TerritoryFilter(territory), Minion.class);
                         
             if (criteria.getMinionCount() != null) {                
                 int actual = piecesAtTerritory.size();
@@ -301,12 +288,8 @@ public class Board {
     
     public void addMinionToTerritory(final Territory territory, final Team team,
             final boolean overrun) {
-        PieceCriteria criteria = new PieceCriteria();
-        criteria.setClass(Minion.class);
-        criteria.setTerritory(territory);
-        criteria.setOwner(team);
         
-        List<Piece> minions = getPieces(criteria);
+        List<Minion> minions = getPieces(new TerritoryFilter(territory), Minion.class);
         boolean isCentre = territory.equals(getCentralTerritory());
         
         if (minions.size() < 3 || isCentre) {
@@ -342,7 +325,7 @@ public class Board {
         }
     }
 
-    private boolean allMinionsAreDemons(final List<Piece> minions, Minion added) {
+    private boolean allMinionsAreDemons(final List<Minion> minions, Minion added) {
                 
         //if all the minions are demons taint it
         for (Piece p : minions) {

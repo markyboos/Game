@@ -1,6 +1,7 @@
 
 package com.game.thrones.engine;
 
+import android.util.Log;
 import com.game.thrones.activity.CameraChangeEvent;
 import com.game.thrones.model.Board;
 import com.game.thrones.model.Team;
@@ -38,7 +39,8 @@ public class AddMinionAction implements Action {
         
         GameController.getInstance().fireCameraChangeEvent(new CameraChangeEvent(territory));
         
-        for (int i = 0; i < number; i++) {            
+        for (int i = 0; i < number; i++) {
+            Log.d("Add Minion To territory", "[" + territory + "] [" + team + "]");
             board.addMinionToTerritory(territory, team, true);
         }
     }

@@ -5,17 +5,18 @@ import com.game.thrones.activity.CameraChangeEvent;
 import com.game.thrones.activity.CameraChangeListener;
 import com.game.thrones.activity.GameFinishedEvent;
 import com.game.thrones.activity.GameFinishedListener;
+import com.game.thrones.model.AllFilter;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.game.thrones.model.Board;
-import com.game.thrones.model.PieceCriteria;
+import com.game.thrones.model.PieceFilter;
 import com.game.thrones.model.Territory;
+import com.game.thrones.model.TerritoryFilter;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.hero.Woundable;
-import com.game.thrones.model.piece.Piece;
 import java.util.Collections;
 
 /**
@@ -79,13 +80,10 @@ public class GameController {
         GameInitialiser initialiser = new GameInitialiser();
         board = initialiser.createBoard();
 
-        PieceCriteria criteria = new PieceCriteria();
-        criteria.setClass(Hero.class);
-
         players = new ArrayList<Hero>();
 
-        for (Piece piece : board.getPieces(criteria)) {
-            players.add((Hero) piece);
+        for (Hero piece : board.getPieces(AllFilter.INSTANCE, Hero.class)) {
+            players.add(piece);
         }
 
         player = players.get(0);
@@ -115,19 +113,8 @@ public class GameController {
         player.addItem(itemController.getTopItem());
 
         //if the hero is in a place with monsters then take life off
-        PieceCriteria criteria = new PieceCriteria();
-        criteria.setClass(Minion.class);
-        criteria.setTerritory(player.getPosition());
-
-        List<Piece> piecesAtHero = board.getPieces(criteria);
-
-        //todo crappy work around
-
-        List<Minion> minionsAtHero = new ArrayList<Minion>();
-
-        for (Piece piece : piecesAtHero) {
-            minionsAtHero.add((Minion) piece);
-        }
+        List<Minion> minionsAtHero = board.getPieces(new TerritoryFilter(player.getPosition()),
+                Minion.class);
 
         player.takeDamage(minionsAtHero);
 
@@ -151,11 +138,9 @@ public class GameController {
         //there are too many minions on the map
         //the centre has 5 or more minions
         //or the taint has spread too far then its game over
-        
-        criteria.setTerritory(centralTerritory);
-        criteria.setClass(Minion.class);
 
-        if (board.getPieces(criteria).size() > 4) {
+        PieceFilter centralTerritoryFilter = new TerritoryFilter(centralTerritory);
+        if (board.getPieces(centralTerritoryFilter, Minion.class).size() > 4) {
             gameFinishedListener.fireGameFinishedEvent(new GameFinishedEvent(GameFinished.CENTRE_OVERRUN));
         }
 
@@ -169,27 +154,17 @@ public class GameController {
             gameFinishedListener.fireGameFinishedEvent(new GameFinishedEvent(GameFinished.TOO_MUCH_TAINTED_LAND));
         }
 
-        criteria = new PieceCriteria();
-        criteria.setTerritory(centralTerritory);
-        criteria.setClass(General.class);
-
-        if (!board.getPieces(criteria).isEmpty()) {
+        if (!board.getPieces(centralTerritoryFilter, General.class).isEmpty()) {
             gameFinishedListener.fireGameFinishedEvent(new GameFinishedEvent(GameFinished.GENERAL_REACHED_CENTRE));
         }
 
-        criteria = new PieceCriteria();
-        criteria.setClass(Minion.class);
-
-        if (board.getPieces(criteria).size() > 25) {
+        if (board.getPieces(AllFilter.INSTANCE, Minion.class).size() > 25) {
             gameFinishedListener.fireGameFinishedEvent(new GameFinishedEvent(GameFinished.TOO_MANY_MINIONS));
         }
 
         //heal generals
-        criteria = new PieceCriteria();
-        criteria.setClass(General.class);
 
-        for (Piece piece : board.getPieces(criteria)) {
-            General general = (General) piece;
+        for (General general : board.getPieces(AllFilter.INSTANCE, General.class)) {
             if (general instanceof Woundable) {
                 Woundable fatty = (Woundable) general;
                 //wait a round of players before healing
@@ -279,11 +254,7 @@ public class GameController {
                     Territory territory = addMinionAction.getTerritory();
 
                     //its not possible to have more than 3 on a territory at the beggining
-                    PieceCriteria criteria = new PieceCriteria();
-                    criteria.setClass(Minion.class);
-                    criteria.setTerritory(territory);
-
-                    if (board.getPieces(criteria).size() + total > 3 
+                    if (board.getPieces(new TerritoryFilter(territory), Minion.class).size() + total > 3 
                             || board.getCentralTerritory().equals(territory)) {
                         continue;
                     }

@@ -1,11 +1,10 @@
 
 package com.game.thrones.engine;
 
-import com.game.thrones.model.PieceCriteria;
 import com.game.thrones.model.Territory;
+import com.game.thrones.model.TerritoryFilter;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
-import com.game.thrones.model.piece.Piece;
 import java.util.List;
 
 /**
@@ -24,19 +23,13 @@ public class AttackAction extends AbstractAction<Hero> {
     
     private Dice dice = new Dice();
 
-    public void execute() {
-        
-        PieceCriteria criteria = new PieceCriteria<Minion>();
-        criteria.setTerritory(attackingTerritory);
-        criteria.setClass(Minion.class);
-        
-        List<Piece> minions = GameController.getInstance().getBoard().getPieces(criteria);
+    public void execute() {        
+        List<Minion> minions = GameController.getInstance()
+                .getBoard().getPieces(new TerritoryFilter(attackingTerritory), Minion.class);
         
         int killed = 0;
         
-        for (Piece minionPiece : minions) {
-            
-            Minion minion = (Minion) minionPiece;
+        for (Minion minion : minions) {
             //roll the dice
             
             if (isSlayer(minion) || 

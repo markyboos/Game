@@ -1,11 +1,10 @@
 
 package com.game.thrones.engine;
 
-import com.game.thrones.model.PieceCriteria;
 import com.game.thrones.model.Territory;
+import com.game.thrones.model.TerritoryFilter;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
-import com.game.thrones.model.piece.Piece;
 import java.util.List;
 
 /**
@@ -34,12 +33,9 @@ public class BarbarianAttackAction extends AttackAction {
             List<Territory> bordering = GameController.getInstance().getBoard()
                     .getBorderingTerritories(attackingTerritory);
             
-            for (Territory border : bordering) {
-                PieceCriteria criteria = new PieceCriteria();
-                criteria.setClass(Minion.class);
-                criteria.setTerritory(border);
-                
-                List<Piece> pieces = GameController.getInstance().getBoard().getPieces(criteria);
+            for (Territory border : bordering) {                
+                List<Minion> pieces = GameController.getInstance().getBoard().getPieces(
+                        new TerritoryFilter(border), Minion.class);
                 
                 if (pieces.isEmpty()) {
                     continue;

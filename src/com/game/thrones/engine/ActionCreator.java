@@ -2,10 +2,11 @@
 package com.game.thrones.engine;
 
 import android.util.Log;
-import com.game.thrones.model.PieceCriteria;
+import com.game.thrones.model.PieceFilter;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.TerritoryCriteria;
+import com.game.thrones.model.TerritoryFilter;
 import com.game.thrones.model.hero.Barbarian;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
@@ -32,15 +33,12 @@ public class ActionCreator {
         //generic actions
         List<Action> actions = createMoveActions(piece);
         
-        PieceCriteria criteria = new PieceCriteria();
-        criteria.setClass(Minion.class);
-        criteria.setTerritory(piece.getPosition());
+        PieceFilter filter = new TerritoryFilter(piece.getPosition());
+                
+        boolean minionsAtHero = !controller.getBoard().getPieces(
+                filter, Minion.class).isEmpty();
         
-        boolean minionsAtHero = !controller.getBoard().getPieces(criteria).isEmpty();
-        
-        criteria.setClass(General.class);
-        
-        List<Piece> pieces = controller.getBoard().getPieces(criteria);
+        List<General> pieces = controller.getBoard().getPieces(filter, General.class);
         
         boolean generalAtHero = !pieces.isEmpty();
         
@@ -64,7 +62,7 @@ public class ActionCreator {
             }
             
             if (generalAtHero && !minionsAtHero) {
-                General general = (General)pieces.get(0);
+                General general = pieces.get(0);
                 
                 //not allowed to attack the general if they have no items                
                 if (!hero.getItemsForTeam(general.getTeam()).isEmpty()) {

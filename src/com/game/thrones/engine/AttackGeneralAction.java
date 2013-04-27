@@ -1,8 +1,8 @@
 package com.game.thrones.engine;
 
 import com.game.thrones.activity.GameFinishedEvent;
+import com.game.thrones.model.AllFilter;
 import com.game.thrones.model.Board;
-import com.game.thrones.model.PieceCriteria;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
@@ -130,11 +130,8 @@ public class AttackGeneralAction implements GroupAction<Hero> {
             }
         }
 
-        //victory condition check           
-        PieceCriteria criteria = new PieceCriteria();
-        criteria.setClass(General.class);
-
-        if (board.getPieces(criteria).isEmpty()) {
+        //victory condition check
+        if (board.getPieces(AllFilter.INSTANCE, General.class).isEmpty()) {
             GameController.getInstance().fireGameFinishedEvent(new GameFinishedEvent(GameFinished.GENERALS_ALL_DEAD));
         }
 

@@ -20,9 +20,12 @@ import com.game.thrones.engine.RumorsAction;
 import com.game.thrones.engine.ShapeShiftAction;
 import com.game.thrones.engine.TeamSelectAction;
 import com.game.thrones.engine.TerritorySelectAction;
-import com.game.thrones.model.PieceCriteria;
+import com.game.thrones.model.ChainedFilter;
+import com.game.thrones.model.EnoughItemsFilter;
+import com.game.thrones.model.PieceFilter;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
+import com.game.thrones.model.TerritoryFilter;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Item;
 import com.game.thrones.model.piece.Piece;
@@ -225,24 +228,15 @@ public class PlayerActionActivity extends ListActivity {
     }
     
     private void choosePlayers(final AttackGeneralAction action) {
+                        
+        PieceFilter filter = 
+                new ChainedFilter(
+                    new TerritoryFilter(hero.getPosition()),
+                    new EnoughItemsFilter(action.getTarget().getTeam())
+                );
         
-        PieceCriteria criteria = new PieceCriteria();
-        criteria.setClass(Hero.class);
-        criteria.setTerritory(hero.getPosition());
-        
-        //todo make sure these heroes have items
-        
-        List<Piece> pOptions = GameController.getInstance().getBoard().getPieces(criteria);
-        final List<Hero> options = new ArrayList<Hero>();
-        
-        for (Piece p : pOptions) {
-            Hero hero = (Hero)p;
-            if (hero.getItemsForTeam(action.getTarget().getTeam()).isEmpty()) {
-                continue;
-            }
-            options.add(hero);
-        }
-        
+        final List<Hero> options = GameController.getInstance().getBoard()
+                .getPieces(filter, Hero.class);                
         
         final LinkedList<Hero> selectedHeroes = new LinkedList<Hero>();
         
