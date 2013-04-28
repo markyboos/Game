@@ -11,11 +11,14 @@ import com.game.thrones.model.hero.Barbarian;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
+import com.game.thrones.model.hero.Paladin;
 import com.game.thrones.model.hero.Ranger;
 import com.game.thrones.model.hero.Sorceress;
+import com.game.thrones.model.hero.Wizard;
 import com.game.thrones.model.piece.Piece;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Creates actions for pieces
@@ -95,6 +98,22 @@ public class ActionCreator {
                     && actionsSoFar(ShapeShiftAction.class) == 0) {
                 actions.add(new ShapeShiftAction((Sorceress)hero));
             }
+            
+            if (piece instanceof Paladin) {
+                actions.addAll(createSteedActions((Paladin)hero));                
+            }
+            
+            if (piece instanceof Wizard) {
+                
+                if (actionsSoFar(TeleportAction.class) == 0) {
+                    actions.addAll(createTeleportActions((Wizard)hero));
+                }
+                
+                if (minionsAtHero 
+                        && !hero.getItemsForTeam(hero.getPosition().getOwner()).isEmpty()) {                
+                    actions.add(new FireballAction((Wizard)piece));
+                }
+            }
         }
         
         return actions;
@@ -150,6 +169,33 @@ public class ActionCreator {
         
         for (Territory territory : territories) {
             actions.add(new RangedAttackAction(piece, territory));
+        }
+        
+        return actions;
+    }
+
+    private List<Action> createSteedActions(final Paladin hero) {
+        
+        List<Action> actions = new ArrayList<Action>();
+        
+        Set<Territory> territories = controller.getBoard()
+                .getTerritoriesDistanceAway(hero.getPosition(), 2);
+        
+        for (Territory territory : territories) {
+            actions.add(new SteedAction(hero, territory));
+        }
+        
+        return actions;
+    }
+
+    private List<Action> createTeleportActions(Wizard wizard) {
+        List<Action> actions = new ArrayList<Action>();
+        
+        for (Territory territory : controller.getBoard().getTerritories()) {
+            if (territory.equals(wizard.getPosition())) {
+                continue;
+            }
+            actions.add(new TeleportAction(wizard, territory));
         }
         
         return actions;

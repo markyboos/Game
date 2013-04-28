@@ -12,14 +12,16 @@ import android.widget.EditText;
 import android.widget.ListView;
 import com.game.thrones.engine.Action;
 import com.game.thrones.engine.ActionCreator;
+import com.game.thrones.engine.AttackAction;
 import com.game.thrones.engine.AttackGeneralAction;
 import com.game.thrones.engine.BarbarianAttackAction;
-import com.game.thrones.engine.CleanseAction;
 import com.game.thrones.engine.GameController;
+import com.game.thrones.engine.ItemSelectAction;
 import com.game.thrones.engine.RumorsAction;
 import com.game.thrones.engine.ShapeShiftAction;
 import com.game.thrones.engine.TeamSelectAction;
 import com.game.thrones.engine.TerritorySelectAction;
+import com.game.thrones.engine.descriptions.AttackDescriptionRenderer;
 import com.game.thrones.model.ChainedFilter;
 import com.game.thrones.model.EnoughItemsFilter;
 import com.game.thrones.model.PieceFilter;
@@ -91,9 +93,9 @@ public class PlayerActionActivity extends ListActivity {
             
             return;            
         }
-        if (selected instanceof CleanseAction) {
+        if (selected instanceof ItemSelectAction) {
             
-            chooseItem((CleanseAction)selected);
+            chooseItem((ItemSelectAction)selected);
             
             return;
         }
@@ -200,7 +202,7 @@ public class PlayerActionActivity extends ListActivity {
     
     private Item selectedItem;
     
-    private void chooseItem(final CleanseAction action) {
+    private void chooseItem(final ItemSelectAction action) {
         
         final List<Item> options = hero.getItemsForTeam(hero.getPosition().getOwner());
         
@@ -219,7 +221,7 @@ public class PlayerActionActivity extends ListActivity {
         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                action.setItemToUse(PlayerActionActivity.this.selectedItem);
+                action.setItem(PlayerActionActivity.this.selectedItem);
                 takeMove(action);
             }
         });
@@ -350,6 +352,22 @@ public class PlayerActionActivity extends ListActivity {
         
     }
     
+    private void showSummary(String message) {
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Summary")
+        .setMessage(message)
+        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {                
+                PlayerActionActivity.this.finish();
+            }
+        });
+        
+        builder.show();
+        
+    }
+    
     private void takeMove(final Action action) {
         controller.takeMove(action);
             
@@ -359,7 +377,14 @@ public class PlayerActionActivity extends ListActivity {
             
             hero.setCardsToRemove(0);
             return;
-        } 
+        }
+        
+        if (action instanceof AttackAction) {
+            AttackAction describable = (AttackAction)action;
+            AttackDescriptionRenderer view = new AttackDescriptionRenderer();
+            showSummary(view.render(describable.summary()));
+            return;
+        }
         
         this.finish();
     }

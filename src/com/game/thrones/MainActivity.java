@@ -16,6 +16,9 @@ import com.game.thrones.engine.GameController;
  */
 public class MainActivity extends AbstractMenuActivity {
     
+    public static final int FIREBALL = 0;
+    public static final int SWORDFIGHT = 1;
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,9 @@ public class MainActivity extends AbstractMenuActivity {
             @Override
             protected Void doInBackground(Void... arg0) {
                 soundManager.playMusic(R.raw.themetune);
+                
+                soundManager.addSound(FIREBALL, R.raw.fireball);
+                soundManager.addSound(SWORDFIGHT, R.raw.swordfight);
                 
                 return null;
             }

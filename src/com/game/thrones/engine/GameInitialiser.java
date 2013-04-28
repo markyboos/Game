@@ -10,9 +10,11 @@ import com.game.thrones.model.hero.Fatty;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
+import com.game.thrones.model.hero.Paladin;
 import com.game.thrones.model.hero.Ranger;
 import com.game.thrones.model.hero.Sorceress;
 import com.game.thrones.model.hero.UndeadKing;
+import com.game.thrones.model.hero.Wizard;
 import com.game.thrones.model.piece.Piece;
 
 import java.util.*;
@@ -62,8 +64,9 @@ public class GameInitialiser {
         createGeneral(new Dragon(), winterfell);
 
         //createHero(new Barbarian(), kingsLanding);
-        createHero(new Ranger(), kingsLanding);
-        createHero(new Sorceress(), kingsLanding);
+        createHero(new Wizard(), kingsLanding);
+        //createHero(new Sorceress(), kingsLanding);
+        createHero(new Paladin(), kingsLanding);
     }
     
     private void initialiseBigMap() {

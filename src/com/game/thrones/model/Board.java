@@ -96,6 +96,55 @@ public class Board {
         return Collections.unmodifiableList(borderingTerritories);
     }
     
+    public Set<Territory> getTerritoriesDistanceAway(Territory territory, int distance) {
+        Map<Territory, Integer> away = getTerritoriesAway(territory, 0, distance);
+        
+        Set<Territory> gathered = new HashSet<Territory>();
+        
+        for (Map.Entry<Territory, Integer> entry : away.entrySet()) {
+            Log.d("getTerritoriesAway", "[" +entry.getKey() + "] distance away[" +  entry.getValue() + "]");
+            if (entry.getValue() == distance) {
+                gathered.add(entry.getKey());
+            }            
+        }
+        
+        return Collections.unmodifiableSet(gathered);
+    }
+    
+    public Map<Territory, Integer> getTerritoriesAway(Territory territory, int current, int distance) {
+        if (current == distance) {
+            return Collections.emptyMap();
+        }
+        
+        Map<Territory, Integer> away = new HashMap<Territory, Integer>();
+        
+        if (current == 0) {
+            //starting position
+            away.put(territory, 0);
+        }
+        
+        for (Territory bordering : getBorderingTerritories(territory)) {
+            away.put(bordering, current + 1);
+        }
+        
+        Iterator<Territory> iter = away.keySet().iterator();
+        
+        Map<Territory, Integer> found = new HashMap<Territory, Integer>();
+        
+        while(iter.hasNext()) {
+            found.putAll(getTerritoriesAway(iter.next(), current + 1, distance));
+        }
+        
+        for (Territory key : found.keySet()) {
+            if (!away.containsKey(key)) {
+                away.put(key, found.get(key));                
+            }            
+        }
+        
+        return away;
+        
+    }
+    
     private PathFinder pathFinder = new DijkstraPathFinder(this);
     
     /**
@@ -149,16 +198,13 @@ public class Board {
         return false;
     }
     
-    public Set<Piece> getPieces(final Territory territory) {
-        Set<Piece> territoryPieces = new HashSet<Piece>();
-        
-        for (Piece piece : pieces) {
-            if (piece.getPosition().equals(territory)) {
-                territoryPieces.add(piece);
-            }
-        }
-        
-        return Collections.unmodifiableSet(territoryPieces);
+    /**
+     * Utility function to move a piece some distance on the board.     * 
+     * @param piece Piece to move
+     * @param destination Territory to move to
+     */
+    public void movePieceFar(Piece piece, Territory destination) {
+        piece.setPosition(destination);
     }
     
     public <P extends Piece> List<P> getPieces(final PieceFilter filter, final Class<P> klass) {
@@ -190,13 +236,6 @@ public class Board {
     //The following methods are just in so i can start working on some activities.
     //They should be removed when we decide how to do them properly.
     //
-    
-    public Territory getRandomTerritory() {
-        List<Territory> randomChoice = new ArrayList(territories);
-        Collections.shuffle(randomChoice);
-        
-        return randomChoice.get(0);
-    }
     
     public List<Territory> getTerritories(TerritoryCriteria criteria) {
         

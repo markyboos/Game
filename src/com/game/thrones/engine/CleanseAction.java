@@ -1,7 +1,6 @@
 
 package com.game.thrones.engine;
 
-import com.game.thrones.model.Territory;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Item;
 import com.game.thrones.model.hero.Sorceress;
@@ -10,7 +9,7 @@ import com.game.thrones.model.hero.Sorceress;
  *
  * @author James
  */
-public class CleanseAction extends AbstractAction<Hero> {
+public class CleanseAction extends AbstractAction<Hero> implements ItemSelectAction {
     
     private Item itemToUse;
     
@@ -20,7 +19,7 @@ public class CleanseAction extends AbstractAction<Hero> {
     
     Dice dice = new Dice();
     
-    public void setItemToUse(Item item) {
+    public void setItem(Item item) {
         itemToUse = item;        
     }
 

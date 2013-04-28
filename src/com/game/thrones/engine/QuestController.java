@@ -7,11 +7,11 @@ import com.game.thrones.model.ItemReward;
 import com.game.thrones.model.Quest;
 import com.game.thrones.model.Reward;
 import com.game.thrones.model.Territory;
+import com.game.thrones.model.TerritoryFilter;
 import com.game.thrones.model.hero.ActionItem;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Item;
 import com.game.thrones.model.hero.Minion;
-import com.game.thrones.model.piece.Piece;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -84,13 +84,11 @@ public class QuestController {
             private boolean removePieces(Territory ter, int total) {
 
                 Board board = GameController.getInstance().getBoard();
-                for (Piece piece : board.getPieces(ter)) {
-                    if (piece instanceof Minion) {
-                        total--;
-                        board.removePiece(piece);
-                        if (total == 0) {
-                            return true;
-                        }
+                for (Minion minion : board.getPieces(new TerritoryFilter(ter), Minion.class)) {
+                    total--;
+                    board.removePiece(minion);
+                    if (total == 0) {
+                        return true;
                     }
                 }
                 return false;

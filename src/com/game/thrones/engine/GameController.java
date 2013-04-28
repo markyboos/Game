@@ -93,9 +93,12 @@ public class GameController {
         itemController = new ItemController();
 
         questController = new QuestController();
-
+        
+        //add two hero cards for each player
         //deal out quest cards
         for (Hero hero : players) {
+            hero.addItem(itemController.getTopItem());
+            hero.addItem(itemController.getTopItem());
             hero.setQuest(questController.getTopQuest());
         }
 
