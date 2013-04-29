@@ -1,5 +1,7 @@
 package com.game.thrones.engine;
 
+import com.game.thrones.engine.actions.AddMinionAction;
+import com.game.thrones.engine.actions.Action;
 import android.util.Log;
 import com.game.thrones.activity.CameraChangeEvent;
 import com.game.thrones.activity.CameraChangeListener;
@@ -10,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.game.thrones.model.Board;
-import com.game.thrones.model.PieceFilter;
+import com.game.thrones.model.Filter;
 import com.game.thrones.model.Territory;
-import com.game.thrones.model.TerritoryFilter;
+import com.game.thrones.model.PieceTerritoryFilter;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
@@ -75,14 +77,14 @@ public class GameController {
         return Collections.unmodifiableList(actionsTaken);
     }
 
-    public void initialise() {
+    public void initialise(List<Hero> heroes) {
 
         GameInitialiser initialiser = new GameInitialiser();
-        board = initialiser.createBoard();
+        board = initialiser.createBoard(heroes);
 
         players = new ArrayList<Hero>();
 
-        for (Hero piece : board.getPieces(AllFilter.INSTANCE, Hero.class)) {
+        for (Hero piece : board.getPieces(new AllFilter<Hero>(), Hero.class)) {
             players.add(piece);
         }
 
@@ -116,7 +118,7 @@ public class GameController {
         player.addItem(itemController.getTopItem());
 
         //if the hero is in a place with monsters then take life off
-        List<Minion> minionsAtHero = board.getPieces(new TerritoryFilter(player.getPosition()),
+        List<Minion> minionsAtHero = board.getPieces(new PieceTerritoryFilter(player.getPosition()),
                 Minion.class);
 
         player.takeDamage(minionsAtHero);
@@ -142,7 +144,7 @@ public class GameController {
         //the centre has 5 or more minions
         //or the taint has spread too far then its game over
 
-        PieceFilter centralTerritoryFilter = new TerritoryFilter(centralTerritory);
+        Filter centralTerritoryFilter = new PieceTerritoryFilter(centralTerritory);
         if (board.getPieces(centralTerritoryFilter, Minion.class).size() > 4) {
             gameFinishedListener.fireGameFinishedEvent(new GameFinishedEvent(GameFinished.CENTRE_OVERRUN));
         }
@@ -167,7 +169,7 @@ public class GameController {
 
         //heal generals
 
-        for (General general : board.getPieces(AllFilter.INSTANCE, General.class)) {
+        for (General general : board.getPieces(new AllFilter<General>(), General.class)) {
             if (general instanceof Woundable) {
                 Woundable fatty = (Woundable) general;
                 //wait a round of players before healing
@@ -257,7 +259,7 @@ public class GameController {
                     Territory territory = addMinionAction.getTerritory();
 
                     //its not possible to have more than 3 on a territory at the beggining
-                    if (board.getPieces(new TerritoryFilter(territory), Minion.class).size() + total > 3 
+                    if (board.getPieces(new PieceTerritoryFilter(territory), Minion.class).size() + total > 3 
                             || board.getCentralTerritory().equals(territory)) {
                         continue;
                     }

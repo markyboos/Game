@@ -1,17 +1,15 @@
 
 package com.game.thrones.model;
 
-import com.game.thrones.model.piece.Piece;
-
 /**
  *
  * @author James
  */
-public class AllFilter implements PieceFilter {
+public class AllFilter<T> implements Filter<T> {
     
     public static final AllFilter INSTANCE = new AllFilter();
 
-    public boolean valid(Piece piece) {
+    public boolean valid(T piece) {
         return true;
     }
 }

@@ -12,7 +12,7 @@ import android.view.View;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.model.AllFilter;
 import com.game.thrones.model.Territory;
-import com.game.thrones.model.TerritoryFilter;
+import com.game.thrones.model.PieceTerritoryFilter;
 import com.game.thrones.model.piece.Piece;
 import java.util.ArrayList;
 import java.util.List;
@@ -190,7 +190,7 @@ public class MapView extends View implements CameraChangeListener {
             if (clicked != null) {
                 
                 final List<Piece> pieceOptions = controller.getBoard().getPieces(
-                        new TerritoryFilter(clicked.getTerritory()), Piece.class);
+                        new PieceTerritoryFilter(clicked.getTerritory()), Piece.class);
                 
                 if (pieceOptions.contains(controller.getPlayer())) {
                     if (controller.getPlayer().getActionsAvailable() == 0) {

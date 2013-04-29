@@ -12,10 +12,10 @@ import java.util.Map;
 public class AttackDescription implements ActionDescription {
     
     final Territory attackingTerritory;
-    final Map<Minion, SingleAttackResult> minionResults;
+    final Map<Minion, DiceRollResult> minionResults;
     final int killed;
     
-    public AttackDescription(Territory territory, Map<Minion, SingleAttackResult> minions, int killed) {
+    public AttackDescription(Territory territory, Map<Minion, DiceRollResult> minions, int killed) {
         attackingTerritory = territory;
         minionResults = minions;
         this.killed = killed;

@@ -1,7 +1,7 @@
 
 package com.game.thrones.model.hero;
 
-import com.game.thrones.engine.Action;
+import com.game.thrones.engine.actions.Action;
 import com.game.thrones.model.Team;
 
 /**

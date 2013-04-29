@@ -17,17 +17,17 @@ public class AttackDescriptionRenderer implements DescriptionRenderer<AttackDesc
         
         for (Minion minion : model.minionResults.keySet()) {
             
-            SingleAttackResult result = model.minionResults.get(minion);
+            DiceRollResult result = model.minionResults.get(minion);
         
             buf.append("You go for a ");
             buf.append(minion.getTeam());
             buf.append("\n");
 
-            if (result.slayer) {
+            /*if (result.slayer) {
                 buf.append("The ");
                 buf.append(minion.getTeam());
                 buf.append(" sees you and your mighty weapon and runs away!");
-            } else {
+            } else*/ {
                 buf.append("You needed to roll a ");
                 buf.append(result.needed);
                 buf.append(" and rolled a ");

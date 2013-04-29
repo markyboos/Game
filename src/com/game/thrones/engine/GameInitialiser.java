@@ -28,7 +28,7 @@ public class GameInitialiser {
     private Set<Piece> pieces = new HashSet<Piece>();
     private Map<Territory, Set<Territory>> borderMap = new HashMap<Territory, Set<Territory>>();
 
-    private void initialise() {
+    private void initialise(List<Hero> heroes) {
 
         // territories
         Territory kingsLanding = createTerritory(Territory.CENTRAL_TERRITORY, 1, Team.NO_ONE);
@@ -62,11 +62,10 @@ public class GameInitialiser {
 
         createGeneral(new Fatty(), rock);
         createGeneral(new Dragon(), winterfell);
-
-        //createHero(new Barbarian(), kingsLanding);
-        createHero(new Wizard(), kingsLanding);
-        //createHero(new Sorceress(), kingsLanding);
-        createHero(new Paladin(), kingsLanding);
+        
+        for (Hero hero : heroes) {
+            createHero(hero, kingsLanding);
+        }
     }
     
     private void initialiseBigMap() {
@@ -260,8 +259,8 @@ public class GameInitialiser {
         borderMap.get(t2).add(t1);
     }
 
-    public Board createBoard() {
-        initialise();
+    public Board createBoard(List<Hero> heroes) {
+        initialise(heroes);
 
         return new Board(borderMap, pieces);
     }

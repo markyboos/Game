@@ -25,6 +25,10 @@ public class Quest {
         this.requirement = requirement;
     }
     
+    public Requirement getRequirement() {
+        return requirement;
+    }
+    
     public boolean isSatisfied(Hero hero) {
         return requirement.satisfied(hero);
     }

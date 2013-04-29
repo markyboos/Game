@@ -1,6 +1,11 @@
 
 package com.game.thrones.engine;
 
+import com.game.thrones.engine.actions.MoveAlongPathAction;
+import com.game.thrones.engine.actions.AddMinionAction;
+import com.game.thrones.engine.actions.MoveAction;
+import com.game.thrones.engine.actions.OrcPatrolsAction;
+import com.game.thrones.engine.actions.Action;
 import android.util.Log;
 import com.game.thrones.model.AllFilter;
 import com.game.thrones.model.Team;
@@ -121,7 +126,7 @@ public class AIController {
             orders.add(order);
         }
              
-        for (General general : controller.getBoard().getPieces(AllFilter.INSTANCE, General.class)) {
+        for (General general : controller.getBoard().getPieces(new AllFilter<General>(), General.class)) {
                     
             List<Territory> path = controller.getBoard()
                     .getPathToTerritory(general.getPosition(), centralTerritory);

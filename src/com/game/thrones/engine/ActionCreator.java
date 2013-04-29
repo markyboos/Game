@@ -1,15 +1,30 @@
 
 package com.game.thrones.engine;
 
+import com.game.thrones.engine.actions.MoveAction;
+import com.game.thrones.engine.actions.CleanseAction;
+import com.game.thrones.engine.actions.AttackAction;
+import com.game.thrones.engine.actions.FireballAction;
+import com.game.thrones.engine.actions.RangedAttackAction;
+import com.game.thrones.engine.actions.ShapeShiftAction;
+import com.game.thrones.engine.actions.TeleportAction;
+import com.game.thrones.engine.actions.QuestAction;
+import com.game.thrones.engine.actions.SteedAction;
+import com.game.thrones.engine.actions.RumorsAction;
+import com.game.thrones.engine.actions.HealAction;
+import com.game.thrones.engine.actions.AttackGeneralAction;
+import com.game.thrones.engine.actions.BarbarianAttackAction;
+import com.game.thrones.engine.actions.Action;
 import android.util.Log;
-import com.game.thrones.model.PieceFilter;
+import com.game.thrones.model.Filter;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.TerritoryCriteria;
-import com.game.thrones.model.TerritoryFilter;
+import com.game.thrones.model.PieceTerritoryFilter;
 import com.game.thrones.model.hero.Barbarian;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
+import com.game.thrones.model.hero.InventorySearcher;
 import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.hero.Paladin;
 import com.game.thrones.model.hero.Ranger;
@@ -27,7 +42,9 @@ import java.util.Set;
  */
 public class ActionCreator {
     
-    GameController controller;
+    private GameController controller;
+    
+    private InventorySearcher searcher = new InventorySearcher();
     
     public List<Action> createActions(final Piece piece) {
         
@@ -36,7 +53,7 @@ public class ActionCreator {
         //generic actions
         List<Action> actions = createMoveActions(piece);
         
-        PieceFilter filter = new TerritoryFilter(piece.getPosition());
+        Filter filter = new PieceTerritoryFilter(piece.getPosition());
                 
         boolean minionsAtHero = !controller.getBoard().getPieces(
                 filter, Minion.class).isEmpty();
@@ -67,8 +84,8 @@ public class ActionCreator {
             if (generalAtHero && !minionsAtHero) {
                 General general = pieces.get(0);
                 
-                //not allowed to attack the general if they have no items                
-                if (!hero.getItemsForTeam(general.getTeam()).isEmpty()) {
+                //not allowed to attack the general if they have no items
+                if (searcher.hasTeamOrNooneItems(hero, general.getTeam())) {
                     actions.add(new AttackGeneralAction(hero, general));
                 }                
             }
@@ -80,7 +97,7 @@ public class ActionCreator {
             }
             
             if (position.getTainted() > 0 
-                    && !hero.getItemsForTeam(hero.getPosition().getOwner()).isEmpty()) {
+                    && searcher.hasTeamItems(hero, hero.getPosition().getOwner())) {
                 actions.add(new CleanseAction(hero));
             }
                         
@@ -110,7 +127,7 @@ public class ActionCreator {
                 }
                 
                 if (minionsAtHero 
-                        && !hero.getItemsForTeam(hero.getPosition().getOwner()).isEmpty()) {                
+                        && searcher.hasTeamItems(hero, hero.getPosition().getOwner())) {                
                     actions.add(new FireballAction((Wizard)piece));
                 }
             }

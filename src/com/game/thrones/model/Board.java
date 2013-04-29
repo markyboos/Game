@@ -207,14 +207,14 @@ public class Board {
         piece.setPosition(destination);
     }
     
-    public <P extends Piece> List<P> getPieces(final PieceFilter filter, final Class<P> klass) {
+    public <P extends Piece> List<P> getPieces(final Filter<P> filter, final Class<P> klass) {
         List<P> foundPieces = new ArrayList<P>();
         
         //Log.d("getPieces", "Doing search....");
 
         for (Piece piece : pieces) {
             if (klass.isAssignableFrom(piece.getClass())
-                    && filter.valid(piece)) {
+                    && filter.valid((P) piece)) {
                 //Log.d("getPieces", piece + " is valid  at position [" + piece.getPosition() + "] and team [" + piece.getTeam() + "]");
                 foundPieces.add((P) piece);
             }
@@ -243,7 +243,7 @@ public class Board {
         
         for (Territory territory : territories) {
             
-            List<Minion> piecesAtTerritory = getPieces(new TerritoryFilter(territory), Minion.class);
+            List<Minion> piecesAtTerritory = getPieces(new PieceTerritoryFilter(territory), Minion.class);
                         
             if (criteria.getMinionCount() != null) {                
                 int actual = piecesAtTerritory.size();
@@ -328,7 +328,7 @@ public class Board {
     public void addMinionToTerritory(final Territory territory, final Team team,
             final boolean overrun) {
         
-        List<Minion> minions = getPieces(new TerritoryFilter(territory), Minion.class);
+        List<Minion> minions = getPieces(new PieceTerritoryFilter(territory), Minion.class);
         boolean isCentre = territory.equals(getCentralTerritory());
         
         if (minions.size() < 3 || isCentre) {

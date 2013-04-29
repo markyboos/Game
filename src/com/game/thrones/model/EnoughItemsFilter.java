@@ -2,21 +2,22 @@
 package com.game.thrones.model;
 
 import com.game.thrones.model.hero.Hero;
+import com.game.thrones.model.hero.Item;
 
 /**
  *
  * @author James
  */
-public class EnoughItemsFilter implements PieceFilter<Hero> {
+public class EnoughItemsFilter implements Filter<Hero> {
     
-    public Team team;
+    public Filter<Item> filter;
     
-    public EnoughItemsFilter(Team team) {
-        this.team = team;        
+    public EnoughItemsFilter(Filter<Item> filter) {
+        this.filter = filter;        
     }
 
     public boolean valid(Hero hero) {
-        return !hero.getItemsForTeam(team).isEmpty();
+        return !hero.getItems(filter, Item.class).isEmpty();
     }
 
 }

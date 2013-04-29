@@ -1,5 +1,6 @@
 package com.game.thrones.engine;
 
+import com.game.thrones.engine.actions.RemoveTaintAction;
 import android.util.Log;
 import com.game.thrones.model.Board;
 import com.game.thrones.model.DiceRequirement;
@@ -7,7 +8,7 @@ import com.game.thrones.model.ItemReward;
 import com.game.thrones.model.Quest;
 import com.game.thrones.model.Reward;
 import com.game.thrones.model.Territory;
-import com.game.thrones.model.TerritoryFilter;
+import com.game.thrones.model.PieceTerritoryFilter;
 import com.game.thrones.model.hero.ActionItem;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Item;
@@ -81,10 +82,10 @@ public class QuestController {
                 }
             }
 
-            private boolean removePieces(Territory ter, int total) {
+            private boolean removePieces(Territory territory, int total) {
 
                 Board board = GameController.getInstance().getBoard();
-                for (Minion minion : board.getPieces(new TerritoryFilter(ter), Minion.class)) {
+                for (Minion minion : board.getPieces(new PieceTerritoryFilter<Minion>(territory), Minion.class)) {
                     total--;
                     board.removePiece(minion);
                     if (total == 0) {

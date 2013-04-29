@@ -7,7 +7,7 @@ import com.game.thrones.model.piece.Piece;
  *
  * @author James
  */
-public class TeamFilter implements PieceFilter {
+public class TeamFilter implements Filter<Piece> {
     
     private Team team;
     

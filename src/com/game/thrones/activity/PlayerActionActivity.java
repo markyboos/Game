@@ -10,26 +10,26 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import com.game.thrones.engine.Action;
+import com.game.thrones.engine.actions.Action;
 import com.game.thrones.engine.ActionCreator;
-import com.game.thrones.engine.AttackAction;
-import com.game.thrones.engine.AttackGeneralAction;
-import com.game.thrones.engine.BarbarianAttackAction;
+import com.game.thrones.engine.actions.AttackGeneralAction;
+import com.game.thrones.engine.actions.BarbarianAttackAction;
 import com.game.thrones.engine.GameController;
-import com.game.thrones.engine.ItemSelectAction;
-import com.game.thrones.engine.RumorsAction;
-import com.game.thrones.engine.ShapeShiftAction;
-import com.game.thrones.engine.TeamSelectAction;
-import com.game.thrones.engine.TerritorySelectAction;
-import com.game.thrones.engine.descriptions.AttackDescriptionRenderer;
-import com.game.thrones.model.ChainedFilter;
+import com.game.thrones.engine.actions.ItemSelectAction;
+import com.game.thrones.engine.actions.RumorsAction;
+import com.game.thrones.engine.actions.ShapeShiftAction;
+import com.game.thrones.engine.actions.TeamSelectAction;
+import com.game.thrones.engine.actions.TerritorySelectAction;
+import com.game.thrones.engine.descriptions.Describable;
+import com.game.thrones.model.AndFilter;
 import com.game.thrones.model.EnoughItemsFilter;
-import com.game.thrones.model.PieceFilter;
+import com.game.thrones.model.Filter;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
-import com.game.thrones.model.TerritoryFilter;
+import com.game.thrones.model.PieceTerritoryFilter;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Item;
+import com.game.thrones.model.hero.InventorySearcher;
 import com.game.thrones.model.piece.Piece;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -48,6 +48,8 @@ public class PlayerActionActivity extends ListActivity {
     private GameController controller = GameController.getInstance();
     private ActionCreator actionCreator = new ActionCreator();
     private Hero hero;
+    
+    private InventorySearcher searcher = new InventorySearcher();
 
     /**
      * Called when the activity is first created.
@@ -95,7 +97,11 @@ public class PlayerActionActivity extends ListActivity {
         }
         if (selected instanceof ItemSelectAction) {
             
-            chooseItem((ItemSelectAction)selected);
+            ItemSelectAction itemAction = (ItemSelectAction)selected;
+            
+            List<Item> options = hero.getItems(itemAction.getItemFilter(), Item.class);
+                    
+            chooseItem(itemAction, options);
             
             return;
         }
@@ -202,9 +208,7 @@ public class PlayerActionActivity extends ListActivity {
     
     private Item selectedItem;
     
-    private void chooseItem(final ItemSelectAction action) {
-        
-        final List<Item> options = hero.getItemsForTeam(hero.getPosition().getOwner());
+    private void chooseItem(final ItemSelectAction action, final List<Item> options) {
         
         selectedItem = options.get(0);
         
@@ -230,11 +234,13 @@ public class PlayerActionActivity extends ListActivity {
     }
     
     private void choosePlayers(final AttackGeneralAction action) {
+        
+        Filter<Item> teamFilter = searcher.aTeamOrNooneFilter(action.getTarget().getTeam());
                         
-        PieceFilter filter = 
-                new ChainedFilter(
-                    new TerritoryFilter(hero.getPosition()),
-                    new EnoughItemsFilter(action.getTarget().getTeam())
+        Filter<Hero> filter = 
+                new AndFilter<Hero> (
+                    new PieceTerritoryFilter(hero.getPosition()),
+                    new EnoughItemsFilter(teamFilter)
                 );
         
         final List<Hero> options = GameController.getInstance().getBoard()
@@ -278,8 +284,10 @@ public class PlayerActionActivity extends ListActivity {
         }
         
         final Hero hero = heroes.pop();
+                
+        final List<Item> options = hero.getItems(
+                searcher.aTeamOrNooneFilter(action.getTarget().getTeam()), Item.class);    
         
-        final List<Item> options = hero.getItemsForTeam(action.getTarget().getTeam());        
         final List<Item> selectedItems = new ArrayList<Item>();
                 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -379,10 +387,9 @@ public class PlayerActionActivity extends ListActivity {
             return;
         }
         
-        if (action instanceof AttackAction) {
-            AttackAction describable = (AttackAction)action;
-            AttackDescriptionRenderer view = new AttackDescriptionRenderer();
-            showSummary(view.render(describable.summary()));
+        if (action instanceof Describable) {
+            Describable describable = (Describable)action;
+            showSummary(describable.render());
             return;
         }
         

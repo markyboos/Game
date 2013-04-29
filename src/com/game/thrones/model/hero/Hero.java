@@ -1,6 +1,7 @@
 
 package com.game.thrones.model.hero;
 
+import com.game.thrones.model.Filter;
 import com.game.thrones.model.Quest;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
@@ -52,30 +53,17 @@ public abstract class Hero extends Piece {
         inventory.clear();
     }
     
-    public boolean isSlayer(final Team team) {
+    public <I extends Item> List<I> getItems(final Filter<I> filter, final Class<I> klass) {
+        List<I> foundItems = new ArrayList<I>();
+
         for (Item item : inventory) {
-            if (item.getItemType() == Item.ItemType.SLAYER && item.getTeam() == team) {
-                return true;
+            if (klass.isAssignableFrom(item.getClass())
+                    && filter.valid((I) item)) {
+                foundItems.add((I) item);
             }
         }
-        
-        return false;
-    }
-    
-    public List<Item> getItemsForTeam(final Team team) {
-        List<Item> items = new ArrayList<Item>();
-        for (Item item : inventory) {
-            
-            if (item.getItemType() != Item.ItemType.CARD) {
-                continue;                
-            }
-            
-            if (item.getTeam() == team || item.getTeam() == Team.NO_ONE) {
-                items.add(item);
-            }
-        }
-        
-        return Collections.unmodifiableList(items);        
+
+        return foundItems;
     }
     
     public void setCardsToRemove(int cardsToRemove) {
