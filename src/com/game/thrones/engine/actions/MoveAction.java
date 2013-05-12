@@ -1,14 +1,17 @@
 
 package com.game.thrones.engine.actions;
 
+import com.game.framework.SoundManager;
+import com.game.thrones.MainActivity;
 import com.game.thrones.activity.CameraChangeEvent;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.model.Board;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
-import com.game.thrones.model.hero.Fatty;
 import com.game.thrones.model.hero.General;
+import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Sorceress;
+import com.game.thrones.model.hero.Woundable;
 import com.game.thrones.model.piece.Piece;
 
 /**
@@ -33,6 +36,11 @@ public class MoveAction extends AbstractAction {
     }
 
     public void execute() {
+        
+        if (piece instanceof Hero) {            
+            playSoundEffect(MainActivity.WALK);
+        }
+        
         final Board board = GameController.getInstance().getBoard();
         
         //generals can never move away from the centre of the map
@@ -43,7 +51,7 @@ public class MoveAction extends AbstractAction {
             }
             
             //dont move if they are heavily wounded
-            if (piece instanceof Fatty && ((Fatty)piece).isHeavilyWounded()) {
+            if (piece instanceof Woundable && ((Woundable)piece).isHeavilyWounded()) {
                 return;            
             }
         }

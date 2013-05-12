@@ -57,17 +57,14 @@ public class FireballAction extends AttackAction implements ItemSelectAction {
     public void execute() {
         piece.useItem(item);
         
+        playSoundEffect(MainActivity.FIREBALL);
+        
         super.execute();
     }
     
     @Override
     protected boolean isSlayer(Minion minion) {        
         return false;
-    }
-    
-    @Override
-    protected void playSoundEffect() {
-        SoundManager.getSingleton().playSound(MainActivity.FIREBALL);        
     }
 
     @Override

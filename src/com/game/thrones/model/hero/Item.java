@@ -1,6 +1,7 @@
 
 package com.game.thrones.model.hero;
 
+import com.game.thrones.engine.descriptions.ActionDescription;
 import com.game.thrones.model.Team;
 
 /**
@@ -8,7 +9,7 @@ import com.game.thrones.model.Team;
  * 
  * @author James
  */
-public class Item implements CharSequence {
+public class Item implements CharSequence, ActionDescription {
     
     public enum ItemType {CARD, SLAYER, BOOTS_OF_SPEED, DISPOSABLE}
     
@@ -29,12 +30,6 @@ public class Item implements CharSequence {
         
         type = ItemType.SLAYER;
         this.team = team;
-    }
-    
-    public Item(int power) {
-        type = ItemType.BOOTS_OF_SPEED;
-        this.power = power;
-        this.team = Team.NO_ONE;        
     }
     
     public Item() {

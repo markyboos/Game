@@ -114,8 +114,9 @@ public class GameController {
     public void endTurn() {
 
         //collect items
-        player.addItem(itemController.getTopItem());
-        player.addItem(itemController.getTopItem());
+        for (int i = 0; i < player.itemsPerTurn(); i++) {
+            player.addItem(itemController.getTopItem());
+        }
 
         //if the hero is in a place with monsters then take life off
         List<Minion> minionsAtHero = board.getPieces(new PieceTerritoryFilter(player.getPosition()),
@@ -192,7 +193,7 @@ public class GameController {
         player.modifyActions();
     }
 
-    public boolean takeMove(final Action action) {
+    public void takeMove(final Action action) {
 
         //take the turn for that hero
         action.execute();
@@ -203,11 +204,8 @@ public class GameController {
 
         if (player.getActionsAvailable() == 0) {
             //end that players turn
-            return true;
-
+            endTurn();
         }
-
-        return false;
     }
 
     private Hero getNextPlayer() {

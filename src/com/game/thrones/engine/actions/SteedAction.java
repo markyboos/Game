@@ -1,6 +1,7 @@
 
 package com.game.thrones.engine.actions;
 
+import com.game.thrones.MainActivity;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.hero.Paladin;
@@ -18,7 +19,9 @@ public class SteedAction extends AbstractAction<Paladin> {
         this.destination = destination;
     }
 
-    public void execute() {
+    public void execute() {        
+        playSoundEffect(MainActivity.HORSE);
+        
         GameController.getInstance().getBoard()
                 .movePieceFar(piece, destination);
     }

@@ -40,7 +40,7 @@ public class AttackAction extends AbstractAction<Hero> implements Describable<At
 
     public void execute() {
         
-        playSoundEffect();
+        playSoundEffect(MainActivity.SWORDFIGHT);
         
         List<Minion> minions = GameController.getInstance()
                 .getBoard().getPieces(new PieceTerritoryFilter(attackingTerritory), Minion.class);
@@ -89,10 +89,6 @@ public class AttackAction extends AbstractAction<Hero> implements Describable<At
     
     protected int rollToDamage(Minion minion) {
         return minion.getRollToDamage();
-    }
-    
-    protected void playSoundEffect() {
-        SoundManager.getSingleton().playSound(MainActivity.SWORDFIGHT);        
     }
     
     @Override

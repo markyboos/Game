@@ -1,6 +1,7 @@
 
 package com.game.thrones.engine.actions;
 
+import com.game.thrones.MainActivity;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.hero.Wizard;
@@ -19,6 +20,9 @@ public class TeleportAction extends AbstractAction<Wizard> {
     }
 
     public void execute() {
+        
+        playSoundEffect(MainActivity.TELEPORT);
+        
         GameController.getInstance().getBoard()
                 .movePieceFar(piece, destination);
     }

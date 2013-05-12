@@ -69,7 +69,11 @@ public class Territory {
     }
     
     public void removeTaint() {
-        tainted --;
+        tainted --;     
+    }
+    
+    public void removeAllTaint() {
+        tainted = 0;
     }
 
     @Override

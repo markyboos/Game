@@ -1,45 +1,34 @@
 
 package com.game.thrones.engine.actions;
 
-import com.game.thrones.engine.descriptions.QuestDescription;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.engine.descriptions.Describable;
 import com.game.thrones.engine.descriptions.QuestDescriptionRenderer;
 import com.game.thrones.model.Quest;
-import com.game.thrones.model.Requirement;
 import com.game.thrones.model.hero.Hero;
 
 /**
  *
  * @author James
  */
-public class QuestAction extends AbstractAction<Hero> implements Describable<QuestDescription> {
+public class QuestAction extends AbstractAction<Hero> implements Describable<Quest> {
     
-    private QuestDescription description;
-
+    private Quest quest;
+    
     public QuestAction(Hero hero) {
         super(hero);
+        this.quest = piece.getQuest();
     }
 
     public void execute() {
-        Quest quest = piece.getQuest();
         
-        Requirement requirement = quest.getRequirement();
-        
-        if (!quest.isSatisfied(piece)) {
-            
-            description = new QuestDescription(requirement);
-            
+        if (!quest.isSatisfied(piece)) {            
             return;            
         }
         
-        quest.collectReward(piece);
-        
-        piece.competeQuest();
+        piece.collectReward(quest);
         
         Quest next = GameController.getInstance().getQuestController().getTopQuest();
-        
-        description = new QuestDescription(requirement);
         
         piece.setQuest(next);
     }
@@ -49,8 +38,8 @@ public class QuestAction extends AbstractAction<Hero> implements Describable<Que
         return piece.getQuest().toString();
     }
 
-    public QuestDescription summary() {
-        return description;
+    public Quest summary() {
+        return quest;
     }
 
     public String render() {

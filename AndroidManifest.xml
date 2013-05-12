@@ -15,6 +15,7 @@
         
         <activity android:name=".activity.PlayerActionActivity"/>
         <activity android:name=".activity.MapCanvasActivity"/>
+        <activity android:name=".activity.InventoryActivity"/>
         <activity android:name=".activity.MapActivity"/>
     </application>
 </manifest>

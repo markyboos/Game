@@ -1,7 +1,7 @@
 
 package com.game.thrones.engine.actions;
 
-import com.game.thrones.engine.actions.PieceAction;
+import com.game.framework.SoundManager;
 import com.game.thrones.model.piece.Piece;
 
 /**
@@ -20,7 +20,6 @@ public abstract class AbstractAction<P extends Piece> implements PieceAction<P> 
     public static final int RECRUIT_ACTION = DISBAND_ACTION + 1;
     
     protected P piece;
-    
 
     public AbstractAction(P piece) {
         this.piece = piece;
@@ -28,6 +27,10 @@ public abstract class AbstractAction<P extends Piece> implements PieceAction<P> 
 
     public P getPiece() {
         return piece;
+    }
+    
+    protected void playSoundEffect(int sound) {
+        SoundManager.getSingleton().playSound(sound);        
     }
     
     @Override

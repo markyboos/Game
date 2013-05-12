@@ -3,8 +3,10 @@ package com.game.thrones.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import com.game.thrones.AbstractMenuActivity;
@@ -23,6 +25,8 @@ public class MapCanvasActivity extends AbstractMenuActivity implements GameFinis
     @Override public void onCreate(Bundle savedInstanceState) {
         
         super.onCreate(savedInstanceState);
+        
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         
         setContentView(R.layout.dashboard);
         
@@ -44,6 +48,16 @@ public class MapCanvasActivity extends AbstractMenuActivity implements GameFinis
                 mapView.invalidate();
 
                 updateHUD();
+            }
+        });
+        
+        Button buttonTwo = (Button) findViewById(R.id.inventoryButton);
+        buttonTwo.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(final View v) {
+                
+                Intent intent = new Intent(MapCanvasActivity.this, InventoryActivity.class);
+        
+                startActivity(intent);                
             }
         });
     }

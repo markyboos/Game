@@ -96,6 +96,19 @@ public class Board {
         return Collections.unmodifiableList(borderingTerritories);
     }
     
+    public Set<Territory> getAllTerritoriesDistanceAway(Territory territory, int distance) {        
+        Map<Territory, Integer> away = getTerritoriesAway(territory, 0, distance);
+        
+        Set<Territory> gathered = new HashSet<Territory>();
+        
+        for (Map.Entry<Territory, Integer> entry : away.entrySet()) {
+            Log.d("getTerritoriesAway", "[" +entry.getKey() + "] distance away[" +  entry.getValue() + "]");
+            gathered.add(entry.getKey());
+        }
+        
+        return Collections.unmodifiableSet(gathered);        
+    }
+    
     public Set<Territory> getTerritoriesDistanceAway(Territory territory, int distance) {
         Map<Territory, Integer> away = getTerritoriesAway(territory, 0, distance);
         

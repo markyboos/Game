@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.view.Window;
 import com.game.framework.SoundManager;
 import com.game.framework.VibrationManager;
 import com.game.thrones.activity.MapCanvasActivity;
@@ -16,6 +17,7 @@ import com.game.thrones.model.hero.Dwarf;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Paladin;
 import com.game.thrones.model.hero.Ranger;
+import com.game.thrones.model.hero.Rogue;
 import com.game.thrones.model.hero.Sorceress;
 import com.game.thrones.model.hero.Wizard;
 import java.util.ArrayList;
@@ -29,11 +31,17 @@ public class MainActivity extends AbstractMenuActivity {
     
     public static final int FIREBALL = 0;
     public static final int SWORDFIGHT = 1;
+    public static final int WALK = 2;
+    public static final int HORSE = 3;
+    public static final int EAGLE = 4;
+    public static final int TELEPORT = 5;
     
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
         
         loadSoundManager();
@@ -59,17 +67,18 @@ public class MainActivity extends AbstractMenuActivity {
         
         final List<Hero> options = new ArrayList<Hero>();
         
-        options.add(new Paladin());
         options.add(new Barbarian());
         options.add(new Dwarf());
-        options.add(new Wizard());
+        options.add(new Paladin());        
         options.add(new Ranger());
+        options.add(new Rogue());
         options.add(new Sorceress());
+        options.add(new Wizard());        
         
         final List<Hero> selectedHeroes = new ArrayList<Hero>();
         
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("What heroes will you choose");
+        builder.setTitle("Which heroes will you choose");
         builder.setMultiChoiceItems(options.toArray(new Hero[options.size()]), null,
                    new DialogInterface.OnMultiChoiceClickListener() {
             @Override
@@ -115,6 +124,10 @@ public class MainActivity extends AbstractMenuActivity {
                 
                 soundManager.addSound(FIREBALL, R.raw.fireball);
                 soundManager.addSound(SWORDFIGHT, R.raw.swordfight);
+                soundManager.addSound(WALK, R.raw.walkingedited);
+                soundManager.addSound(HORSE, R.raw.galloping);
+                soundManager.addSound(EAGLE, R.raw.eaglecall);
+                soundManager.addSound(TELEPORT, R.raw.teleport);
                 
                 return null;
             }

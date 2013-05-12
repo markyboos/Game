@@ -10,11 +10,9 @@ import com.game.thrones.model.hero.Fatty;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
-import com.game.thrones.model.hero.Paladin;
 import com.game.thrones.model.hero.Ranger;
 import com.game.thrones.model.hero.Sorceress;
 import com.game.thrones.model.hero.UndeadKing;
-import com.game.thrones.model.hero.Wizard;
 import com.game.thrones.model.piece.Piece;
 
 import java.util.*;

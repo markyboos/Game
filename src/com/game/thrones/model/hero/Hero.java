@@ -1,10 +1,11 @@
 
 package com.game.thrones.model.hero;
 
+import com.game.thrones.engine.actions.Action;
 import com.game.thrones.model.Filter;
+import com.game.thrones.engine.actions.ItemReward;
 import com.game.thrones.model.Quest;
 import com.game.thrones.model.Team;
-import com.game.thrones.model.Territory;
 import com.game.thrones.model.piece.Piece;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,8 +83,17 @@ public abstract class Hero extends Piece {
         this.quest = quest;
     }
     
-    public void competeQuest() {        
+    public void collectReward(final Quest quest) {
         questsCompleted.add(quest);
+        
+        Action reward = quest.getReward();
+        
+        if (reward instanceof ItemReward) {
+            ItemReward itemReward = (ItemReward)reward;
+            itemReward.setHero(this);
+        }
+        
+        reward.execute();
     }
     
     public List<Quest> getCompletedQuests() {
@@ -95,7 +105,7 @@ public abstract class Hero extends Piece {
     }
     
     public void heal() {
-        if (getPosition().getName().equals(Territory.CENTRAL_TERRITORY)) {
+        if (getPosition().getOwner() == Team.NO_ONE) {
             health = maxHealth;
         } else {
             health += 2;
@@ -202,8 +212,16 @@ public abstract class Hero extends Piece {
      */
     public void finishAttack() {}
     
+    /**
+     * Override this method to draw extra cards at the end of the turn.
+     * @return 
+     */
+    public int itemsPerTurn() {
+        return 2;
+    }
+    
     @Override
     public String toString() {
         return name + " [" + health + "/" + maxHealth + "]";
-    }    
+    }
 }
