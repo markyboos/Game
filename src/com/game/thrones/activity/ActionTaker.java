@@ -1,12 +1,10 @@
 
 package com.game.thrones.activity;
 
-import android.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.engine.actions.Action;
@@ -98,21 +96,10 @@ public class ActionTaker {
     }
     
     private void chooseTeam(final TeamSelectAction action, final boolean includeNoone) {
-        String[] items = new String[includeNoone ? Team.values().length : Team.values().length - 1];
-
-        for (int i = 0; i < Team.values().length; i++) {
-            final Team team = Team.values()[i];
-            
-            if (team == Team.NO_ONE && !includeNoone) {
-                continue;
-            }
-            
-            items[i] = team.name();
-        }
-
+        
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Choose a team");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
+        builder.setItems(Team.getTeams(includeNoone), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 
                 action.setTeam(Team.values()[which]);
@@ -168,13 +155,26 @@ public class ActionTaker {
     
     private void chooseTerritory(final TerritorySelectAction action) {
         
-        //todo choose a territory
-        Territory territory = GameController.getInstance().getBoard().getCentralTerritory();
+        List<Territory> options = action.getOptions();
         
-        action.setTerritory(territory);
+        if (options.isEmpty()) {
+            return;
+        }
         
-        takeMove(action);
+        //todo choose a territory        
+        final CharSequence[] items = options.toArray(new CharSequence[options.size()]);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Make your selection");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                 action.setTerritory(action.getOptions().get(item));
         
+                 takeMove(action);
+            }
+        });
+        
+        builder.show();        
     }
     
     private Item selectedItem;
@@ -340,7 +340,7 @@ public class ActionTaker {
         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {                
-                activity.finish();
+                removeCardsAndFinishActivity();
             }
         });
         
@@ -350,14 +350,6 @@ public class ActionTaker {
     
     private void takeMove(final Action action) {
         GameController.getInstance().takeMove(action);
-            
-        if (hero.getCardsToRemove() > 0) {
-            
-            chooseItemsToRemove(hero.getCardsToRemove());
-            
-            hero.setCardsToRemove(0);
-            return;
-        }
         
         if (action instanceof Describable) {
             Describable describable = (Describable)action;
@@ -365,6 +357,15 @@ public class ActionTaker {
             return;
         }
         
+        removeCardsAndFinishActivity();
+    }
+
+    private void removeCardsAndFinishActivity() {
+        if (hero.getCardsToRemove() > 0) {
+            chooseItemsToRemove(hero.getCardsToRemove());
+            hero.setCardsToRemove(0);
+            return;
+        }
         activity.finish();
     }
 

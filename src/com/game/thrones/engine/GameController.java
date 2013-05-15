@@ -1,8 +1,6 @@
 package com.game.thrones.engine;
 
-import com.game.thrones.engine.actions.AddMinionAction;
 import com.game.thrones.engine.actions.Action;
-import android.util.Log;
 import com.game.thrones.activity.CameraChangeEvent;
 import com.game.thrones.activity.CameraChangeListener;
 import com.game.thrones.activity.GameFinishedEvent;
@@ -91,6 +89,8 @@ public class GameController {
         player = players.get(0);
 
         aiController = new AIController();
+        
+        aiController.initialise();
 
         itemController = new ItemController();
 
@@ -103,12 +103,6 @@ public class GameController {
             hero.addItem(itemController.getTopItem());
             hero.setQuest(questController.getTopQuest());
         }
-
-        //add extra minions to the board
-        addExtraMinions(3, 2);
-        addExtraMinions(3, 1);
-        //and reshuffle the evil deck
-        aiController.reshuffleDeck();
     }
 
     public void endTurn() {
@@ -238,43 +232,5 @@ public class GameController {
 
     public void fireGameFinishedEvent(final GameFinishedEvent event) {
         gameFinishedListener.fireGameFinishedEvent(event);
-    }
-
-    /**
-     * Adds extra minions to the board on game initialisation.
-     * @param cards the number of cards to pick up from the ai controller
-     * @param total the number of minions to add
-     */
-    private void addExtraMinions(int cards, int total) {
-        //add extra monsters to the board
-
-        while (true) {
-            //draw 3 cards
-            Orders orders = aiController.takeTopCard();
-            for (Action action : orders.getActions()) {
-                if (action instanceof AddMinionAction) {
-                    AddMinionAction addMinionAction = (AddMinionAction)action;
-                    Territory territory = addMinionAction.getTerritory();
-
-                    //its not possible to have more than 3 on a territory at the beggining
-                    if (board.getPieces(new PieceTerritoryFilter(territory), Minion.class).size() + total > 3 
-                            || board.getCentralTerritory().equals(territory)) {
-                        continue;
-                    }
-
-                    Log.d("addExtraMinions", "adding [" + total + "] minions to [" + territory.getName() + "]");
-
-                    for (int i = 0 ; i < total; i++) {
-                        board.addMinionToTerritory(territory, territory.getOwner(), false);
-                    }
-                    cards --;
-                    break;
-                }
-            }
-
-            if (cards == 0) {
-                break;
-            }
-        }
     }
 }

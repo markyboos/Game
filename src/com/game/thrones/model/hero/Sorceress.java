@@ -15,11 +15,7 @@ public class Sorceress extends Hero {
     private boolean ambushing = true;
     
     public Sorceress() {
-        super("Shapeshifter");
-        
-        maxHealth = 6;
-        health = maxHealth;
-        actionsAvailable = health;
+        super("Shapeshifter", 6);
     }
     
     public void setShape(Team shape) {

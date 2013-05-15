@@ -59,6 +59,9 @@ public class RumorsAction extends AbstractAction<Hero> implements TeamSelectActi
         if (item.getTeam() == team || item.getTeam() == Team.NO_ONE) {
             hero.addItem(item);
             collected.add(item);
+        } else {
+            //otherwise put it on the discard pile
+            GameController.getInstance().getItemController().discard(item);
         }
     }
 

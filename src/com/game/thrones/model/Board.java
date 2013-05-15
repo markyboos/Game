@@ -296,6 +296,10 @@ public class Board {
                 }
             }
             
+            if (criteria.isTainted() != null && territory.getTainted() == 0) {
+                continue;                
+            }
+            
             if (criteria.getBordering() != null && 
                     !getBorderingTerritories(territory).contains(criteria.getBordering())) {
                 continue;                                                
@@ -381,12 +385,12 @@ public class Board {
                 
         //if all the minions are demons taint it
         for (Piece p : minions) {
-            if (p.getTeam() != Team.DEMONS) {
+            if (p.getTeam() != Team.OLD_DEMONS) {
                 return false;
             }
         }
         
-        if (added.getTeam() != Team.DEMONS) {
+        if (added.getTeam() != Team.OLD_DEMONS) {
             return false;
         }
         

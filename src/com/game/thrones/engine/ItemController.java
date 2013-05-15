@@ -12,10 +12,8 @@ import com.game.thrones.model.TerritoryCriteria;
 import com.game.thrones.model.hero.ActionItem;
 import com.game.thrones.model.hero.Item;
 import com.game.thrones.model.hero.Minion;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 /**
  *
@@ -23,26 +21,21 @@ import java.util.Queue;
  */
 public class ItemController {
     
-    private Queue<Item> heroItems;
+    private Deck<Item> deck = new Deck<Item>(initialiseItems());
     
     public Item getTopItem() {
-        
-        if (heroItems == null) {
-            initialiseItems();
+        return deck.takeTopCard();
+    }
+    
+    public void discard(Item item) {
+        //action items get removed from the deck
+        if (item instanceof ActionItem) {
+            return;
         }
-        
-        Item nextItem = heroItems.poll();
-        
-        if (nextItem == null) {
-            initialiseItems();
-            
-            nextItem = heroItems.poll();
-        }
-        
-        return nextItem;
+        deck.discard(item);        
     }
 
-    private void initialiseItems() {
+    private List<Item> initialiseItems() {
         LinkedList<Item> items = new LinkedList<Item>();
         
         final Board board = GameController.getInstance().getBoard();
@@ -63,11 +56,8 @@ public class ItemController {
         //kings guard
         items.add(new ActionItem("Kings guard", "Remove 6 minions on or next to monarch city",
                 new RemoveMinionsAction(board.getCentralTerritory(), 1, 6)));
-        
-        Collections.shuffle(items);
-        
-        this.heroItems = items;
-        
+                
+        return items;
     }
     
     private Action elvenArchers() {

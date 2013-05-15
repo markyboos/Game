@@ -18,6 +18,8 @@ public class TerritoryCriteria {
     private Territory bordering;
     
     private Operator minionCountOperator = Operator.EQUAL;
+    
+    private Boolean tainted;
 
     /**
      * @return the minions
@@ -72,5 +74,13 @@ public class TerritoryCriteria {
      */
     public void setBordering(Territory bordering) {
         this.bordering = bordering;
+    }
+    
+    public void setTainted() {
+        this.tainted = true;
+    }
+    
+    public Boolean isTainted() {
+        return tainted;
     }
 }

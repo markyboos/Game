@@ -100,16 +100,16 @@ public class GameInitialiser {
         Territory mermaidHarbour = createTerritory("Mermaid Harbour", 2, Team.UNDEAD);
 
         //demons
-        Territory windyPass = createTerritory("Windy Pass", 2, Team.DEMONS);
-        Territory bloodFlats = createTerritory("Blood Flats", 1, Team.DEMONS);
-        Territory pleasentHills = createTerritory("Pleasent Hills", 1, Team.DEMONS);
-        Territory scorpionCanyon = createTerritory("Scorpion Canyon", 1, Team.DEMONS);        
-        Territory orcValley = createTerritory("Orc Valley", 1, Team.DEMONS);
-        Territory serpentSwamp = createTerritory("Serpent Swamp", 1, Team.DEMONS);
-        Territory ghostMarsh = createTerritory("Ghost Marsh", 2, Team.DEMONS);
-        Territory ancientRuins = createTerritory("Ancient Ruins", 2, Team.DEMONS);
-        Territory witheredHills = createTerritory("Withered Hills", 2, Team.DEMONS);
-        Territory cursedPlateau = createTerritory("Cursed Plateau", 2, Team.DEMONS);        
+        Territory windyPass = createTerritory("Windy Pass", 2, Team.OLD_DEMONS);
+        Territory bloodFlats = createTerritory("Blood Flats", 1, Team.OLD_DEMONS);
+        Territory pleasentHills = createTerritory("Pleasent Hills", 1, Team.OLD_DEMONS);
+        Territory scorpionCanyon = createTerritory("Scorpion Canyon", 1, Team.OLD_DEMONS);        
+        Territory orcValley = createTerritory("Orc Valley", 1, Team.OLD_DEMONS);
+        Territory serpentSwamp = createTerritory("Serpent Swamp", 1, Team.OLD_DEMONS);
+        Territory ghostMarsh = createTerritory("Ghost Marsh", 2, Team.OLD_DEMONS);
+        Territory ancientRuins = createTerritory("Ancient Ruins", 2, Team.OLD_DEMONS);
+        Territory witheredHills = createTerritory("Withered Hills", 2, Team.OLD_DEMONS);
+        Territory cursedPlateau = createTerritory("Cursed Plateau", 2, Team.OLD_DEMONS);        
         
         //dragons
         Territory rockBridgePass = createTerritory("Rock Bridge Pass", 1, Team.DRAGONS);        
@@ -285,7 +285,7 @@ public class GameInitialiser {
 
         pieces.add(minion);
         
-        if (team == Team.DEMONS) {
+        if (team == Team.OLD_DEMONS) {
             position.taint();
         }
     }

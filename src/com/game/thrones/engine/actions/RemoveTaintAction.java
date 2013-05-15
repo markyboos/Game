@@ -1,7 +1,10 @@
 
 package com.game.thrones.engine.actions;
 
+import com.game.thrones.engine.GameController;
 import com.game.thrones.model.Territory;
+import com.game.thrones.model.TerritoryCriteria;
+import java.util.List;
 
 /**
  *
@@ -19,7 +22,14 @@ public class RemoveTaintAction implements TerritorySelectAction {
     
     public void setTerritory(Territory territory) {
         this.territory = territory;
-    }    
+    }
+    
+    public List<Territory> getOptions() {
+        TerritoryCriteria criteria = new TerritoryCriteria();
+        criteria.setTainted();
+        
+        return GameController.getInstance().getBoard().getTerritories(criteria);
+    }
 
     public void execute() {
         if (removeAll) {
@@ -28,5 +38,4 @@ public class RemoveTaintAction implements TerritorySelectAction {
         
         territory.removeTaint();
     }
-
 }

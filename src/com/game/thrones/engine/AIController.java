@@ -8,16 +8,16 @@ import com.game.thrones.engine.actions.OrcPatrolsAction;
 import com.game.thrones.engine.actions.Action;
 import android.util.Log;
 import com.game.thrones.model.AllFilter;
+import com.game.thrones.model.Board;
+import com.game.thrones.model.PieceTerritoryFilter;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.TerritoryCriteria;
 import com.game.thrones.model.hero.General;
+import com.game.thrones.model.hero.Minion;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
-import java.util.Set;
 
 /**
  * In charge of AI moves.
@@ -47,9 +47,7 @@ public class AIController {
     
     private GameController controller = GameController.getInstance();
     
-    private Set<Orders> discardPile = new HashSet<Orders>();
-    
-    private Queue<Orders> evilActions;
+    private Deck<Orders> deck = new Deck<Orders>(createEvilActions());
     
     public void increaseWarStatus() {
         if (warStatus.ordinal() == WarStatus.values().length) {
@@ -61,21 +59,7 @@ public class AIController {
     }
     
     public Orders takeTopCard() {
-        
-        if (evilActions == null) {
-            evilActions = createEvilActions();
-        }
-        
-        Orders orders = evilActions.poll();
-        
-        if (orders == null) {
-            reshuffleDeck();
-            orders = evilActions.poll();
-        }
-        
-        discardPile.add(orders);
-        
-        return orders;
+        return deck.takeTopCard();
     }
     
     public void takeTurn() {        
@@ -85,7 +69,7 @@ public class AIController {
     }
     
     private void drawAndUseCard() {
-        Orders orders = takeTopCard();
+        Orders orders = deck.takeTopCard();
 
         //add minions to places        
         //add taint        
@@ -93,22 +77,19 @@ public class AIController {
         for (Action action : orders.getActions()) {
             action.execute();            
         }
+        
+        deck.discard(orders);
     }
     
-    public void reshuffleDeck() {
-        
-        Log.d("AIController:recreateDeck", "Recreating the deck...");
-        
-        LinkedList<Orders> newActions = new LinkedList<Orders>(discardPile);
-        
-        discardPile.clear();
-        
-        Collections.shuffle(newActions);
-        
-        evilActions = newActions;        
+    public void initialise() {
+        //add extra minions to the board
+        addExtraMinions(3, 2);
+        addExtraMinions(3, 1);
+        //and reshuffle the evil deck
+        deck.reshuffleDeck();
     }
     
-    private Queue<Orders> createEvilActions() {
+    private List<Orders> createEvilActions() {
         
         Log.d("AIController:createEvilActions", "Generating evil actions...");
         
@@ -190,7 +171,7 @@ public class AIController {
         Orders order = new Orders();
         
         for (Team team : Team.values()) {
-            if (team == Team.NO_ONE) {
+            if (team == Team.NO_ONE || !team.enabled()) {
                 continue;
             }
             order.addAction(new AddMinionAction(centre, 1, team));
@@ -201,6 +182,46 @@ public class AIController {
     
     private Orders allQuiet() {
         return new Orders();
+    }
+    
+    /**
+     * Adds extra minions to the board on game initialisation.
+     * @param cards the number of cards to pick up from the ai controller
+     * @param total the number of minions to add
+     */
+    private void addExtraMinions(int cards, int total) {
+        //add extra monsters to the board
+        
+        final Board board = controller.getBoard();
+
+        while (true) {
+            //draw 3 cards
+            Orders orders = takeTopCard();
+            for (Action action : orders.getActions()) {
+                if (action instanceof AddMinionAction) {
+                    AddMinionAction addMinionAction = (AddMinionAction)action;
+                    Territory territory = addMinionAction.getTerritory();
+
+                    //its not possible to have more than 3 on a territory at the beggining
+                    if (board.getPieces(new PieceTerritoryFilter(territory), Minion.class).size() + total > 3 
+                            || board.getCentralTerritory().equals(territory)) {
+                        continue;
+                    }
+
+                    Log.d("addExtraMinions", "adding [" + total + "] minions to [" + territory.getName() + "]");
+
+                    for (int i = 0 ; i < total; i++) {
+                        board.addMinionToTerritory(territory, territory.getOwner(), false);
+                    }
+                    cards --;
+                    break;
+                }
+            }
+
+            if (cards == 0) {
+                break;
+            }
+        }
     }
 
 }

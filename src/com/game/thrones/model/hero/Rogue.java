@@ -10,9 +10,7 @@ import com.game.thrones.model.Team;
 public class Rogue extends Hero {
     
     public Rogue() {
-        super("Rogue");
-        super.maxHealth = 6;
-        super.health = 6;
+        super("Rogue", 6);
     }
     
     @Override
@@ -22,7 +20,7 @@ public class Rogue extends Hero {
     
     @Override
     public int itemsPerTurn() {
-        if (getPosition().getOwner() == Team.DEMONS) {
+        if (getPosition().getOwner() == Team.OLD_DEMONS) {
             return 3;
         }
         

@@ -69,7 +69,7 @@ public class AttackGeneralAction implements GroupAction<Hero> {
                 }
 
                 //red cards get corrupted for the demon
-                if (item.getTeam() == Team.DEMONS && target.getTeam() == Team.DEMONS
+                if (item.getTeam() == Team.OLD_DEMONS && target.getTeam() == Team.OLD_DEMONS
                         && dice.roll(1).success()) {
                     continue;
                 }

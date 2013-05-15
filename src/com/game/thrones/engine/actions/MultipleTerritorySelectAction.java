@@ -8,9 +8,9 @@ import java.util.List;
  *
  * @author James
  */
-public interface TerritorySelectAction extends Action {
+public interface MultipleTerritorySelectAction extends Action {
     
-    public void setTerritory(Territory territory);
+    public void setTerritories(List<Territory> territory);
     
     public List<Territory> getOptions();
 

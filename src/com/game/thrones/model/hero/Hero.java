@@ -1,6 +1,7 @@
 
 package com.game.thrones.model.hero;
 
+import com.game.thrones.engine.GameController;
 import com.game.thrones.engine.actions.Action;
 import com.game.thrones.model.Filter;
 import com.game.thrones.engine.actions.ItemReward;
@@ -17,11 +18,11 @@ import java.util.List;
  */
 public abstract class Hero extends Piece {
     
-    protected int maxHealth = 5;
+    final protected int maxHealth;
     
-    protected int health = maxHealth;
+    protected int health;
     
-    protected int actionsAvailable = health;
+    protected int actionsAvailable;
     
     private List<Item> inventory = new ArrayList<Item>();
     
@@ -33,9 +34,19 @@ public abstract class Hero extends Piece {
     
     public Hero(final String name) {
         this.name = name;
+        this.maxHealth = 5;
+        this.health = maxHealth;
+        this.actionsAvailable = maxHealth;
     }
     
-    public void addItem(final Item item) {        
+    public Hero(final String name, final int maxHealth) {
+        this.name = name;
+        this.maxHealth = maxHealth;
+        this.health = maxHealth;
+        this.actionsAvailable = maxHealth;
+    }
+    
+    public void addItem(final Item item) {
         inventory.add(item);
         if (inventory.size() > 10) {
             cardsToRemove ++;
@@ -44,6 +55,7 @@ public abstract class Hero extends Piece {
     
     public void useItem(final Item item) {
         inventory.remove(item);
+        GameController.getInstance().getItemController().discard(item);
     }
     
     public List<Item> getInventory() {
@@ -51,6 +63,9 @@ public abstract class Hero extends Piece {
     }
     
     public void clearInventory() {
+        for (Item item : inventory) {
+            GameController.getInstance().getItemController().discard(item);
+        }
         inventory.clear();
     }
     

@@ -16,7 +16,7 @@ public class DemonKing extends General implements Woundable {
     public DemonKing() {
         super("Demon");
         
-        this.team = Team.DEMONS;
+        this.team = Team.OLD_DEMONS;
         this.rollToDamage = 4;
         
         maxHealth = 6;    
