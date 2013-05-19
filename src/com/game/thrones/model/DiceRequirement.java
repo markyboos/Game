@@ -41,13 +41,13 @@ public class DiceRequirement implements Requirement<DiceDescription> {
     }
     
     public String render() {
-        return new DiceDescriptionRenderer().render(summary());
+        return DiceDescriptionRenderer.INSTANCE.render(summary());
     }
 
     private boolean roll(final int toRoll, final int require, final Hero hero) {
 
         for (int i = 0; i < toRoll; i++) {
-            DiceRollResult result = dice.roll(require - hero.modifyQuestRoll());
+            DiceRollResult result = dice.roll(require, hero.modifyQuestRoll());
             diceResults.add(result);
             
             if (result.success()) {

@@ -38,4 +38,8 @@ public class RemoveTaintAction implements TerritorySelectAction {
         
         territory.removeTaint();
     }
+
+    public boolean chosenTerritory() {
+        return territory != null;
+    }
 }

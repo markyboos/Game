@@ -8,7 +8,7 @@ import com.game.thrones.model.hero.Minion;
  * @author James
  */
 public class AttackDescriptionRenderer implements DescriptionRenderer<AttackDescription> {
-    
+        
     public String render(AttackDescription model) {
         StringBuilder buf = new StringBuilder();
         buf.append("You attacked the minions at ");
@@ -28,12 +28,10 @@ public class AttackDescriptionRenderer implements DescriptionRenderer<AttackDesc
                 buf.append(minion.getTeam());
                 buf.append(" sees you and your mighty weapon and runs away!");
             } else*/ {
-                buf.append("You needed to roll a ");
-                buf.append(result.needed);
-                buf.append(" and rolled a ");
-                buf.append(result.rolled);                
+            
+                buf.append(result.toString());
 
-                if (result.rolled >= result.needed) {
+                if (result.success()) {
                     buf.append(", killing it.");                    
                 } else {
                     buf.append(", failing to kill it.");

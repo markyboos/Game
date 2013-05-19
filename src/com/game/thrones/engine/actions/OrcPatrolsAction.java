@@ -14,9 +14,11 @@ import java.util.List;
 public class OrcPatrolsAction implements Action {
     
     private TerritoryCriteria criteria;
+    private Team team;
 
-    public OrcPatrolsAction(final TerritoryCriteria criteria) {
-        this.criteria =criteria;
+    public OrcPatrolsAction(final TerritoryCriteria criteria, Team team) {
+        this.criteria = criteria;
+        this.team = team;
     }
 
     public void execute() {
@@ -26,7 +28,7 @@ public class OrcPatrolsAction implements Action {
         
         for (Territory territory : territories) {
             GameController.getInstance().
-                getBoard().addMinionToTerritory(territory, Team.ORCS, true);
+                getBoard().addMinionToTerritory(territory, team, true);
         }
     }
 

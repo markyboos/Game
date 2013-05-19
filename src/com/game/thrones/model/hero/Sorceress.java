@@ -1,6 +1,8 @@
 
 package com.game.thrones.model.hero;
 
+import com.game.thrones.engine.actions.Action;
+import com.game.thrones.engine.actions.ShapeShiftAction;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 
@@ -8,7 +10,7 @@ import com.game.thrones.model.Territory;
  *
  * @author James
  */
-public class Sorceress extends Hero {
+public class Sorceress extends Hero implements StartActionHero {
     
     private Team shape = Team.NO_ONE;
     
@@ -77,6 +79,11 @@ public class Sorceress extends Hero {
         return 1;            
     }
     
+    @Override    
+    public Action getStartingAction() {
+        return new ShapeShiftAction(this);
+    }
+    
     @Override
     protected boolean affectedByUndead() {
         return shape != Team.UNDEAD;
@@ -86,5 +93,5 @@ public class Sorceress extends Hero {
     public String toString() {
         return super.toString() + " " + shape.name();
     }
-
+    
 }

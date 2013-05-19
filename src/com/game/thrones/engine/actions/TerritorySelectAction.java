@@ -13,5 +13,7 @@ public interface TerritorySelectAction extends Action {
     public void setTerritory(Territory territory);
     
     public List<Territory> getOptions();
+    
+    public boolean chosenTerritory();
 
 }

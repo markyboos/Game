@@ -5,6 +5,8 @@ import com.game.thrones.activity.CameraChangeEvent;
 import com.game.thrones.activity.CameraChangeListener;
 import com.game.thrones.activity.GameFinishedEvent;
 import com.game.thrones.activity.GameFinishedListener;
+import com.game.thrones.activity.GamePhaseChangeEvent;
+import com.game.thrones.activity.GamePhaseChangeListener;
 import com.game.thrones.model.AllFilter;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,13 +106,18 @@ public class GameController {
             hero.setQuest(questController.getTopQuest());
         }
     }
-
-    public void endTurn() {
-
+    
+    public void takeEveningPhase() {
+        
         //collect items
         for (int i = 0; i < player.itemsPerTurn(); i++) {
             player.addItem(itemController.getTopItem());
         }
+        
+        fireGamePhaseChangeEvent(new GamePhaseChangeEvent(GamePhase.NIGHT));
+    }
+    
+    public void takeNightPhase() {
 
         //if the hero is in a place with monsters then take life off
         List<Minion> minionsAtHero = board.getPieces(new PieceTerritoryFilter(player.getPosition()),
@@ -142,6 +149,7 @@ public class GameController {
         Filter centralTerritoryFilter = new PieceTerritoryFilter(centralTerritory);
         if (board.getPieces(centralTerritoryFilter, Minion.class).size() > 4) {
             gameFinishedListener.fireGameFinishedEvent(new GameFinishedEvent(GameFinished.CENTRE_OVERRUN));
+            return;
         }
 
         int tainted = 0;
@@ -152,14 +160,17 @@ public class GameController {
 
         if (tainted > 11) {
             gameFinishedListener.fireGameFinishedEvent(new GameFinishedEvent(GameFinished.TOO_MUCH_TAINTED_LAND));
+            return;
         }
 
         if (!board.getPieces(centralTerritoryFilter, General.class).isEmpty()) {
             gameFinishedListener.fireGameFinishedEvent(new GameFinishedEvent(GameFinished.GENERAL_REACHED_CENTRE));
+            return;
         }
 
         if (board.getPieces(AllFilter.INSTANCE, Minion.class).size() > 25) {
             gameFinishedListener.fireGameFinishedEvent(new GameFinishedEvent(GameFinished.TOO_MANY_MINIONS));
+            return;
         }
 
         //heal generals
@@ -177,14 +188,18 @@ public class GameController {
 
         //regain actions back based on health for next turn
         player.rest();
-
+        
         //next player
-
         player = getNextPlayer();
+        
+        fireGamePhaseChangeEvent(new GamePhaseChangeEvent(GamePhase.MORNING));
+    }
+    
+    public void startMorningPhase() {        
 
         actionsTaken.clear();
 
-        player.modifyActions();
+        player.modifyActions();        
     }
 
     public void takeMove(final Action action) {
@@ -195,11 +210,6 @@ public class GameController {
         actionsTaken.add(action);
 
         player.useAction();
-
-        if (player.getActionsAvailable() == 0) {
-            //end that players turn
-            endTurn();
-        }
     }
 
     private Hero getNextPlayer() {
@@ -233,4 +243,15 @@ public class GameController {
     public void fireGameFinishedEvent(final GameFinishedEvent event) {
         gameFinishedListener.fireGameFinishedEvent(event);
     }
+    
+    private GamePhaseChangeListener gamePhaseChangeListener;
+    
+    public void addGamePhaseChangeListener(final GamePhaseChangeListener listener) {
+        this.gamePhaseChangeListener = listener;
+    }
+
+    public void fireGamePhaseChangeEvent(final GamePhaseChangeEvent event) {
+        gamePhaseChangeListener.fireGamePhaseChangeEvent(event);
+    }
+    
 }

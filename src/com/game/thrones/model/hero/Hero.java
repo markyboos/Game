@@ -47,6 +47,11 @@ public abstract class Hero extends Piece {
     }
     
     public void addItem(final Item item) {
+        //dont add null items
+        if (item == null) {
+            return;
+        }        
+        
         inventory.add(item);
         if (inventory.size() > 10) {
             cardsToRemove ++;

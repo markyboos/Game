@@ -65,7 +65,7 @@ public class PlayerActionActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         Action selected = (Action) l.getItemAtPosition(position);
         
-        ActionTaker actionTaker = new ActionTaker(hero, this);
+        ActionTaker actionTaker = new ActionTaker(hero, this, true);
         
         actionTaker.takeAction(selected);        
     }

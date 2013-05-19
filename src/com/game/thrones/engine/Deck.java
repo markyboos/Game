@@ -40,6 +40,8 @@ public class Deck<T> {
         
         deck.addAll(discardPile);
         
+        discardPile.clear();
+        
         Collections.shuffle(deck); 
     }
 

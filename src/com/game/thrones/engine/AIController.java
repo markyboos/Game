@@ -132,7 +132,7 @@ public class AIController {
         
         TerritoryCriteria territoryCriteria = new TerritoryCriteria();
         territoryCriteria.setMinionCount(1);
-        territoryCriteria.setMinionTeam(Team.ORCS);
+        territoryCriteria.setOwner(Team.ORCS);
         
         orders.add(createOrcPatrols(territoryCriteria));
         
@@ -162,7 +162,7 @@ public class AIController {
         
         Orders order = new Orders();
         
-        order.addAction(new OrcPatrolsAction(territoryCriteria));
+        order.addAction(new OrcPatrolsAction(territoryCriteria, Team.ORCS));
         
         return order;        
     }

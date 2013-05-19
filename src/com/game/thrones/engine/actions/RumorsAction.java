@@ -56,7 +56,7 @@ public class RumorsAction extends AbstractAction<Hero> implements TeamSelectActi
         Item item = GameController.getInstance().getItemController().getTopItem();
         
         //if its the same add it to the stash
-        if (item.getTeam() == team || item.getTeam() == Team.NO_ONE) {
+        if (item != null && (item.getTeam() == team || item.getTeam() == Team.NO_ONE)) {
             hero.addItem(item);
             collected.add(item);
         } else {

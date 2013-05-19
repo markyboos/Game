@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.*;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import com.game.thrones.engine.GameController;
@@ -43,7 +44,9 @@ public class MapView extends View implements CameraChangeListener {
     public MapView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         
-        controller = GameController.getInstance();        
+        controller = GameController.getInstance();
+        
+        territoryTiles = createTerritoryTiles();
     }
     
     Territory[][] map = new Territory[6][6];
@@ -160,6 +163,11 @@ public class MapView extends View implements CameraChangeListener {
     
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
+        
+        if (!isEnabled()) {
+            return false;
+        }
+        
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
             startPosition.x = (int)event.getX();
             startPosition.y = (int)event.getY();
@@ -253,6 +261,8 @@ public class MapView extends View implements CameraChangeListener {
     }
 
     public void fireCameraChangeEvent(final CameraChangeEvent e) {
+        Log.d("fire camera", "camera change fired....");
+        
         for (TerritoryTile tile : territoryTiles) {
             if (tile.getTerritory().equals(e.getFocus())) {
                 cameraX = TerritoryTile.SIZE - tile.getX();
@@ -260,5 +270,7 @@ public class MapView extends View implements CameraChangeListener {
                 return;
             }
         }
+        
+        this.postInvalidate();
     }
 }

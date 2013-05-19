@@ -6,7 +6,6 @@ import com.game.thrones.engine.actions.CleanseAction;
 import com.game.thrones.engine.actions.AttackAction;
 import com.game.thrones.engine.actions.FireballAction;
 import com.game.thrones.engine.actions.RangedAttackAction;
-import com.game.thrones.engine.actions.ShapeShiftAction;
 import com.game.thrones.engine.actions.TeleportAction;
 import com.game.thrones.engine.actions.QuestAction;
 import com.game.thrones.engine.actions.SteedAction;
@@ -25,6 +24,7 @@ import com.game.thrones.model.hero.Barbarian;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.InventorySearcher;
+import com.game.thrones.model.hero.Item;
 import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.hero.Paladin;
 import com.game.thrones.model.hero.Ranger;
@@ -111,11 +111,6 @@ public class ActionCreator {
                 actions.addAll(createRangedAttackActions(hero));
             }
             
-            if ((piece instanceof Sorceress) && isFirstAction() 
-                    && actionsSoFar(ShapeShiftAction.class) == 0) {
-                actions.add(new ShapeShiftAction((Sorceress)hero));
-            }
-            
             if (piece instanceof Paladin) {
                 actions.addAll(createSteedActions((Paladin)hero));                
             }
@@ -126,9 +121,11 @@ public class ActionCreator {
                     actions.addAll(createTeleportActions((Wizard)hero));
                 }
                 
+                FireballAction fireball = new FireballAction((Wizard)piece);
+                
                 if (minionsAtHero 
-                        && searcher.hasTeamItems(hero, hero.getPosition().getOwner())) {                
-                    actions.add(new FireballAction((Wizard)piece));
+                        && !hero.getItems(fireball.getItemFilter(), Item.class).isEmpty()) {                
+                    actions.add(fireball);
                 }
             }
         }

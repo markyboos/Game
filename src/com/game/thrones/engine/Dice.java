@@ -20,11 +20,16 @@ public class Dice {
     
     public DiceRollResult roll(int amount) {
         
+        return roll(amount, 0);
+    }
+    
+    public DiceRollResult roll(int amount, int modifier) {
+        
         final int rolled = roll();
         
         Log.d("Dice", "Require [" + amount + "], rolled [" + rolled + "]");
         
-        return new DiceRollResult(rolled, amount);
+        return new DiceRollResult(rolled, amount, modifier);
     }
 
 }

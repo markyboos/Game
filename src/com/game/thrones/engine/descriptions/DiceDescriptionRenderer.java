@@ -6,21 +6,14 @@ package com.game.thrones.engine.descriptions;
  * @author James
  */
 public class DiceDescriptionRenderer implements DescriptionRenderer<DiceDescription> {
+    
+    public static final DiceDescriptionRenderer INSTANCE = new DiceDescriptionRenderer();
 
     public String render(final DiceDescription model) {
         StringBuilder buf = new StringBuilder();
         buf.append("\n");
-        for (DiceRollResult result : model.rolled) {
-            buf.append("You need a ");
-            buf.append(result.needed);
-            buf.append(" and rolled a ");
-            buf.append(result.rolled);
-            buf.append(".\n");
-        }
-        if (model.satisfied) {
-            buf.append("You succeeded!");
-        } else {
-            buf.append("You failed.");
+        for (DiceRollResult roll : model.rolled) {
+            buf.append(roll.toString());
         }
         
         return buf.toString();

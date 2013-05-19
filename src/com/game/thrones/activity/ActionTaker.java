@@ -7,15 +7,18 @@ import android.content.DialogInterface;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import com.game.thrones.engine.GameController;
+import com.game.thrones.engine.GamePhase;
 import com.game.thrones.engine.actions.Action;
 import com.game.thrones.engine.actions.AttackGeneralAction;
 import com.game.thrones.engine.actions.BarbarianAttackAction;
 import com.game.thrones.engine.actions.ItemSelectAction;
+import com.game.thrones.engine.actions.PlayerSelectAction;
 import com.game.thrones.engine.actions.RumorsAction;
 import com.game.thrones.engine.actions.ShapeShiftAction;
 import com.game.thrones.engine.actions.TeamSelectAction;
 import com.game.thrones.engine.actions.TerritorySelectAction;
 import com.game.thrones.engine.descriptions.Describable;
+import com.game.thrones.model.AllFilter;
 import com.game.thrones.model.AndFilter;
 import com.game.thrones.model.EnoughItemsFilter;
 import com.game.thrones.model.Filter;
@@ -31,77 +34,90 @@ import java.util.List;
 
 /**
  * Takes actions for an activity, this might include any extra choices the action needs.
- * 
+ *
  * @author James
  */
 public class ActionTaker {
-    
-    private final Hero hero;    
+
+    private final Hero hero;
     private final Activity activity;
-    
+    private final boolean finish;
     private InventorySearcher searcher = new InventorySearcher();
     
-    public ActionTaker(Hero hero, Activity activity) {
+    private final GameController controller = GameController.getInstance();
+
+    public ActionTaker(Hero hero, Activity activity, boolean finish) {
         this.activity = activity;
-        this.hero = hero;        
+        this.hero = hero;
+        this.finish = finish;
     }
-    
+
     public void takeAction(Action selected) {
-        
+
         if (selected instanceof AttackGeneralAction) {
-            
+
             //make a choice about the items to use
             choosePlayers((AttackGeneralAction) selected);
-            
-            return;            
-        }
-        if (selected instanceof ItemSelectAction) {
-            
-            ItemSelectAction itemAction = (ItemSelectAction)selected;
-            
-            List<Item> options = hero.getItems(itemAction.getItemFilter(), Item.class);
-                    
-            chooseItem(itemAction, options);
-            
+
             return;
         }
-        
+        if (selected instanceof ItemSelectAction) {
+
+            ItemSelectAction itemAction = (ItemSelectAction) selected;
+
+            List<Item> options = hero.getItems(itemAction.getItemFilter(), Item.class);
+
+            chooseItem(itemAction, options);
+
+            return;
+        }
+
         if (selected instanceof BarbarianAttackAction) {
-            
-            chooseExtraActions((BarbarianAttackAction)selected);
-            
-            return;            
+
+            chooseExtraActions((BarbarianAttackAction) selected);
+
+            return;
         }
         if (selected instanceof RumorsAction) {
 
-            chooseTeam((TeamSelectAction)selected, false);
-            
+            chooseTeam((TeamSelectAction) selected, false);
+
             return;
         }
         if (selected instanceof ShapeShiftAction) {
 
-            chooseTeam((TeamSelectAction)selected, true);
-            
+            chooseTeam((TeamSelectAction) selected, true);
+
             return;
         }
         if (selected instanceof TerritorySelectAction) {
-            chooseTerritory((TerritorySelectAction)selected);
+
+            TerritorySelectAction action = (TerritorySelectAction) selected;
+
+            if (!action.chosenTerritory()) {
+                chooseTerritory((TerritorySelectAction) action);
+
+                return;
+            }
+        }
+        if (selected instanceof PlayerSelectAction) {
+            choosePlayer((PlayerSelectAction) selected);
             
             return;
         }
 
         //all actions have finished
         takeMove(selected);
-        
+
     }
-    
+
     private void chooseTeam(final TeamSelectAction action, final boolean includeNoone) {
-        
+
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Choose a team");
         builder.setItems(Team.getTeams(includeNoone), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                
+
                 action.setTeam(Team.values()[which]);
                 takeMove(action);
             }
@@ -109,58 +125,59 @@ public class ActionTaker {
 
         builder.show();
     }
-    
+
     private void chooseExtraActions(final BarbarianAttackAction action) {
-        
+
         final Spinner input = new Spinner(activity);
         final ArrayList<Integer> numbers = new ArrayList<Integer>();
-        
+
         final int actionsAvailable = action.getPiece().getActionsAvailable() - 1;
-        
+
         if (actionsAvailable == 0) {
             takeMove(action);
             return;
         }
-        
+
         for (int i = 0; i <= actionsAvailable; i++) {
             numbers.add(i);
         }
-            
-        final ArrayAdapter adapter = new ArrayAdapter(activity, 
+
+        final ArrayAdapter adapter = new ArrayAdapter(activity,
                 android.R.layout.simple_spinner_dropdown_item, numbers);
-        
+
         input.setAdapter(adapter);
 
         new AlertDialog.Builder(activity)
-        .setTitle("Choose extra actions to attack with")
-        .setView(input)
-        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {                
+                .setTitle("Choose extra actions to attack with")
+                .setView(input)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
                 int extraAttacks;
-                
+
                 try {
                     extraAttacks = Integer.parseInt(input.getSelectedItem().toString());
                 } catch (NumberFormatException ex) {
                     return;
                 }
-                
+
                 action.setExtraAttacks(Math.min(extraAttacks, actionsAvailable));
-                
+
                 takeMove(action);
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {}
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
         }).show();
     }
-    
+
     private void chooseTerritory(final TerritorySelectAction action) {
-        
+
         List<Territory> options = action.getOptions();
-        
+
         if (options.isEmpty()) {
             return;
         }
-        
+
         //todo choose a territory        
         final CharSequence[] items = options.toArray(new CharSequence[options.size()]);
 
@@ -168,32 +185,32 @@ public class ActionTaker {
         builder.setTitle("Make your selection");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                 action.setTerritory(action.getOptions().get(item));
-        
-                 takeMove(action);
+                action.setTerritory(action.getOptions().get(item));
+
+                takeAction(action);
             }
         });
-        
-        builder.show();        
+
+        builder.show();
     }
     
     private Item selectedItem;
-    
+
     private void chooseItem(final ItemSelectAction action, final List<Item> options) {
-        
+
         selectedItem = options.get(0);
-        
+
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Choose which item to use");
         builder.setSingleChoiceItems(options.toArray(new Item[options.size()]), 0,
-                   new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-                ActionTaker.this.selectedItem = options.get(which);
-            }
-        })
-        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        ActionTaker.this.selectedItem = options.get(which);
+                    }
+                })
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 action.setItem(ActionTaker.this.selectedItem);
@@ -203,39 +220,38 @@ public class ActionTaker {
 
         builder.show();
     }
-    
+
     private void choosePlayers(final AttackGeneralAction action) {
-        
+
         Filter<Item> teamFilter = searcher.aTeamOrNooneFilter(action.getTarget().getTeam());
-                        
-        Filter<Hero> filter = 
-                new AndFilter<Hero> (
-                    new PieceTerritoryFilter(hero.getPosition()),
-                    new EnoughItemsFilter(teamFilter)
-                );
+
+        Filter<Hero> filter =
+                new AndFilter<Hero>(
+                new PieceTerritoryFilter(hero.getPosition()),
+                new EnoughItemsFilter(teamFilter));
         
-        final List<Hero> options = GameController.getInstance().getBoard()
-                .getPieces(filter, Hero.class);                
-        
+        final List<Hero> options = controller.getBoard()
+                .getPieces(filter, Hero.class);
+
         final LinkedList<Hero> selectedHeroes = new LinkedList<Hero>();
-        
+
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Choose which players to use");
         builder.setMultiChoiceItems(options.toArray(new Hero[options.size()]), null,
-                   new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which,
-                    boolean isChecked) {
+                new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which,
+                            boolean isChecked) {
 
-                Hero selected = options.get(which);
-                if (isChecked) {
-                    selectedHeroes.add(selected);
-                } else if (selectedHeroes.contains(selected)) {
-                    selectedHeroes.remove(selected);
-                }
-            }
-        })
-        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        Hero selected = options.get(which);
+                        if (isChecked) {
+                            selectedHeroes.add(selected);
+                        } else if (selectedHeroes.contains(selected)) {
+                            selectedHeroes.remove(selected);
+                        }
+                    }
+                })
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 chooseItems(selectedHeroes, action);
@@ -243,41 +259,41 @@ public class ActionTaker {
         });
 
         builder.show();
-        
+
     }
-    
+
     private void chooseItems(final LinkedList<Hero> heroes, final AttackGeneralAction action) {
-        
+
         //if weve gone through the list already then we should take the move
         if (heroes.isEmpty()) {
             takeMove(action);
             return;
         }
-        
+
         final Hero hero = heroes.pop();
-                
+
         final List<Item> options = hero.getItems(
-                searcher.aTeamOrNooneFilter(action.getTarget().getTeam()), Item.class);    
-        
+                searcher.aTeamOrNooneFilter(action.getTarget().getTeam()), Item.class);
+
         final List<Item> selectedItems = new ArrayList<Item>();
-                
+
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Choose which items " + hero + " will use");
         builder.setMultiChoiceItems(options.toArray(new Item[options.size()]), null,
-                   new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which,
-                    boolean isChecked) {
+                new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which,
+                            boolean isChecked) {
 
-                Item selected = options.get(which);
-                if (isChecked) {
-                    selectedItems.add(selected);
-                } else if (selectedItems.contains(selected)) {
-                    selectedItems.remove(selected);
-                }
-            }
-        })
-        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        Item selected = options.get(which);
+                        if (isChecked) {
+                            selectedItems.add(selected);
+                        } else if (selectedItems.contains(selected)) {
+                            selectedItems.remove(selected);
+                        }
+                    }
+                })
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 action.putItems(hero, selectedItems);
@@ -287,76 +303,102 @@ public class ActionTaker {
 
         builder.show();
     }
-    
+
     private void chooseItemsToRemove(final int total) {
-        
+
         final List<Item> options = hero.getInventory();
-        
+
         final int toRemove = Math.min(total, options.size());
-        
+
         final List<Item> selectedItems = new ArrayList<Item>();
-        
+
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Choose which items to discard, you must remove " + toRemove + " items");
         builder.setMultiChoiceItems(options.toArray(new Item[options.size()]), null,
-                   new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which,
-                    boolean isChecked) {
+                new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which,
+                            boolean isChecked) {
 
-                Item selected = options.get(which);
-                if (isChecked) {
-                    selectedItems.add(selected);
-                } else if (selectedItems.contains(selected)) {
-                    selectedItems.remove(selected);
-                }
-            }
-        })
-        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        Item selected = options.get(which);
+                        if (isChecked) {
+                            selectedItems.add(selected);
+                        } else if (selectedItems.contains(selected)) {
+                            selectedItems.remove(selected);
+                        }
+                    }
+                })
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 if (selectedItems.size() != toRemove) {
                     //todo keep trying
                     return;
                 }
-                
+
                 for (Item item : selectedItems) {
                     hero.useItem(item);
                 }
-                
-                activity.finish();
+
+                finish();
             }
         })
-        .setCancelable(false);
+                .setCancelable(false);
         builder.show();
-        
-    }
+
+    }    
     
-    private void showSummary(String message) {
+    private Hero selectedPlayer;
+
+    private void choosePlayer(final PlayerSelectAction action) {
+        final List<Hero> pieces = controller.getBoard().getPieces(AllFilter.INSTANCE, Hero.class);
         
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle("Summary")
-        .setMessage(message)
-        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        builder.setTitle("Choose which players to use");
+        builder.setSingleChoiceItems(pieces.toArray(new Hero[pieces.size()]), 0,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        ActionTaker.this.selectedPlayer = pieces.get(which);
+                    }
+                })
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int id) {                
-                removeCardsAndFinishActivity();
+            public void onClick(DialogInterface dialog, int id) {
+                action.setPlayer(ActionTaker.this.selectedPlayer);
+                takeMove(action);
             }
         });
         
         builder.show();
-        
     }
-    
-    private void takeMove(final Action action) {
-        GameController.getInstance().takeMove(action);
+
+    private void showSummary(String message) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Summary")
+                .setMessage(message)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                removeCardsAndFinishActivity();
+            }
+        });
+
+        builder.show();
+
+    }
+
+    private void takeMove(final Action action) {                
+        controller.takeMove(action);
         
         if (action instanceof Describable) {
-            Describable describable = (Describable)action;
+            Describable describable = (Describable) action;
             showSummary(describable.render());
             return;
         }
-        
+
         removeCardsAndFinishActivity();
     }
 
@@ -366,7 +408,13 @@ public class ActionTaker {
             hero.setCardsToRemove(0);
             return;
         }
-        activity.finish();
+        finish();
     }
 
+    private void finish() {
+        
+        if (finish) {
+            activity.finish();
+        }
+    }
 }

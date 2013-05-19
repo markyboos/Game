@@ -4,6 +4,7 @@ package com.game.thrones.engine;
 import com.game.thrones.engine.actions.Action;
 import com.game.thrones.engine.actions.RemoveMinionsAction;
 import com.game.thrones.engine.actions.RemoveTaintAction;
+import com.game.thrones.engine.actions.TeleportAnyoneAction;
 import com.game.thrones.model.Board;
 import com.game.thrones.model.PieceTerritoryFilter;
 import com.game.thrones.model.Team;
@@ -28,6 +29,10 @@ public class ItemController {
     }
     
     public void discard(Item item) {
+        if (item == null) {
+            return;
+        }
+        
         //action items get removed from the deck
         if (item instanceof ActionItem) {
             return;
@@ -56,6 +61,12 @@ public class ItemController {
         //kings guard
         items.add(new ActionItem("Kings guard", "Remove 6 minions on or next to monarch city",
                 new RemoveMinionsAction(board.getCentralTerritory(), 1, 6)));
+        
+        //battle fury
+        //items.add(new ActionItem("Battle Fury", "Defeat all minions at your current location", new RemoveMinionsAction(null, distanceAway, totalToRemove)));
+        
+        //hammer of valor
+        items.add(new ActionItem("Hammer of Valor", "Teleport any hero to any location", new TeleportAnyoneAction()));
                 
         return items;
     }

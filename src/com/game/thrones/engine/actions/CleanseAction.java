@@ -7,6 +7,8 @@ import com.game.thrones.engine.descriptions.CleanseDescription;
 import com.game.thrones.engine.descriptions.CleanseDescriptionRenderer;
 import com.game.thrones.engine.descriptions.DiceRollResult;
 import com.game.thrones.model.Filter;
+import com.game.thrones.model.hero.DoctorJekyll;
+import com.game.thrones.model.hero.DoctorJekyll.Form;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Item;
 import com.game.thrones.model.hero.ItemTeamFilter;
@@ -47,6 +49,11 @@ public class CleanseAction extends AbstractAction<Hero> implements ItemSelectAct
         
         if (piece instanceof Sorceress) {
             toRoll = 4;
+        } else if (piece instanceof DoctorJekyll) {
+            DoctorJekyll jekyll = (DoctorJekyll)piece;
+            if (jekyll.getCurrentForm() == Form.DR_JEKYLL) {
+                toRoll = 0;
+            }
         }
         
         DiceRollResult rollOne = dice.roll(toRoll);

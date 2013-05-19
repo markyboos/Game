@@ -13,6 +13,7 @@ import com.game.framework.VibrationManager;
 import com.game.thrones.activity.MapCanvasActivity;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.model.hero.Barbarian;
+import com.game.thrones.model.hero.DoctorJekyll;
 import com.game.thrones.model.hero.Dwarf;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Paladin;
@@ -68,6 +69,7 @@ public class MainActivity extends AbstractMenuActivity {
         final List<Hero> options = new ArrayList<Hero>();
         
         options.add(new Barbarian());
+        options.add(new DoctorJekyll());
         options.add(new Dwarf());
         options.add(new Paladin());        
         options.add(new Ranger());

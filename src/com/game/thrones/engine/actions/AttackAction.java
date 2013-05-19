@@ -53,13 +53,13 @@ public class AttackAction extends AbstractAction<Hero> implements Describable<At
             //roll the dice
             
             boolean slayer = isSlayer(minion);
-            int roll = getRoll(minion);
-            int needed = rollToDamage(minion);
+            DiceRollResult result = new DiceRollResult(getRoll(), rollToDamage(minion),
+                    modifyAttack(minion));
             
-            attacks.put(minion, new DiceRollResult(roll, needed));
+            attacks.put(minion, result);
             
             if (slayer || 
-                    roll >= needed) {
+                    result.success()) {
                 //remove the minion
                 GameController.getInstance().getBoard().removePiece(minion);
                 killed ++;
@@ -73,8 +73,8 @@ public class AttackAction extends AbstractAction<Hero> implements Describable<At
         description = new AttackDescription(attackingTerritory, attacks, killed);
     }
     
-    private int getRoll(Minion minion) {
-        return dice.roll() + modifyAttack(minion);
+    private int getRoll() {
+        return dice.roll();
     }
     
     protected void execute(int killed) {}

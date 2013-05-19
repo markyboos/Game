@@ -67,7 +67,7 @@ public class InventoryActivity extends ListActivity {
                 public void onClick(DialogInterface arg0, int arg1) {
                     Action action = actionItem.getAction();
                     
-                    ActionTaker actionTaker = new ActionTaker(hero, InventoryActivity.this);
+                    ActionTaker actionTaker = new ActionTaker(hero, InventoryActivity.this, true);
                     
                     actionTaker.takeAction(action);
                     
