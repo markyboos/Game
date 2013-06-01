@@ -22,19 +22,19 @@ import java.util.Map;
  *
  * @author James
  */
-public class AttackAction extends AbstractAction<Hero> implements Describable<AttackDescription> {
+public class AttackAction<H extends Hero> extends AbstractAction<H> implements Describable<AttackDescription> {
     
     protected Territory attackingTerritory;
     
     private InventorySearcher builder = new InventorySearcher();
 
-    public AttackAction(final Hero piece) {
+    public AttackAction(final H piece) {
         super(piece);
         
         attackingTerritory = piece.getPosition();
     }
     
-    private Dice dice = new Dice();
+    protected Dice dice = new Dice();
     
     private AttackDescription description;
 

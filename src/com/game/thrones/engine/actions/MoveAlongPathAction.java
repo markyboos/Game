@@ -1,6 +1,7 @@
 
 package com.game.thrones.engine.actions;
 
+import com.game.thrones.activity.CameraChangeEvent;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.hero.Fatty;
@@ -36,6 +37,8 @@ public class MoveAlongPathAction extends AbstractAction {
         
         List<Territory> path = instance.getBoard()
                 .getPathToTerritory(piece.getPosition(), finish);
+        
+        instance.fireCameraChangeEvent(new CameraChangeEvent(piece.getPosition()));
         
         //todo this will only ever work for a distance of one
         for (int i = 0; i < distance; i ++) {

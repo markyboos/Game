@@ -15,12 +15,14 @@ import com.game.thrones.engine.actions.AttackGeneralAction;
 import com.game.thrones.engine.actions.BarbarianAttackAction;
 import com.game.thrones.engine.actions.Action;
 import android.util.Log;
+import com.game.thrones.engine.actions.FeedAttackAction;
 import com.game.thrones.model.Filter;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.TerritoryCriteria;
 import com.game.thrones.model.PieceTerritoryFilter;
 import com.game.thrones.model.hero.Barbarian;
+import com.game.thrones.model.hero.Daywalker;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.InventorySearcher;
@@ -74,9 +76,13 @@ public class ActionCreator {
             
             if (minionsAtHero) {
                 if (piece instanceof Barbarian) {
-                    actions.add(new BarbarianAttackAction(hero));
                     
+                    actions.add(new BarbarianAttackAction((Barbarian)hero));                    
+                } else if (piece instanceof Daywalker) {
+                    
+                    actions.add(new FeedAttackAction((Daywalker)hero));                    
                 } else {
+                    
                     actions.add(new AttackAction(hero));
                 }
             }
@@ -92,7 +98,7 @@ public class ActionCreator {
             
             Territory position = piece.getPosition();
             
-            if (!minionsAtHero && !generalAtHero && !hero.isAtMaxHealth()) {
+            if (!minionsAtHero && !generalAtHero && !hero.isAtMaxHealth() && !(hero instanceof Daywalker)) {
                 actions.add(new HealAction(hero));
             }
             

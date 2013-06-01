@@ -4,6 +4,10 @@ import com.game.thrones.activity.GameFinishedEvent;
 import com.game.thrones.engine.Dice;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.engine.GameFinished;
+import com.game.thrones.engine.descriptions.ActionDescription;
+import com.game.thrones.engine.descriptions.AttackGeneralDescriptionRenderer;
+import com.game.thrones.engine.descriptions.Describable;
+import com.game.thrones.engine.descriptions.DiceRollResult;
 import com.game.thrones.model.AllFilter;
 import com.game.thrones.model.Board;
 import com.game.thrones.model.Team;
@@ -23,12 +27,14 @@ import java.util.Set;
  *
  * @author James
  */
-public class AttackGeneralAction implements GroupAction<Hero> {
+public class AttackGeneralAction implements GroupAction<Hero>, ActionDescription, Describable<AttackGeneralAction> {
 
     private Map<Hero, List<Item>> team = new LinkedHashMap<Hero, List<Item>>();
     private General target;
     private Dice dice = new Dice();
     private Board board = GameController.getInstance().getBoard();
+    
+    private Map<Hero, List<DiceRollResult>> rolls = new HashMap<Hero, List<DiceRollResult>>();
 
     public AttackGeneralAction(final Hero hero, final General target) {
         team.put(hero, Collections.<Item>emptyList());
@@ -49,6 +55,10 @@ public class AttackGeneralAction implements GroupAction<Hero> {
 
     public General getTarget() {
         return target;
+    }
+    
+    public Map<Hero, List<DiceRollResult>> getRolls() {
+        return rolls;
     }
 
     public void execute() {
@@ -107,12 +117,21 @@ public class AttackGeneralAction implements GroupAction<Hero> {
     }
 
     private boolean attackGeneral(Hero hero, int attacks) {
+        
+        List<DiceRollResult> heroRolls = new ArrayList<DiceRollResult>();
 
         for (int i = 0; i < attacks; i++) {
-            if (dice.roll() + hero.modifyAttack(target) >= target.getRollToDamage()) {
+            
+            final DiceRollResult roll = dice.roll(target.getRollToDamage(), hero.modifyAttack(target));
+            
+            heroRolls.add(roll);
+            
+            if (roll.success()) {
                 target.damage();
             }
         }
+        
+        rolls.put(hero, heroRolls);
 
         return target.isDead();
 
@@ -146,5 +165,13 @@ public class AttackGeneralAction implements GroupAction<Hero> {
     @Override
     public String toString() {
         return "Attack the general [" + target.getName() + "]";
+    }
+
+    public AttackGeneralAction summary() {
+        return this;
+    }
+
+    public String render() {
+        return new AttackGeneralDescriptionRenderer().render(summary());
     }
 }

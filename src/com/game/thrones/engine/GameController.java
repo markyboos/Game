@@ -1,5 +1,6 @@
 package com.game.thrones.engine;
 
+import android.os.Handler;
 import com.game.thrones.engine.actions.Action;
 import com.game.thrones.activity.CameraChangeEvent;
 import com.game.thrones.activity.CameraChangeListener;
@@ -15,6 +16,7 @@ import com.game.thrones.model.Board;
 import com.game.thrones.model.Filter;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.PieceTerritoryFilter;
+import com.game.thrones.model.hero.DamageListener;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
@@ -98,12 +100,24 @@ public class GameController {
 
         questController = new QuestController();
         
+        DamageListener damageListener = null;
+        for (Hero hero : players) {
+            if (hero instanceof DamageListener) {
+                damageListener = (DamageListener)hero;
+                continue;
+            }
+        }
+        
         //add two hero cards for each player
         //deal out quest cards
         for (Hero hero : players) {
             hero.addItem(itemController.getTopItem());
             hero.addItem(itemController.getTopItem());
             hero.setQuest(questController.getTopQuest());
+            
+            if (damageListener != null) {
+                hero.setDamageListener(damageListener);
+            }
         }
     }
     
@@ -192,10 +206,16 @@ public class GameController {
         //next player
         player = getNextPlayer();
         
-        fireGamePhaseChangeEvent(new GamePhaseChangeEvent(GamePhase.MORNING));
+        Handler handler = new Handler();
+        
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                fireGamePhaseChangeEvent(new GamePhaseChangeEvent(GamePhase.MORNING));
+            }
+        }, 4000);
     }
     
-    public void startMorningPhase() {        
+    public void startMorningPhase() {
 
         actionsTaken.clear();
 

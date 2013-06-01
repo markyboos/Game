@@ -13,6 +13,7 @@ import com.game.framework.VibrationManager;
 import com.game.thrones.activity.MapCanvasActivity;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.model.hero.Barbarian;
+import com.game.thrones.model.hero.Daywalker;
 import com.game.thrones.model.hero.DoctorJekyll;
 import com.game.thrones.model.hero.Dwarf;
 import com.game.thrones.model.hero.Hero;
@@ -36,6 +37,7 @@ public class MainActivity extends AbstractMenuActivity {
     public static final int HORSE = 3;
     public static final int EAGLE = 4;
     public static final int TELEPORT = 5;
+    public static final int MORNING = 6;
     
     /** Called when the activity is first created. */
     @Override
@@ -69,6 +71,7 @@ public class MainActivity extends AbstractMenuActivity {
         final List<Hero> options = new ArrayList<Hero>();
         
         options.add(new Barbarian());
+        options.add(new Daywalker());
         options.add(new DoctorJekyll());
         options.add(new Dwarf());
         options.add(new Paladin());        
@@ -130,6 +133,7 @@ public class MainActivity extends AbstractMenuActivity {
                 soundManager.addSound(HORSE, R.raw.galloping);
                 soundManager.addSound(EAGLE, R.raw.eaglecall);
                 soundManager.addSound(TELEPORT, R.raw.teleport);
+                soundManager.addSound(MORNING, R.raw.morning);
                 
                 return null;
             }

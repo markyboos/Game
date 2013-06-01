@@ -7,16 +7,16 @@ import android.content.DialogInterface;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import com.game.thrones.engine.GameController;
-import com.game.thrones.engine.GamePhase;
 import com.game.thrones.engine.actions.Action;
 import com.game.thrones.engine.actions.AttackGeneralAction;
 import com.game.thrones.engine.actions.BarbarianAttackAction;
 import com.game.thrones.engine.actions.ItemSelectAction;
+import com.game.thrones.engine.actions.MultipleTerritorySelectAction;
 import com.game.thrones.engine.actions.PlayerSelectAction;
 import com.game.thrones.engine.actions.RumorsAction;
 import com.game.thrones.engine.actions.ShapeShiftAction;
+import com.game.thrones.engine.actions.SingleTerritorySelectAction;
 import com.game.thrones.engine.actions.TeamSelectAction;
-import com.game.thrones.engine.actions.TerritorySelectAction;
 import com.game.thrones.engine.descriptions.Describable;
 import com.game.thrones.model.AllFilter;
 import com.game.thrones.model.AndFilter;
@@ -90,13 +90,22 @@ public class ActionTaker {
 
             return;
         }
-        if (selected instanceof TerritorySelectAction) {
+        if (selected instanceof SingleTerritorySelectAction) {
 
-            TerritorySelectAction action = (TerritorySelectAction) selected;
+            SingleTerritorySelectAction action = (SingleTerritorySelectAction) selected;
 
             if (!action.chosenTerritory()) {
-                chooseTerritory((TerritorySelectAction) action);
+                chooseTerritory(action);
 
+                return;
+            }
+        }
+        if (selected instanceof MultipleTerritorySelectAction) {
+            MultipleTerritorySelectAction action = (MultipleTerritorySelectAction) selected;
+            
+            if (!action.chosenTerritory()) {
+                chooseTerritories(action);
+                
                 return;
             }
         }
@@ -170,7 +179,7 @@ public class ActionTaker {
         }).show();
     }
 
-    private void chooseTerritory(final TerritorySelectAction action) {
+    private void chooseTerritory(final SingleTerritorySelectAction action) {
 
         List<Territory> options = action.getOptions();
 
@@ -192,6 +201,51 @@ public class ActionTaker {
         });
 
         builder.show();
+    }
+    
+    private void chooseTerritories(final MultipleTerritorySelectAction action) {
+        
+        final List<Territory> options = action.getOptions();
+
+        if (options.isEmpty()) {
+            return;
+        }
+        
+        final List<Territory> selectedTerritories = new ArrayList<Territory>();
+
+        //todo choose a territory        
+        final CharSequence[] items = options.toArray(new CharSequence[options.size()]);
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Make your selection, please choose " + action.getTotal() + " territories");
+        builder.setMultiChoiceItems(options.toArray(new Territory[options.size()]), null,
+        new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which,
+                    boolean isChecked) {
+
+                Territory selected = options.get(which);
+                if (isChecked) {
+                    selectedTerritories.add(selected);
+                } else if (selectedTerritories.contains(selected)) {
+                    selectedTerritories.remove(selected);
+                }
+            }
+        })
+        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                
+                if (selectedTerritories.size() == action.getTotal()) {
+                    action.setTerritories(selectedTerritories);
+                
+                    takeAction(action);                    
+                }                
+            }
+        });
+        builder.setCancelable(false);
+
+        builder.show();     
     }
     
     private Item selectedItem;

@@ -8,10 +8,10 @@ import java.util.List;
  *
  * @author James
  */
-public interface MultipleTerritorySelectAction extends Action {
+public interface MultipleTerritorySelectAction extends TerritorySelectAction {
     
     public void setTerritories(List<Territory> territory);
     
-    public List<Territory> getOptions();
+    public int getTotal();
 
 }

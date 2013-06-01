@@ -1,18 +1,14 @@
 
 package com.game.thrones.engine;
 
-import com.game.thrones.engine.actions.Action;
+import com.game.thrones.engine.actions.ElvenArchersAction;
 import com.game.thrones.engine.actions.RemoveMinionsAction;
 import com.game.thrones.engine.actions.RemoveTaintAction;
 import com.game.thrones.engine.actions.TeleportAnyoneAction;
 import com.game.thrones.model.Board;
-import com.game.thrones.model.PieceTerritoryFilter;
-import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
-import com.game.thrones.model.TerritoryCriteria;
 import com.game.thrones.model.hero.ActionItem;
 import com.game.thrones.model.hero.Item;
-import com.game.thrones.model.hero.Minion;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,7 +48,7 @@ public class ItemController {
         }
         
         items.add(new ActionItem("Elven archers", "Remove all the minions"
-                + " from 2 green territories", elvenArchers()));
+                + " from 2 green territories", new ElvenArchersAction()));
         
         //spell of purity        
         items.add(new ActionItem("Spell of purity", 
@@ -65,48 +61,13 @@ public class ItemController {
         //battle fury
         //items.add(new ActionItem("Battle Fury", "Defeat all minions at your current location", new RemoveMinionsAction(null, distanceAway, totalToRemove)));
         
+        //battle strategy
+        //push one general back and remove all minions from 3 territories
+        //items.add(new ActionItem("Battle Strategy", "Push one general back and remove all minions from 3 territories", new ));
+        
         //hammer of valor
         items.add(new ActionItem("Hammer of Valor", "Teleport any hero to any location", new TeleportAnyoneAction()));
                 
         return items;
-    }
-    
-    private Action elvenArchers() {
-        
-        return new Action() {
-            
-            private List<Territory> territories;
-            
-            public void setTerritories(List<Territory> territories) {
-                this.territories = territories;                
-            }
-            
-            public int getTotal() {
-                return 2;
-            }
-            
-            public List<Territory> getOptions() {
-                Board board = GameController.getInstance().getBoard();
-                
-                TerritoryCriteria criteria = new TerritoryCriteria();
-                criteria.setOwner(Team.ORCS);
-                
-                return board.getTerritories(criteria);                                
-            }
-            
-            public void execute() {
-                
-                Board board = GameController.getInstance().getBoard();
-                
-                for (Territory territory : territories) {
-                
-                    List<Minion> pieces = board.getPieces(new PieceTerritoryFilter<Minion>(territory), Minion.class);
-                    
-                    for (Minion minion : pieces) {
-                        board.removePiece(minion);
-                    }                    
-                }                
-            }
-        };        
     }
 }

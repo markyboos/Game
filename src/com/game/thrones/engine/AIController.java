@@ -59,7 +59,11 @@ public class AIController {
     }
     
     public Orders takeTopCard() {
-        return deck.takeTopCard();
+        Orders orders = deck.takeTopCard();
+        
+        deck.discard(orders);
+        
+        return orders;
     }
     
     public void takeTurn() {        
@@ -69,7 +73,7 @@ public class AIController {
     }
     
     private void drawAndUseCard() {
-        Orders orders = deck.takeTopCard();
+        Orders orders = takeTopCard();
 
         //add minions to places        
         //add taint        
@@ -77,8 +81,6 @@ public class AIController {
         for (Action action : orders.getActions()) {
             action.execute();            
         }
-        
-        deck.discard(orders);
     }
     
     public void initialise() {

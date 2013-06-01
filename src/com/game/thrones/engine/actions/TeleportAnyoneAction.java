@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author James
  */
-public class TeleportAnyoneAction implements Action, TerritorySelectAction, PlayerSelectAction {
+public class TeleportAnyoneAction implements Action, SingleTerritorySelectAction, PlayerSelectAction {
     
     private Hero hero;
     private Territory territory;

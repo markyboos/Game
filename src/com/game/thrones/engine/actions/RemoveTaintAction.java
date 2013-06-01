@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author James
  */
-public class RemoveTaintAction implements TerritorySelectAction {
+public class RemoveTaintAction implements SingleTerritorySelectAction {
     
     private Territory territory;
     

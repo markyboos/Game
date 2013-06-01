@@ -20,7 +20,7 @@ import java.util.Set;
  *
  * @author James
  */
-public class FireballAction extends AttackAction implements ItemSelectAction {
+public class FireballAction extends AttackAction<Wizard> implements ItemSelectAction {
 
     private Item item;
 

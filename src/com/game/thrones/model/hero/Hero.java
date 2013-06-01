@@ -18,6 +18,13 @@ import java.util.List;
  */
 public abstract class Hero extends Piece {
     
+    private static class NoListener implements DamageListener {
+        //no op
+        public void damageEventFired(Hero hero) {}        
+    }
+    
+    private static final NoListener NO_LISTENER = new NoListener();
+    
     final protected int maxHealth;
     
     protected int health;
@@ -31,6 +38,8 @@ public abstract class Hero extends Piece {
     private Quest quest;
     
     private List<Quest> questsCompleted = new ArrayList<Quest>();
+    
+    private DamageListener listener = NO_LISTENER;
     
     public Hero(final String name) {
         this.name = name;
@@ -88,7 +97,7 @@ public abstract class Hero extends Piece {
     }
     
     public void setCardsToRemove(int cardsToRemove) {
-        this.cardsToRemove = cardsToRemove;        
+        this.cardsToRemove = Math.min(inventory.size(), cardsToRemove);
     }
     
     public int getCardsToRemove() {
@@ -142,6 +151,10 @@ public abstract class Hero extends Piece {
     public int getActionsAvailable() {
         return actionsAvailable;
     }
+    
+    public void setDamageListener(DamageListener listener) {
+        this.listener = listener;
+    }
 
     /**
      * Take damage from minions.
@@ -176,6 +189,8 @@ public abstract class Hero extends Piece {
         if (damage <= 0) {
             return;
         }
+        
+        listener.damageEventFired(this);
         
         health -= damage;
         if (health < 0) {
