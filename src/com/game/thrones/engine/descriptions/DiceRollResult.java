@@ -4,7 +4,7 @@ package com.game.thrones.engine.descriptions;
  *
  * @author James
  */
-public class DiceRollResult implements ActionDescription {
+public class DiceRollResult implements AttackResult {
 
     public final int needed;
     public final int rolled;

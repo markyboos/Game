@@ -17,7 +17,7 @@ public class AttackDescriptionRenderer implements DescriptionRenderer<AttackDesc
         
         for (Minion minion : model.minionResults.keySet()) {
             
-            DiceRollResult result = model.minionResults.get(minion);
+            AttackResult result = model.minionResults.get(minion);
         
             buf.append("You go for a ");
             buf.append(minion.getTeam());
