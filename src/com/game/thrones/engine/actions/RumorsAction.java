@@ -8,8 +8,10 @@ import com.game.thrones.engine.descriptions.RumorsDescription;
 import com.game.thrones.engine.descriptions.RumorsDescriptionRenderer;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.hero.Hero;
-import com.game.thrones.model.hero.Item;
+import com.game.thrones.model.item.AbstractItem;
 import com.game.thrones.model.hero.Rogue;
+import com.game.thrones.model.item.AttackGeneralItem;
+import com.game.thrones.model.item.Item;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,8 @@ public class RumorsAction extends AbstractAction<Hero> implements TeamSelectActi
 
     public void execute() {
         
+        piece.useAction();
+        
         List<Item> collected = new ArrayList<Item> ();
         
         //checks the 2 top items in the deck
@@ -53,7 +57,7 @@ public class RumorsAction extends AbstractAction<Hero> implements TeamSelectActi
     }
 
     private void listen(final Hero hero, final List<Item> collected) {        
-        Item item = GameController.getInstance().getItemController().getTopItem();
+        AttackGeneralItem item = GameController.getInstance().getItemController().getTopItem();
         
         //if its the same add it to the stash
         if (item != null && (item.getTeam() == team || item.getTeam() == Team.NO_ONE)) {

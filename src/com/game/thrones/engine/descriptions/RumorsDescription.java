@@ -1,7 +1,7 @@
 
 package com.game.thrones.engine.descriptions;
 
-import com.game.thrones.model.hero.Item;
+import com.game.thrones.model.item.Item;
 import java.util.List;
 
 /**

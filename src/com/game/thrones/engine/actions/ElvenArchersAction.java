@@ -3,6 +3,8 @@ package com.game.thrones.engine.actions;
 
 import android.util.Log;
 import com.game.thrones.engine.GameController;
+import com.game.thrones.engine.descriptions.ActionDescription;
+import com.game.thrones.engine.descriptions.Describable;
 import com.game.thrones.model.Board;
 import com.game.thrones.model.PieceTerritoryFilter;
 import com.game.thrones.model.Team;
@@ -15,7 +17,7 @@ import java.util.List;
  *
  * @author James
  */
-public class ElvenArchersAction implements MultipleTerritorySelectAction {
+public class ElvenArchersAction implements MultipleTerritorySelectAction, Describable<ActionDescription>{
 
     private List<Territory> territories;
             
@@ -57,6 +59,14 @@ public class ElvenArchersAction implements MultipleTerritorySelectAction {
                 board.removePiece(minion);
             }                    
         }                
+    }
+
+    public ActionDescription summary() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public String render() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     

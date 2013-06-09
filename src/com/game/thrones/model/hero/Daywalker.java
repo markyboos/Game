@@ -68,8 +68,11 @@ public class Daywalker extends Hero implements DamageListener {
                 .getPieces(new PieceTerritoryFilter<Hero>(this.getPosition()), Hero.class);
 
         for (Hero hero : pieces) {
-
-            if (!hero.equals(this)) {
+            
+            if (hero instanceof HellBlazer) {
+                thirstSated = true;
+                takeDamage(1);
+            } else if (!hero.equals(this)) {
                 thirstSated = true;
                 hero.takeDamage(1);
             }        

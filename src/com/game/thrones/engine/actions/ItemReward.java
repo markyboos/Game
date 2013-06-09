@@ -3,7 +3,7 @@ package com.game.thrones.engine.actions;
 import com.game.thrones.engine.descriptions.Describable;
 import com.game.thrones.engine.descriptions.ItemDescriptionRenderer;
 import com.game.thrones.model.hero.Hero;
-import com.game.thrones.model.hero.Item;
+import com.game.thrones.model.item.Item;
 
 /**
  *

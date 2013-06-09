@@ -46,7 +46,24 @@ public enum Team {
         return sum;
     }
     
-    public static String[] getTeams(boolean includeNoone) {
+    public static Team[] getTeams(boolean includeNoone) {
+        Team[] teams = new Team[includeNoone ? Team.total() : Team.total() - 1];
+        
+        int i = 0;
+        
+        for (Team team : values()) {            
+            if (team == Team.NO_ONE && !includeNoone || !team.enabled()) {
+                continue;
+            }
+            
+            teams[i] = team;
+            i ++;
+        }
+        
+        return teams;
+    }
+    
+    public static String[] getTeamNames(boolean includeNoone) {
         String[] items = new String[includeNoone ? Team.total() : Team.total() - 1];
         
         int i = 0;

@@ -27,7 +27,8 @@ import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.InventorySearcher;
-import com.game.thrones.model.hero.Item;
+import com.game.thrones.model.item.AttackGeneralItem;
+import com.game.thrones.model.item.Item;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -65,7 +66,7 @@ public class ActionTaker {
 
             ItemSelectAction itemAction = (ItemSelectAction) selected;
 
-            List<Item> options = hero.getItems(itemAction.getItemFilter(), Item.class);
+            List<AttackGeneralItem> options = hero.getItems(itemAction.getItemFilter(), AttackGeneralItem.class);
 
             chooseItem(itemAction, options);
 
@@ -124,10 +125,10 @@ public class ActionTaker {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Choose a team");
-        builder.setItems(Team.getTeams(includeNoone), new DialogInterface.OnClickListener() {
+        builder.setItems(Team.getTeamNames(includeNoone), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
-                action.setTeam(Team.values()[which]);
+                action.setTeam(Team.getTeams(includeNoone)[which]);
                 takeMove(action);
             }
         });
@@ -248,15 +249,15 @@ public class ActionTaker {
         builder.show();     
     }
     
-    private Item selectedItem;
+    private AttackGeneralItem selectedItem;
 
-    private void chooseItem(final ItemSelectAction action, final List<Item> options) {
+    private void chooseItem(final ItemSelectAction action, final List<AttackGeneralItem> options) {
 
         selectedItem = options.get(0);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Choose which item to use");
-        builder.setSingleChoiceItems(options.toArray(new Item[options.size()]), 0,
+        builder.setSingleChoiceItems(options.toArray(new AttackGeneralItem[options.size()]), 0,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -277,7 +278,7 @@ public class ActionTaker {
 
     private void choosePlayers(final AttackGeneralAction action) {
 
-        Filter<Item> teamFilter = searcher.aTeamOrNooneFilter(action.getTarget().getTeam());
+        Filter<AttackGeneralItem> teamFilter = searcher.aTeamOrNooneFilter(action.getTarget().getTeam());
 
         Filter<Hero> filter =
                 new AndFilter<Hero>(
@@ -326,20 +327,20 @@ public class ActionTaker {
 
         final Hero hero = heroes.pop();
 
-        final List<Item> options = hero.getItems(
-                searcher.aTeamOrNooneFilter(action.getTarget().getTeam()), Item.class);
+        final List<AttackGeneralItem> options = hero.getItems(
+                searcher.aTeamOrNooneFilter(action.getTarget().getTeam()), AttackGeneralItem.class);
 
-        final List<Item> selectedItems = new ArrayList<Item>();
+        final List<AttackGeneralItem> selectedItems = new ArrayList<AttackGeneralItem>();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Choose which items " + hero + " will use");
-        builder.setMultiChoiceItems(options.toArray(new Item[options.size()]), null,
+        builder.setMultiChoiceItems(options.toArray(new AttackGeneralItem[options.size()]), null,
                 new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which,
                             boolean isChecked) {
 
-                        Item selected = options.get(which);
+                        AttackGeneralItem selected = options.get(which);
                         if (isChecked) {
                             selectedItems.add(selected);
                         } else if (selectedItems.contains(selected)) {
@@ -391,7 +392,7 @@ public class ActionTaker {
                 }
 
                 for (Item item : selectedItems) {
-                    hero.useItem(item);
+                    hero.disposeItem(item);
                 }
 
                 finish();

@@ -2,7 +2,9 @@
 package com.game.thrones.model;
 
 import com.game.thrones.model.hero.Hero;
-import com.game.thrones.model.hero.Item;
+import com.game.thrones.model.item.AbstractItem;
+import com.game.thrones.model.item.AttackGeneralItem;
+import com.game.thrones.model.item.Item;
 
 /**
  *
@@ -10,14 +12,14 @@ import com.game.thrones.model.hero.Item;
  */
 public class EnoughItemsFilter implements Filter<Hero> {
     
-    public Filter<Item> filter;
+    public Filter<AttackGeneralItem> filter;
     
-    public EnoughItemsFilter(Filter<Item> filter) {
+    public EnoughItemsFilter(Filter<AttackGeneralItem> filter) {
         this.filter = filter;        
     }
 
     public boolean valid(Hero hero) {
-        return !hero.getItems(filter, Item.class).isEmpty();
+        return !hero.getItems(filter, AttackGeneralItem.class).isEmpty();
     }
 
 }

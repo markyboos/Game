@@ -2,7 +2,9 @@
 package com.game.thrones.engine.actions;
 
 import com.game.thrones.model.Filter;
-import com.game.thrones.model.hero.Item;
+import com.game.thrones.model.item.AbstractItem;
+import com.game.thrones.model.item.AttackGeneralItem;
+import com.game.thrones.model.item.Item;
 
 /**
  *
@@ -10,7 +12,7 @@ import com.game.thrones.model.hero.Item;
  */
 public interface ItemSelectAction extends Action {
     
-    public void setItem(final Item item);
+    public void setItem(final AttackGeneralItem item);
     
     public Filter getItemFilter();
 

@@ -6,8 +6,8 @@ import com.game.thrones.model.DiceRequirement;
 import com.game.thrones.engine.actions.ItemReward;
 import com.game.thrones.model.Quest;
 import com.game.thrones.model.Territory;
-import com.game.thrones.model.hero.ActionItem;
-import com.game.thrones.model.hero.BootsOfSpeed;
+import com.game.thrones.model.item.ActionItem;
+import com.game.thrones.model.item.ActionModifierItem;
 import java.util.Collections;
 
 import java.util.LinkedList;
@@ -46,7 +46,7 @@ public class QuestController {
         //roll 3 dice, get a 6
         //gain +2 actions per turn
         quests.add(new Quest("Boots of Speed", dragonRange,
-                new DiceRequirement(3, 6), new ItemReward(new BootsOfSpeed(2))));
+                new DiceRequirement(3, 6), new ItemReward(new ActionModifierItem("The boots of speed", "These boots are so light you feel like you are walking on air", 2))));
 
         //old tree bloke
         Territory oldFatherTreeBloke = GameController.getInstance().getBoard().getTerritory(Territory.OLD_FATHER_WOOD);

@@ -21,6 +21,8 @@ public class TeleportAction extends AbstractAction<Wizard> {
 
     public void execute() {
         
+        piece.useAction();
+        
         playSoundEffect(MainActivity.TELEPORT);
         
         GameController.getInstance().getBoard()

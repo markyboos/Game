@@ -26,6 +26,9 @@ public class MapCanvasActivity extends AbstractMenuActivity implements GameFinis
 
     private View mapView;
     private GameController controller = GameController.getInstance();
+    
+    private Button endTurnButton;
+    private Button inventoryButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,8 +47,8 @@ public class MapCanvasActivity extends AbstractMenuActivity implements GameFinis
 
         updateHUD();
 
-        Button buttonOne = (Button) findViewById(R.id.endTurnButton);
-        buttonOne.setOnClickListener(new Button.OnClickListener() {
+        endTurnButton = (Button) findViewById(R.id.endTurnButton);
+        endTurnButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(final View v) {
 
                 fireGamePhaseChangeEvent(new GamePhaseChangeEvent(GamePhase.EVENING));
@@ -54,8 +57,8 @@ public class MapCanvasActivity extends AbstractMenuActivity implements GameFinis
             }
         });
 
-        Button buttonTwo = (Button) findViewById(R.id.inventoryButton);
-        buttonTwo.setOnClickListener(new Button.OnClickListener() {
+        inventoryButton = (Button) findViewById(R.id.inventoryButton);
+        inventoryButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(final View v) {
 
                 if (!controller.getPlayer().getInventory().isEmpty()) {
@@ -114,6 +117,9 @@ public class MapCanvasActivity extends AbstractMenuActivity implements GameFinis
 
     public void fireGamePhaseChangeEvent(GamePhaseChangeEvent phase) {
         if (phase.getGamePhase() == GamePhase.EVENING) {
+            
+            endTurnButton.setEnabled(false);
+            inventoryButton.setEnabled(false);
 
             Toast.makeText(this, "Evening comes..", Toast.LENGTH_SHORT).show();
 
@@ -126,6 +132,9 @@ public class MapCanvasActivity extends AbstractMenuActivity implements GameFinis
             scheduleNextPhase(phase.getGamePhase());
 
         } else if (phase.getGamePhase() == GamePhase.MORNING) {
+            
+            endTurnButton.setEnabled(true);
+            inventoryButton.setEnabled(true);
 
             SoundManager.getSingleton().playSound(MainActivity.MORNING);
 

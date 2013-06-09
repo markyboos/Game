@@ -4,7 +4,7 @@ package com.game.thrones.engine.actions;
 import com.game.thrones.activity.CameraChangeEvent;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.model.Territory;
-import com.game.thrones.model.hero.Fatty;
+import com.game.thrones.model.hero.Woundable;
 import com.game.thrones.model.piece.Piece;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class MoveAlongPathAction extends AbstractAction {
             return;
         }
         
-        if (piece instanceof Fatty && ((Fatty)piece).isHeavilyWounded()) {
+        if (piece instanceof Woundable && ((Woundable)piece).isHeavilyWounded()) {
             return;            
         }
         

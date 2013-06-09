@@ -1,7 +1,8 @@
 
 package com.game.thrones.engine.descriptions;
 
-import com.game.thrones.model.hero.Item;
+import com.game.thrones.model.item.AbstractItem;
+import com.game.thrones.model.item.Item;
 
 /**
  *

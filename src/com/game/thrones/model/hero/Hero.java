@@ -3,10 +3,14 @@ package com.game.thrones.model.hero;
 
 import com.game.thrones.engine.GameController;
 import com.game.thrones.engine.actions.Action;
-import com.game.thrones.model.Filter;
 import com.game.thrones.engine.actions.ItemReward;
+import com.game.thrones.model.Filter;
 import com.game.thrones.model.Quest;
 import com.game.thrones.model.Team;
+import com.game.thrones.model.item.AbstractItem;
+import com.game.thrones.model.item.ActionModifierItem;
+import com.game.thrones.model.item.AttackGeneralItem;
+import com.game.thrones.model.item.Item;
 import com.game.thrones.model.piece.Piece;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,9 +71,11 @@ public abstract class Hero extends Piece {
         }
     }
     
-    public void useItem(final Item item) {
+    public void disposeItem(final Item item) {
         inventory.remove(item);
-        GameController.getInstance().getItemController().discard(item);
+        if (item instanceof AttackGeneralItem) {
+            GameController.getInstance().getItemController().discard((AttackGeneralItem)item);
+        }
     }
     
     public List<Item> getInventory() {
@@ -78,7 +84,9 @@ public abstract class Hero extends Piece {
     
     public void clearInventory() {
         for (Item item : inventory) {
-            GameController.getInstance().getItemController().discard(item);
+            if (item instanceof AttackGeneralItem) {
+                GameController.getInstance().getItemController().discard((AttackGeneralItem)item);
+            }
         }
         inventory.clear();
     }
@@ -212,8 +220,8 @@ public abstract class Hero extends Piece {
     public void modifyActions() {
         //if you have the boots of speed you go mega fast
         for (Item item : inventory) {
-            if (item.getItemType() == Item.ItemType.BOOTS_OF_SPEED) {
-                actionsAvailable += item.getPower();
+            if (item instanceof ActionModifierItem) {
+                actionsAvailable += ((ActionModifierItem)item).getExtraActions();
             }
         }
     }

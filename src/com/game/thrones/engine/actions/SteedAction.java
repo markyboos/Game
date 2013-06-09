@@ -20,6 +20,8 @@ public class SteedAction extends AbstractAction<Paladin> {
     }
 
     public void execute() {        
+        piece.useAction();
+        
         playSoundEffect(MainActivity.HORSE);
         
         GameController.getInstance().getBoard()

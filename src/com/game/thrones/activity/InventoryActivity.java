@@ -12,9 +12,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.game.thrones.engine.GameController;
 import com.game.thrones.engine.actions.Action;
-import com.game.thrones.model.hero.ActionItem;
+import com.game.thrones.model.item.ActionItem;
 import com.game.thrones.model.hero.Hero;
-import com.game.thrones.model.hero.Item;
+import com.game.thrones.model.item.Item;
 import java.util.List;
 
 /**
@@ -52,7 +52,7 @@ public class InventoryActivity extends ListActivity {
     
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        Item selected = (Item) l.getItemAtPosition(position);
+        final Item selected = (Item) l.getItemAtPosition(position);
         
         if (selected instanceof ActionItem) {
             
@@ -71,7 +71,7 @@ public class InventoryActivity extends ListActivity {
                     
                     actionTaker.takeAction(action);
                     
-                    hero.useItem(actionItem);
+                    hero.disposeItem(selected);
                 }
             });
             alertDialogBuilder.show();

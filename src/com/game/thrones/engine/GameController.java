@@ -229,7 +229,7 @@ public class GameController {
 
         actionsTaken.add(action);
 
-        player.useAction();
+        //player.useAction();
     }
 
     private Hero getNextPlayer() {

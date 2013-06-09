@@ -13,8 +13,10 @@ import com.game.thrones.model.Board;
 import com.game.thrones.model.Team;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Hero;
-import com.game.thrones.model.hero.Item;
+import com.game.thrones.model.item.AbstractItem;
 import com.game.thrones.model.hero.Woundable;
+import com.game.thrones.model.item.AttackGeneralItem;
+import com.game.thrones.model.item.SlayerItem;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,7 +31,7 @@ import java.util.Set;
  */
 public class AttackGeneralAction implements GroupAction<Hero>, ActionDescription, Describable<AttackGeneralAction> {
 
-    private Map<Hero, List<Item>> team = new LinkedHashMap<Hero, List<Item>>();
+    private Map<Hero, List<AttackGeneralItem>> team = new LinkedHashMap<Hero, List<AttackGeneralItem>>();
     private General target;
     private Dice dice = new Dice();
     private Board board = GameController.getInstance().getBoard();
@@ -37,12 +39,12 @@ public class AttackGeneralAction implements GroupAction<Hero>, ActionDescription
     private Map<Hero, List<DiceRollResult>> rolls = new HashMap<Hero, List<DiceRollResult>>();
 
     public AttackGeneralAction(final Hero hero, final General target) {
-        team.put(hero, Collections.<Item>emptyList());
+        team.put(hero, Collections.<AttackGeneralItem>emptyList());
 
         this.target = target;
     }
 
-    public void putItems(Hero hero, List<Item> items) {
+    public void putItems(Hero hero, List<AttackGeneralItem> items) {
         if (items.isEmpty()) {
             throw new IllegalStateException("You cannot attack a general without items");
         }
@@ -64,16 +66,18 @@ public class AttackGeneralAction implements GroupAction<Hero>, ActionDescription
     public void execute() {
 
         final Hero initiator = team.keySet().iterator().next();
+        
+        initiator.useAction();
 
         Map<Hero, Integer> attacks = new HashMap<Hero, Integer>();
 
         //all items get used immediately
         for (Hero hero : team.keySet()) {
-            List<Item> itemsToUse = team.get(hero);
+            List<AttackGeneralItem> itemsToUse = team.get(hero);
             
             int totalAttacks = 0;
 
-            for (Item item : itemsToUse) {
+            for (AttackGeneralItem item : itemsToUse) {
                 if (item.getTeam() != target.getTeam() && item.getTeam() != Team.NO_ONE) {
                     throw new AssertionError("Cannot use items against a general that arent of that team");
                 }
@@ -83,15 +87,15 @@ public class AttackGeneralAction implements GroupAction<Hero>, ActionDescription
                         && dice.roll(1).success()) {
                     continue;
                 }
-                totalAttacks += item.getPower();
+                totalAttacks += item.getAttackValue();
             }
             
             attacks.put(hero, totalAttacks);
             
-            List<Item> items = new ArrayList<Item>(itemsToUse);
+            List<AttackGeneralItem> items = new ArrayList<AttackGeneralItem>(itemsToUse);
 
-            for (Item item : items) {
-                hero.useItem(item);
+            for (AttackGeneralItem item : items) {
+                hero.disposeItem(item);
             }
         }
 
@@ -143,7 +147,7 @@ public class AttackGeneralAction implements GroupAction<Hero>, ActionDescription
 
         //make the hero brilliant
         //slayer
-        slayer.addItem(new Item(target.getTeam()));
+        slayer.addItem(new SlayerItem("You are the slayer of beasts, any minion of that team you attack will flee from your mightyness", target));
 
         for (Hero hero : team.keySet()) {
             //add 3 hero cards

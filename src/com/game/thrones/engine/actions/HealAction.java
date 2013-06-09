@@ -13,7 +13,9 @@ public class HealAction extends AbstractAction<Hero> {
         super(piece);        
     }
 
-    public void execute() {        
+    public void execute() {
+        piece.useAction();
+        
         piece.heal();
     }
     

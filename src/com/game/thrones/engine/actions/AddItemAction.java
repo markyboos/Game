@@ -2,7 +2,7 @@
 package com.game.thrones.engine.actions;
 
 import com.game.thrones.model.hero.Hero;
-import com.game.thrones.model.hero.Item;
+import com.game.thrones.model.item.AbstractItem;
 
 /**
  *
@@ -10,7 +10,7 @@ import com.game.thrones.model.hero.Item;
  */
 public class AddItemAction extends AbstractAction<Hero> {
     
-    public AddItemAction(Hero hero, Item item) {
+    public AddItemAction(Hero hero, AbstractItem item) {
         super(hero);
     }
 

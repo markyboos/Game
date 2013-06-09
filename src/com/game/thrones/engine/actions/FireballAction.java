@@ -8,10 +8,11 @@ import com.game.thrones.model.Filter;
 import com.game.thrones.model.OrFilter;
 import com.game.thrones.model.PieceTerritoryFilter;
 import com.game.thrones.model.Team;
-import com.game.thrones.model.hero.Item;
-import com.game.thrones.model.hero.ItemTeamFilter;
+import com.game.thrones.model.item.ItemTeamFilter;
 import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.hero.Wizard;
+import com.game.thrones.model.item.AttackGeneralItem;
+import com.game.thrones.model.item.Item;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,13 +23,13 @@ import java.util.Set;
  */
 public class FireballAction extends AttackAction<Wizard> implements ItemSelectAction {
 
-    private Item item;
+    private AttackGeneralItem item;
 
     public FireballAction(final Wizard wizard) {
         super(wizard);
     }
     
-    public void setItem(final Item item) {
+    public void setItem(final AttackGeneralItem item) {
         this.item = item;
     }
     
@@ -42,7 +43,7 @@ public class FireballAction extends AttackAction<Wizard> implements ItemSelectAc
             teams.add(minion.getTeam());
         }
         
-        Filter<Item>[] filters = new Filter[teams.size()];
+        Filter<AttackGeneralItem>[] filters = new Filter[teams.size()];
         int i = 0;
         for (Team team : teams) {
             filters[i] = new ItemTeamFilter(team);
@@ -55,7 +56,7 @@ public class FireballAction extends AttackAction<Wizard> implements ItemSelectAc
 
     @Override
     public void execute() {
-        piece.useItem(item);
+        piece.disposeItem(item);
         
         playSoundEffect(MainActivity.FIREBALL);
         

@@ -37,7 +37,9 @@ public class MoveAction extends AbstractAction {
 
     public void execute() {
         
-        if (piece instanceof Hero) {            
+        if (piece instanceof Hero) {
+            ((Hero)piece).useAction();
+            
             playSoundEffect(MainActivity.WALK);
         }
         

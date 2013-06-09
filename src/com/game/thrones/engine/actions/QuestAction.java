@@ -22,6 +22,8 @@ public class QuestAction extends AbstractAction<Hero> implements Describable<Que
 
     public void execute() {
         
+        piece.useAction();
+        
         if (!quest.isSatisfied(piece)) {            
             return;            
         }

@@ -1,29 +1,22 @@
 
-package com.game.thrones.model.hero;
+package com.game.thrones.model.item;
 
-import com.game.thrones.engine.actions.Action;
+import com.game.thrones.engine.descriptions.ActionDescription;
 import com.game.thrones.model.Team;
 
 /**
- *
+ * todo this is poop
+ * 
  * @author James
  */
-public class ActionItem extends Item {
+public class AbstractItem implements Item {
     
-    private Action action;
-    private String name;
-    private String description;
+    private final String name;    
+    private final String description;
     
-    public ActionItem(final String name, final String description, final Action action) {
-        this.team = Team.NO_ONE;
-        this.type = ItemType.DISPOSABLE;        
-        this.action = action;
+    public AbstractItem(String name, String description) {
         this.name = name;
         this.description = description;
-    }
-
-    public Action getAction() {
-        return action;
     }
     
     public String getDescription() {
@@ -34,11 +27,23 @@ public class ActionItem extends Item {
         return name;
     }
     
+    public int length() {
+        return toString().length();
+    }
+
+    public char charAt(int arg0) {
+        return toString().charAt(arg0);
+    }
+
+    public CharSequence subSequence(int arg0, int arg1) {
+        return toString().subSequence(arg0, arg1);
+    }
+    
     @Override
     public String toString() {
         return name;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 7;
@@ -54,12 +59,11 @@ public class ActionItem extends Item {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ActionItem other = (ActionItem) obj;
-        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
+        final AbstractItem other = (AbstractItem) obj;
+        if ((this.name == null) ? (other.getName() != null) : !this.name.equals(other.getName())) {
             return false;
         }
         return true;
     }
-    
 
 }

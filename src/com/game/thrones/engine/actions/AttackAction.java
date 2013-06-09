@@ -37,6 +37,8 @@ public class AttackAction<H extends Hero> extends AbstractAction<H> implements D
     private AttackDescription description;
 
     public void execute() {
+        
+        piece.useAction();
 
         playSoundEffect(MainActivity.SWORDFIGHT);
 
@@ -55,6 +57,8 @@ public class AttackAction<H extends Hero> extends AbstractAction<H> implements D
                 GameController.getInstance().getBoard().removePiece(minion);
                 killed++;
             }
+            
+            attacks.put(minion, result);
         }
 
         execute(killed);

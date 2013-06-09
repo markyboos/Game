@@ -1,5 +1,5 @@
 
-package com.game.thrones.model.hero;
+package com.game.thrones.model.item;
 
 import com.game.thrones.model.Filter;
 import com.game.thrones.model.Team;
@@ -8,7 +8,7 @@ import com.game.thrones.model.Team;
  *
  * @author James
  */
-public class ItemTeamFilter implements Filter<Item> {
+public class ItemTeamFilter implements Filter<AttackGeneralItem> {
     
     private final Team team;
     
@@ -16,8 +16,8 @@ public class ItemTeamFilter implements Filter<Item> {
         this.team = team;        
     }
 
-    public boolean valid(Item t) {
-        return t.team.equals(team);
+    public boolean valid(AttackGeneralItem t) {
+        return t.getTeam().equals(team);
     }
 
 }

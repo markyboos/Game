@@ -1,6 +1,7 @@
 
 package com.game.thrones.model.hero;
 
+import com.game.thrones.model.item.ActionItem;
 import com.game.thrones.engine.actions.Action;
 import com.game.thrones.engine.actions.TransformAction;
 

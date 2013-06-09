@@ -10,9 +10,11 @@ import com.game.thrones.model.Filter;
 import com.game.thrones.model.hero.DoctorJekyll;
 import com.game.thrones.model.hero.DoctorJekyll.Form;
 import com.game.thrones.model.hero.Hero;
-import com.game.thrones.model.hero.Item;
-import com.game.thrones.model.hero.ItemTeamFilter;
+import com.game.thrones.model.item.AbstractItem;
+import com.game.thrones.model.item.ItemTeamFilter;
 import com.game.thrones.model.hero.Sorceress;
+import com.game.thrones.model.item.AttackGeneralItem;
+import com.game.thrones.model.item.Item;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +24,7 @@ import java.util.List;
  */
 public class CleanseAction extends AbstractAction<Hero> implements ItemSelectAction, Describable<CleanseDescription> {
     
-    private Item itemToUse;
+    private AttackGeneralItem itemToUse;
     
     private CleanseDescription description;
     
@@ -32,18 +34,20 @@ public class CleanseAction extends AbstractAction<Hero> implements ItemSelectAct
     
     Dice dice = new Dice();
     
-    public void setItem(Item item) {
+    public void setItem(AttackGeneralItem item) {
         itemToUse = item;        
     }
     
-    public Filter<Item> getItemFilter() {
+    public Filter<AttackGeneralItem> getItemFilter() {
         return new ItemTeamFilter(piece.getPosition().getOwner());
     }
 
     public void execute() {
         
+        piece.useAction();
+        
         //use a card
-        piece.useItem(itemToUse);
+        piece.disposeItem(itemToUse);
         
         int toRoll = 5;
         
