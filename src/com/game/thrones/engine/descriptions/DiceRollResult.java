@@ -6,9 +6,9 @@ package com.game.thrones.engine.descriptions;
  */
 public class DiceRollResult implements AttackResult {
 
-    public final int needed;
-    public final int rolled;
-    public final int modifier;
+    private final int needed;
+    private final int rolled;
+    private final int modifier;
 
     public DiceRollResult(int roll, int needed, int modifier) {
         this.needed = needed;
