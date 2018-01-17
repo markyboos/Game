@@ -10,5 +10,5 @@ import com.game.thrones.model.Team;
  */
 public interface TeamSelectAction extends Action {
 
-    public void setTeam(Team team);
+    void setTeam(Team team);
 }

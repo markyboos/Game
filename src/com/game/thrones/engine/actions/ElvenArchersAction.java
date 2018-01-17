@@ -52,7 +52,6 @@ public class ElvenArchersAction implements MultipleTerritorySelectAction, Descri
 
             List<Minion> pieces = board.getPieces(new PieceTerritoryFilter<Minion>(territory), Minion.class);
             
-            
             Log.d("Elven archers", "removing [" + pieces.size() + "] minions from [" + territory.getName() + "]");
 
             for (Minion minion : pieces) {

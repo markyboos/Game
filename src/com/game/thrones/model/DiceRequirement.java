@@ -35,7 +35,8 @@ public class DiceRequirement implements Requirement<DiceDescription> {
         
         return satisfied;
     }
-    
+
+    //this is the result, rather than what you have to do for it
     public DiceDescription summary() {
         return description;
     }

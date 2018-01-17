@@ -13,7 +13,7 @@ public class TerritoryItem extends AbstractItem implements AttackGeneralItem {
     private final Territory territory;
     
     public TerritoryItem(final Territory territory) {
-        super(territory.getName(), territory.getName());
+        super(territory.getName(), "Use this when attacking a general, or to heal taint.");
         this.territory = territory;
     }
     
@@ -27,7 +27,7 @@ public class TerritoryItem extends AbstractItem implements AttackGeneralItem {
     
     @Override
     public String toString() {
-        return territory.getName() + " " + territory.getOwner() + " " + territory.getValue();
+        return territory.getName() + " " + territory.getOwner().toString() + " " + territory.getValue();
     }
 
 }

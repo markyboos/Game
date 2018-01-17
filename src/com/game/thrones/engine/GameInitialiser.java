@@ -66,7 +66,7 @@ public class GameInitialiser {
         }
     }
     
-    private void initialiseBigMap() {
+    private void initialiseBigMap(List<Hero> heros) {
         // territories
         Territory centre = createTerritory(Territory.CENTRAL_TERRITORY, 1, Team.NO_ONE);
 
@@ -234,10 +234,9 @@ public class GameInitialiser {
         createGeneral(new UndeadKing(), darkWoods);
         createGeneral(new DemonKing(), scorpionCanyon);
 
-        createHero(new Barbarian(), centre);
-        createHero(new Ranger(), centre);
-        createHero(new Sorceress(), centre);
-        createHero(new Dwarf(), centre);
+        for (Hero hero : heros) {
+            createHero(hero, centre);
+        }
     }
 
     private Territory createTerritory(String name, int value, Team team) {
@@ -257,8 +256,14 @@ public class GameInitialiser {
         borderMap.get(t2).add(t1);
     }
 
-    public Board createBoard(List<Hero> heroes) {
-        initialise(heroes);
+    public Board createBoard(GameOptions options) {
+
+        if (options.type == GameType.BIG) {
+            initialiseBigMap(options.startingHeros);
+        } else if (options.type == GameType.SMALL) {
+            initialise(options.startingHeros);
+        }
+
 
         return new Board(borderMap, pieces);
     }
@@ -296,7 +301,5 @@ public class GameInitialiser {
 
         pieces.add(hero);
     }
-
-
 
 }

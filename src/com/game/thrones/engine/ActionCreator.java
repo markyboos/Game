@@ -44,13 +44,15 @@ import java.util.Set;
  */
 public class ActionCreator {
     
-    private GameController controller;
+    private GameController controller = GameController.getInstance();
     
     private InventorySearcher searcher = new InventorySearcher();
     
     public List<Action> createActions(final Piece piece) {
-        
-        controller = GameController.getInstance();
+
+        if (!controller.hasActionsLeft()) {
+            return new ArrayList<Action>();
+        }
          
         //generic actions
         List<Action> actions = createMoveActions(piece);
@@ -83,7 +85,7 @@ public class ActionCreator {
                     actions.add(new FeedAttackAction((Daywalker)hero));                    
                 } else {
                     
-                    actions.add(new AttackAction(hero));
+                    actions.add(new AttackAction<Hero>(hero));
                 }
             }
             

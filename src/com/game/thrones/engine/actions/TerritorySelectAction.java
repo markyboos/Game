@@ -10,8 +10,8 @@ import java.util.List;
  */
 public interface TerritorySelectAction extends Action {
     
-    public List<Territory> getOptions();
+    List<Territory> getOptions();
     
-    public boolean chosenTerritory();
+    boolean chosenTerritory();
 
 }

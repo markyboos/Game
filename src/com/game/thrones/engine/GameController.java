@@ -1,6 +1,8 @@
 package com.game.thrones.engine;
 
 import android.os.Handler;
+import android.util.Log;
+
 import com.game.thrones.engine.actions.Action;
 import com.game.thrones.activity.CameraChangeEvent;
 import com.game.thrones.activity.CameraChangeListener;
@@ -10,10 +12,12 @@ import com.game.thrones.activity.GamePhaseChangeEvent;
 import com.game.thrones.activity.GamePhaseChangeListener;
 import com.game.thrones.model.AllFilter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.game.thrones.model.Board;
 import com.game.thrones.model.Filter;
+import com.game.thrones.model.Team;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.PieceTerritoryFilter;
 import com.game.thrones.model.hero.DamageListener;
@@ -22,6 +26,8 @@ import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.hero.Minion;
 import com.game.thrones.model.hero.Woundable;
 import java.util.Collections;
+import java.util.Queue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Singleton of the board
@@ -79,10 +85,14 @@ public class GameController {
         return Collections.unmodifiableList(actionsTaken);
     }
 
-    public void initialise(List<Hero> heroes) {
+    public boolean hasActionsLeft() {
+        return player.getActionsAvailable() > 0;
+    }
+
+    public void initialise(GameOptions gameOptions) {
 
         GameInitialiser initialiser = new GameInitialiser();
-        board = initialiser.createBoard(heroes);
+        board = initialiser.createBoard(gameOptions);
 
         players = new ArrayList<Hero>();
 
@@ -119,39 +129,30 @@ public class GameController {
                 hero.setDamageListener(damageListener);
             }
         }
+
+        this.gameState.set(GamePhase.MORNING.ordinal());
     }
-    
-    public void takeEveningPhase() {
-        
-        //collect items
-        for (int i = 0; i < player.itemsPerTurn(); i++) {
-            player.addItem(itemController.getTopItem());
-        }
-        
-        fireGamePhaseChangeEvent(new GamePhaseChangeEvent(GamePhase.NIGHT));
-    }
-    
-    public void takeNightPhase() {
 
-        //if the hero is in a place with monsters then take life off
-        List<Minion> minionsAtHero = board.getPieces(new PieceTerritoryFilter(player.getPosition()),
-                Minion.class);
-
-        player.takeDamage(minionsAtHero);
-
+    public void endEveningPhase() {
         Territory centralTerritory = board.getCentralTerritory();
 
         if (player.isDead()) {
-            //put them back on kings landing
+            //put them back on main spot
             player.clearInventory();
 
             player.setPosition(centralTerritory);
 
             player.heal();
         }
+    }
 
-        //take evil players turn
-        aiController.takeTurn();
+    public Queue<Action> takeAIOrders() {
+        return aiController.takeTurn();
+    }
+    
+    public void endNightPhase() {
+
+        Territory centralTerritory = board.getCentralTerritory();
 
         //check loss conditions:
 
@@ -182,9 +183,19 @@ public class GameController {
             return;
         }
 
-        if (board.getPieces(AllFilter.INSTANCE, Minion.class).size() > 25) {
-            gameFinishedListener.fireGameFinishedEvent(new GameFinishedEvent(GameFinished.TOO_MANY_MINIONS));
-            return;
+        for (Team team : Team.getTeams(false)) {
+            List<Minion> minions = board.getPieces(AllFilter.INSTANCE, Minion.class);
+            List<Minion> teamMinions = new ArrayList<Minion>();
+            for (Minion minion : minions) {
+                if (minion.getTeam() == team) {
+                    teamMinions.add(minion);
+                }
+            }
+
+            if (teamMinions.size() > 25) {
+                gameFinishedListener.fireGameFinishedEvent(new GameFinishedEvent(GameFinished.TOO_MANY_MINIONS));
+                return;
+            }
         }
 
         //heal generals
@@ -210,7 +221,7 @@ public class GameController {
         
         handler.postDelayed(new Runnable() {
             public void run() {
-                fireGamePhaseChangeEvent(new GamePhaseChangeEvent(GamePhase.MORNING));
+                GameController.this.fireGamePhaseChangeEvent(new GamePhaseChangeEvent(GamePhase.MORNING));
             }
         }, 4000);
     }
@@ -270,7 +281,22 @@ public class GameController {
         this.gamePhaseChangeListener = listener;
     }
 
+    private final AtomicInteger gameState = new AtomicInteger(0);
+
     public void fireGamePhaseChangeEvent(final GamePhaseChangeEvent event) {
+
+        GamePhase gamePhase = event.getGamePhase();
+
+        Log.i("state change", "wanting to change to " + gamePhase);
+
+        boolean nextPhase = gameState.compareAndSet(gamePhase.previousPhase, gamePhase.ordinal());
+
+        if (!nextPhase) {
+            Log.e("state change", "Should'nt be at state " + event.getGamePhase() + " , current state is " + GamePhase.values()[gameState.get()]);
+            return;
+            //throw new IllegalStateException();
+        }
+
         gamePhaseChangeListener.fireGamePhaseChangeEvent(event);
     }
     

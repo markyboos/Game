@@ -9,6 +9,6 @@ import com.game.thrones.model.hero.Hero;
  */
 public interface PlayerSelectAction extends Action {
 
-    public void setPlayer(Hero hero);
+    void setPlayer(Hero hero);
     
 }

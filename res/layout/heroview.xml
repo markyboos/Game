@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:weightSum="16">
+
+    <ImageView
+            android:id="@+id/heroImage"
+            android:layout_gravity="top"
+            android:contentDescription="@string/hero"
+            android:layout_weight="2"
+
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"/>
+
+    <TextView
+            android:id="@+id/heroTitle"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"/>
+
+    <TextView
+            android:id="@+id/heroDescription"
+            android:layout_weight="2"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"/>
+
+    <TextView
+            android:id="@+id/heroSpecialTitle1"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"/>
+
+    <TextView
+            android:id="@+id/heroSpecialText1"
+            android:layout_weight="2"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:lines="3"/>
+
+    <TextView
+            android:id="@+id/heroSpecialTitle2"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"/>
+
+    <TextView
+            android:id="@+id/heroSpecialText2"
+            android:layout_weight="2"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:lines="3" />
+
+    <TextView
+            android:id="@+id/heroSpecialTitle3"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"/>
+
+    <TextView
+            android:id="@+id/heroSpecialText3"
+            android:layout_weight="2"
+            android:lines="3"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"/>
+
+    <ImageButton
+            android:id="@+id/heroCurrentQuest"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"/>
+
+    <ListView
+            android:id="@+id/heroCompletedQuests"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"/>
+
+
+</LinearLayout>

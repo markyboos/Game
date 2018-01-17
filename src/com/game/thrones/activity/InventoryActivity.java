@@ -6,6 +6,8 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
@@ -56,7 +58,7 @@ public class InventoryActivity extends ListActivity {
         
         if (selected instanceof ActionItem) {
             
-            final ActionItem actionItem = (ActionItem)selected;
+            final Item actionItem = selected;
         
             //show a toast, with the option to use the card.
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this); 
@@ -65,15 +67,30 @@ public class InventoryActivity extends ListActivity {
             alertDialogBuilder.setPositiveButton("Use it?", new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface arg0, int arg1) {
-                    Action action = actionItem.getAction();
+                    Action action = ((ActionItem)actionItem).getAction();
                     
-                    ActionTaker actionTaker = new ActionTaker(hero, InventoryActivity.this, true);
+                    ActionTaker actionTaker = new ActionTaker(hero, InventoryActivity.this, new Handler.Callback() {
+                        @Override
+                        public boolean handleMessage(Message message) {
+
+                            InventoryActivity.this.finish();
+                            return true;
+                        }
+                    });
                     
                     actionTaker.takeAction(action);
                     
                     hero.disposeItem(selected);
                 }
             });
+            alertDialogBuilder.show();
+        } else {
+            final Item item = selected;
+
+            //show a toast, with the option to use the card.
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            // set dialog message
+            alertDialogBuilder.setMessage(item.getDescription());
             alertDialogBuilder.show();
         }
     }

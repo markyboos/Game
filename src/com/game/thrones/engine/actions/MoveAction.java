@@ -63,8 +63,10 @@ public class MoveAction extends AbstractAction {
                 throw new IllegalStateException("A sorceress cannot move to an inn or the central territory");
             }
         }
-        
-        GameController.getInstance().fireCameraChangeEvent(new CameraChangeEvent(territory));
+
+        if (piece instanceof General) {
+            GameController.getInstance().fireCameraChangeEvent(new CameraChangeEvent(territory));
+        }
         
         board.movePiece(piece, territory);
     }

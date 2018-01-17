@@ -7,11 +7,15 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.view.View;
 import android.view.Window;
 import com.game.framework.SoundManager;
 import com.game.framework.VibrationManager;
 import com.game.thrones.activity.MapCanvasActivity;
 import com.game.thrones.engine.GameController;
+import com.game.thrones.engine.GameInitialiser;
+import com.game.thrones.engine.GameOptions;
+import com.game.thrones.engine.GameType;
 import com.game.thrones.model.hero.Barbarian;
 import com.game.thrones.model.hero.Daywalker;
 import com.game.thrones.model.hero.DoctorJekyll;
@@ -26,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Doesnt do a lot but will probably be the menu in the future
+ * Doesn't do a lot but will probably be the menu in the future
  * @author James
  */
 public class MainActivity extends AbstractMenuActivity {
@@ -49,10 +53,6 @@ public class MainActivity extends AbstractMenuActivity {
         
         loadSoundManager();
         loadVibrationHandler();
-        
-        choosePlayers();
-        
-        //startGame();
     }
     
     @Override
@@ -65,22 +65,46 @@ public class MainActivity extends AbstractMenuActivity {
     public void onResume() {
         super.onResume();
     }
+
+    public void chooseGameMode(View view) {
+        final List<CharSequence> options = new ArrayList<CharSequence>();
+
+        options.add(GameType.BIG.toString());
+        options.add(GameType.SMALL.toString());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("What game mode do you want to play?");
+        builder.setSingleChoiceItems(options.toArray(new CharSequence[options.size()]), 1,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String selected = (String)options.get(which);
+                        GameType picked = GameType.valueOf(selected);
+                        choosePlayers(picked);
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.show();
+    }
     
-    private void choosePlayers() {
+    private void choosePlayers(final GameType gameType) {
         
         final List<Hero> options = new ArrayList<Hero>();
         
         options.add(new Barbarian());
-        options.add(new Daywalker());
-        options.add(new DoctorJekyll());
+        //options.add(new Daywalker());
+        //options.add(new DoctorJekyll());
         options.add(new Dwarf());
         options.add(new Paladin());        
         options.add(new Ranger());
         options.add(new Rogue());
         options.add(new Sorceress());
-        options.add(new Wizard());        
-        
+        options.add(new Wizard());
+
         final List<Hero> selectedHeroes = new ArrayList<Hero>();
+
+        final int numberOfOptions = gameType.maxHeros;
         
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Which heroes will you choose");
@@ -101,7 +125,7 @@ public class MainActivity extends AbstractMenuActivity {
         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                if (selectedHeroes.size() < 2) {
+                if (selectedHeroes.size() < numberOfOptions) {
                     if (!selectedHeroes.contains(options.get(0))) {
                         selectedHeroes.add(options.get(0));
                     }
@@ -109,7 +133,9 @@ public class MainActivity extends AbstractMenuActivity {
                         selectedHeroes.add(options.get(1));
                     }
                 }
-                startGame(selectedHeroes.subList(0, 2));
+
+                List<Hero> picked = selectedHeroes.subList(0, numberOfOptions);
+                startGame(new GameOptions(gameType, picked));
             }
         });
 
@@ -145,10 +171,10 @@ public class MainActivity extends AbstractMenuActivity {
         vibrationManager.setVibrator((Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE));        
     }
 
-    private void startGame(List<Hero> heroes) {
+    private void startGame(GameOptions options) {
         
         GameController controller = GameController.getInstance();
-        controller.initialise(heroes);
+        controller.initialise(options);
         
         //start the map activity
         Intent intent = new Intent(this, MapCanvasActivity.class);

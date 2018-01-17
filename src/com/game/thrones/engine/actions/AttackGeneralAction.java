@@ -147,7 +147,7 @@ public class AttackGeneralAction implements GroupAction<Hero>, ActionDescription
 
         //make the hero brilliant
         //slayer
-        slayer.addItem(new SlayerItem("You are the slayer of beasts, any minion of that team you attack will flee from your mightyness", target));
+        slayer.addSlayer(new SlayerItem("You are the slayer of beasts, any minion of that team you attack will flee from your mightyness", target));
 
         for (Hero hero : team.keySet()) {
             //add 3 hero cards

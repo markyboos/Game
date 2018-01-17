@@ -3,6 +3,8 @@ package com.game.thrones.engine.actions;
 
 import com.game.thrones.activity.CameraChangeEvent;
 import com.game.thrones.engine.GameController;
+import com.game.thrones.engine.descriptions.AttackDescription;
+import com.game.thrones.engine.descriptions.Describable;
 import com.game.thrones.model.Territory;
 import com.game.thrones.model.hero.Woundable;
 import com.game.thrones.model.piece.Piece;
@@ -12,7 +14,7 @@ import java.util.List;
  *
  * @author James
  */
-public class MoveAlongPathAction extends AbstractAction {
+public class MoveAlongPathAction extends AbstractAction implements Describable<AttackDescription> {
     
     private int distance;
     private Territory finish;
@@ -49,4 +51,13 @@ public class MoveAlongPathAction extends AbstractAction {
         }
     }
 
+    @Override
+    public AttackDescription summary() {
+        return null;
+    }
+
+    @Override
+    public String render() {
+        return piece.getName() + " moved to " + piece.getPosition();
+    }
 }

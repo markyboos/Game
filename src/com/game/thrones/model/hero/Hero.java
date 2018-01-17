@@ -11,6 +11,7 @@ import com.game.thrones.model.item.AbstractItem;
 import com.game.thrones.model.item.ActionModifierItem;
 import com.game.thrones.model.item.AttackGeneralItem;
 import com.game.thrones.model.item.Item;
+import com.game.thrones.model.item.SlayerItem;
 import com.game.thrones.model.piece.Piece;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,7 +22,7 @@ import java.util.List;
  * @author James
  */
 public abstract class Hero extends Piece {
-    
+
     private static class NoListener implements DamageListener {
         //no op
         public void damageEventFired(Hero hero) {}        
@@ -36,6 +37,8 @@ public abstract class Hero extends Piece {
     protected int actionsAvailable;
     
     private List<Item> inventory = new ArrayList<Item>();
+
+    private List<SlayerItem> slayerItems = new ArrayList<SlayerItem>();
     
     private int cardsToRemove;
     
@@ -76,6 +79,14 @@ public abstract class Hero extends Piece {
         if (item instanceof AttackGeneralItem) {
             GameController.getInstance().getItemController().discard((AttackGeneralItem)item);
         }
+    }
+
+    public List<SlayerItem> getSlayerItems() {
+        return Collections.unmodifiableList(slayerItems);
+    }
+
+    public void addSlayer(SlayerItem slayerItem) {
+        slayerItems.add(slayerItem);
     }
     
     public List<Item> getInventory() {
@@ -168,7 +179,7 @@ public abstract class Hero extends Piece {
      * Take damage from minions.
      * @param minion the minion you are taking damage from
      */
-    public void takeDamage(final List<Minion> minions) {
+    public int takeDamage(final List<Minion> minions) {
         
         int damage = 0;
         boolean undead = false;
@@ -179,9 +190,12 @@ public abstract class Hero extends Piece {
                 undead = true;
             }
         }
+
+        damage = undead && affectedByUndead() ? damage + 1 : damage;
         
-        takeDamage(undead && affectedByUndead() ? damage + 1 : damage);       
-        
+        takeDamage(damage);
+
+        return damage;
     }
     
     protected boolean affectedByUndead() {

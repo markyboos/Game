@@ -1,10 +1,12 @@
 
 package com.game.thrones.engine;
 
-import com.game.thrones.engine.actions.MoveAlongPathAction;
-import com.game.thrones.engine.actions.AddMinionAction;
 import com.game.thrones.engine.actions.MoveAction;
-import com.game.thrones.engine.actions.OrcPatrolsAction;
+import com.game.thrones.engine.actions.evil.AllQuietAction;
+import com.game.thrones.engine.actions.evil.AssaultAction;
+import com.game.thrones.engine.actions.MoveAlongPathAction;
+import com.game.thrones.engine.actions.evil.AddMinionAction;
+import com.game.thrones.engine.actions.evil.OrcPatrolsAction;
 import com.game.thrones.engine.actions.Action;
 import android.util.Log;
 import com.game.thrones.model.AllFilter;
@@ -15,9 +17,11 @@ import com.game.thrones.model.Territory;
 import com.game.thrones.model.TerritoryCriteria;
 import com.game.thrones.model.hero.General;
 import com.game.thrones.model.hero.Minion;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * In charge of AI moves.
@@ -34,7 +38,7 @@ public class AIController {
         START(1), EARLY_MID(2), LATE_MID(2), LATE(3);
         
         private int cardsToDraw;
-        private WarStatus(int total) {
+        WarStatus(int total) {
             cardsToDraw = total;
         }
         
@@ -47,7 +51,7 @@ public class AIController {
     
     private GameController controller = GameController.getInstance();
     
-    private Deck<Orders> deck = new Deck<Orders>(createEvilActions());
+    private Deck<Action> deck = new Deck<Action>(createEvilActions());
     
     public void increaseWarStatus() {
         if (warStatus.ordinal() == WarStatus.values().length) {
@@ -58,31 +62,22 @@ public class AIController {
                 = WarStatus.values()[warStatus.ordinal() + 1];
     }
     
-    public Orders takeTopCard() {
-        Orders orders = deck.takeTopCard();
+    public Action takeTopCard() {
+        Action orders = deck.takeTopCard();
         
         deck.discard(orders);
         
         return orders;
     }
     
-    public void takeTurn() {        
+    public Queue<Action> takeTurn() {
+        Queue<Action> orders = new LinkedList<Action>();
         for (int i = 0; i < warStatus.getCardsToDraw(); i++) {
-            drawAndUseCard();
+            orders.add(takeTopCard());
         }
+        return orders;
     }
-    
-    private void drawAndUseCard() {
-        Orders orders = takeTopCard();
 
-        //add minions to places        
-        //add taint        
-        //possibly move general
-        for (Action action : orders.getActions()) {
-            action.execute();            
-        }
-    }
-    
     public void initialise() {
         //add extra minions to the board
         addExtraMinions(3, 2);
@@ -91,11 +86,11 @@ public class AIController {
         deck.reshuffleDeck();
     }
     
-    private List<Orders> createEvilActions() {
+    private List<Action> createEvilActions() {
         
         Log.d("AIController:createEvilActions", "Generating evil actions...");
         
-        LinkedList<Orders> orders = new LinkedList<Orders>();
+        LinkedList<Action> orders = new LinkedList<Action>();
         final Territory centralTerritory = controller.getBoard().getCentralTerritory();
         
         for (Territory t : controller.getBoard().getTerritories()) {
@@ -103,30 +98,22 @@ public class AIController {
             if (t.equals(centralTerritory) || t.getOwner() == Team.NO_ONE) {
                 continue;
             }
-            
-            Orders order = new Orders();
-            order.addAction(new AddMinionAction(t, 2, t.getOwner()));
-            orders.add(order);
+
+            orders.add(new AddMinionAction(t, 2, t.getOwner()));
         }
              
         for (General general : controller.getBoard().getPieces(new AllFilter<General>(), General.class)) {
-                    
+
             List<Territory> path = controller.getBoard()
                     .getPathToTerritory(general.getPosition(), centralTerritory);
 
+            //includes direct movement and partial
             for (Territory t : path) {
-                Orders order = new Orders();
-                order.addAction(new MoveAction(general, t));
-
-                orders.add(order);
+                orders.add(new MoveAction(general, t));
             }
 
             for (int i = 0; i < 2; i ++) {
-
-                Orders order = new Orders();
-                order.addAction(new MoveAlongPathAction(general, centralTerritory, 1));
-
-                orders.add(order);
+                orders.add(new MoveAlongPathAction(general, centralTerritory, 1));
             }
         }
         
@@ -146,7 +133,7 @@ public class AIController {
         
         //assault on the centre
         
-        orders.add(createAssaultAction(centralTerritory));
+        orders.add(createAssaultAction());
         
         //all quiet
         for (int i = 0; i < 3; i ++) {
@@ -160,30 +147,17 @@ public class AIController {
     }
 
     //orc patrols
-    private Orders createOrcPatrols(TerritoryCriteria territoryCriteria) {
+    private Action createOrcPatrols(TerritoryCriteria territoryCriteria) {
         
-        Orders order = new Orders();
-        
-        order.addAction(new OrcPatrolsAction(territoryCriteria, Team.ORCS));
-        
-        return order;        
+        return new OrcPatrolsAction(territoryCriteria, Team.ORCS);
     }
 
-    private Orders createAssaultAction(Territory centre) {
-        Orders order = new Orders();
-        
-        for (Team team : Team.values()) {
-            if (team == Team.NO_ONE || !team.enabled()) {
-                continue;
-            }
-            order.addAction(new AddMinionAction(centre, 1, team));
-        }
-        
-        return order;
+    private Action createAssaultAction() {
+        return new AssaultAction();
     }
     
-    private Orders allQuiet() {
-        return new Orders();
+    private Action allQuiet() {
+        return new AllQuietAction();
     }
     
     /**
@@ -198,26 +172,24 @@ public class AIController {
 
         while (true) {
             //draw 3 cards
-            Orders orders = takeTopCard();
-            for (Action action : orders.getActions()) {
-                if (action instanceof AddMinionAction) {
-                    AddMinionAction addMinionAction = (AddMinionAction)action;
-                    Territory territory = addMinionAction.getTerritory();
+            Action action = takeTopCard();
+            if (action instanceof AddMinionAction) {
+                AddMinionAction addMinionAction = (AddMinionAction)action;
+                Territory territory = addMinionAction.getTerritory();
 
-                    //its not possible to have more than 3 on a territory at the beggining
-                    if (board.getPieces(new PieceTerritoryFilter(territory), Minion.class).size() + total > 3 
-                            || board.getCentralTerritory().equals(territory)) {
-                        continue;
-                    }
-
-                    Log.d("addExtraMinions", "adding [" + total + "] minions to [" + territory.getName() + "]");
-
-                    for (int i = 0 ; i < total; i++) {
-                        board.addMinionToTerritory(territory, territory.getOwner(), false);
-                    }
-                    cards --;
-                    break;
+                //its not possible to have more than 3 on a territory at the beginning
+                if (board.getPieces(new PieceTerritoryFilter(territory), Minion.class).size() + total > 3
+                        || board.getCentralTerritory().equals(territory)) {
+                    continue;
                 }
+
+                Log.d("addExtraMinions", "adding [" + total + "] minions to [" + territory.getName() + "]");
+
+                for (int i = 0 ; i < total; i++) {
+                    board.addMinionToTerritory(territory, territory.getOwner(), false);
+                }
+                cards --;
+                break;
             }
 
             if (cards == 0) {

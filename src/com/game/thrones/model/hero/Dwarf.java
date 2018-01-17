@@ -18,7 +18,7 @@ public class Dwarf extends Hero {
         
         super.modifyActions();
         
-        if (getPosition().getOwner() == Team.DRAGONS) {
+        if (getPosition().getOwner() == Team.DEMONS) {
             actionsAvailable += 1;       
         }        
     }

@@ -3,10 +3,13 @@ package com.game.thrones.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import com.game.thrones.engine.GameController;
+import com.game.thrones.engine.GamePhase;
 import com.game.thrones.engine.actions.Action;
 import com.game.thrones.engine.actions.AttackGeneralAction;
 import com.game.thrones.engine.actions.BarbarianAttackAction;
@@ -33,6 +36,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.security.auth.callback.Callback;
+
 /**
  * Takes actions for an activity, this might include any extra choices the action needs.
  *
@@ -41,16 +46,22 @@ import java.util.List;
 public class ActionTaker {
 
     private final Hero hero;
-    private final Activity activity;
-    private final boolean finish;
+    private final Context activity;
+    //private final boolean finish;
     private InventorySearcher searcher = new InventorySearcher();
+    private Handler.Callback callback;
     
     private final GameController controller = GameController.getInstance();
 
-    public ActionTaker(Hero hero, Activity activity, boolean finish) {
+    public ActionTaker(Hero hero, Context activity) {
         this.activity = activity;
         this.hero = hero;
-        this.finish = finish;
+    }
+
+    public ActionTaker(Hero hero, Context activity, Handler.Callback callback) {
+        this.activity = activity;
+        this.hero = hero;
+        this.callback = callback;
     }
 
     public void takeAction(Action selected) {
@@ -468,8 +479,8 @@ public class ActionTaker {
 
     private void finish() {
         
-        if (finish) {
-            activity.finish();
+        if (callback != null) {
+            callback.handleMessage(null);
         }
     }
 }

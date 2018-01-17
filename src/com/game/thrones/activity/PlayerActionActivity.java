@@ -3,6 +3,8 @@ package com.game.thrones.activity;
 import android.app.ListActivity;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
@@ -10,8 +12,11 @@ import android.widget.ListView;
 import com.game.thrones.engine.actions.Action;
 import com.game.thrones.engine.ActionCreator;
 import com.game.thrones.engine.GameController;
+import com.game.thrones.engine.actions.MoveAction;
 import com.game.thrones.model.hero.Hero;
 import com.game.thrones.model.piece.Piece;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,14 +63,29 @@ public class PlayerActionActivity extends ListActivity {
 
         List<Action> actions = actionCreator.createActions(turnItIs);
 
-        setListAdapter(new ActionAdapter(actions));
+        List<Action> actualActions = new ArrayList<Action>();
+
+        for (Action action : actions) {
+            if (!(action instanceof MoveAction)) {
+                actualActions.add(action);
+            }
+        }
+
+        setListAdapter(new ActionAdapter(actualActions));
     }
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         Action selected = (Action) l.getItemAtPosition(position);
         
-        ActionTaker actionTaker = new ActionTaker(hero, this, true);
+        ActionTaker actionTaker = new ActionTaker(hero, this, new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message message) {
+
+                PlayerActionActivity.this.finish();
+                return true;
+            }
+        });
         
         actionTaker.takeAction(selected);        
     }

@@ -10,6 +10,6 @@ import java.util.Set;
  */
 public interface GroupAction <P extends Piece> extends Action {
     
-    public Set<P> getTeam();
+    Set<P> getTeam();
 
 }

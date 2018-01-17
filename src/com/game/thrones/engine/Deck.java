@@ -20,7 +20,7 @@ public class Deck<T> {
         deck.addAll(initial);
         Collections.shuffle(deck);
     }
-    
+
     public T takeTopCard() {        
         T card = deck.poll();
         
@@ -33,6 +33,7 @@ public class Deck<T> {
     }
     
     public void discard(T t) {
+
         discardPile.add(t);
     }
     

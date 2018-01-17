@@ -12,8 +12,8 @@ import com.game.thrones.model.item.Item;
  */
 public interface ItemSelectAction extends Action {
     
-    public void setItem(final AttackGeneralItem item);
+    void setItem(final AttackGeneralItem item);
     
-    public Filter getItemFilter();
+    Filter getItemFilter();
 
 }

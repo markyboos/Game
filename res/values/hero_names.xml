@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Barbarian">Barbarian</string>
+    <string name="Barbarian.description">A great warrior hailing from the mountains.</string>
+    <string name="Barbarian.special1title">Battle rage</string>
+    <string name="Barbarian.special1">May spend extra action points while attacking to add +1 dice for each point used.</string>
+    <string name="Barbarian.special2title">Famed warrior</string>
+    <string name="Barbarian.special2">If 2 or more enemies are defeated in a location after attacking, remove 1 adjacent minion from every location.</string>
+    <string name="Barbarian.special3title">Local support</string>
+    <string name="Barbarian.special3">If ending turn at a Neutral or Black location, get one extra hero card.</string>
+
+    <string name="Dwarf">Dwarf</string>
+    <string name="Dwarf.description">Little ol\' mikey</string>
+    <string name="Dwarf.special1title">Mountain lore</string>
+    <string name="Dwarf.special1">When starting a turn in a Red location, get one extra action that turn.</string>
+    <string name="Dwarf.special2title">Dragon slayer</string>
+    <string name="Dwarf.special2">Add +1 attack against dragonkin.</string>
+    <string name="Dwarf.special3title">Mithril armour</string>
+    <string name="Dwarf.special3">Take one less wound when damage is taken.</string>
+
+    <string name="Paladin">Paladin</string>
+    <string name="Paladin.description">Big ol\' bastard</string>
+    <string name="Paladin.special1title">Noble steed</string>
+    <string name="Paladin.special1">May spend an action to travel on horseback.</string>
+    <string name="Paladin.special2title">Bravery</string>
+    <string name="Paladin.special2">If ending a turn in a location with undead minions, do not suffer fear.</string>
+    <string name="Paladin.special3title">Righteous bloke</string>
+    <string name="Paladin.special3">Take one less wound when damage is taken.</string>
+
+    <string name="Ranger">Ranger</string>
+    <string name="Ranger.description">Some bloke who crapped in a wood</string>
+    <string name="Ranger.special1title">Woods lore</string>
+    <string name="Ranger.special1">Add +1 to attack in green locations.</string>
+    <string name="Ranger.special2title">Famed Archer</string>
+    <string name="Ranger.special2">May attack one space away.</string>
+    <string name="Ranger.special3title">Elf support</string>
+    <string name="Ranger.special3">When starting a turn in a Green location, get one extra action that turn.</string>
+
+    <string name="Rogue">Rogue</string>
+    <string name="Rogue.description">Sneaky</string>
+    <string name="Rogue.special1title">Hide in the shadows</string>
+    <string name="Rogue.special1">Does not suffer life token loss when in a location with enemy minions at the end of a turn.</string>
+    <string name="Rogue.special2title">Famed Archer</string>
+    <string name="Rogue.special2">May attack one space away.</string>
+    <string name="Rogue.special3title">Crafty</string>
+    <string name="Rogue.special3">When doing rumors action, get 5 hero cards rather than 3.</string>
+
+    <string name="Sorceress">Sorceress</string>
+    <string name="Sorceress.description">Sexy lady</string>
+    <string name="Sorceress.special1title">Shape shifter</string>
+    <string name="Sorceress.special1">At the start of your turn you may choose a team, you do not get wounded
+        when ending you turn on a location with minions of that team.</string>
+    <string name="Sorceress.special2title">Ambush</string>
+    <string name="Sorceress.special2">If you attack a team that you are transformed into gain +2 to dice rolls.</string>
+    <string name="Sorceress.special3title">Visions</string>
+    <string name="Sorceress.special3">Gain 1 extra die for Quest rolls and healing of tainted land.</string>
+
+    <string name="Wizard">Wizard</string>
+    <string name="Wizard.description">Weirdo</string>
+    <string name="Wizard.special1title">Fireball</string>
+    <string name="Wizard.special1">Discard a hero card to damage all minions at your location, roll a dice for every minion, a roll of 2 or more is a hit.</string>
+    <string name="Wizard.special2title">Teleport</string>
+    <string name="Wizard.special2">May teleport anywhere on the map for 1 action point.</string>
+    <string name="Wizard.special3title">Elf support</string>
+    <string name="Wizard.special3">When starting a turn in a Green location, get one extra action that turn.</string>
+
+</resources>

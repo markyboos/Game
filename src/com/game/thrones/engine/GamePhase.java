@@ -7,8 +7,14 @@ package com.game.thrones.engine;
  */
 public enum GamePhase {
     
-    MORNING,
-    EVENING,
-    NIGHT
+    MORNING(2),
+    EVENING(0),
+    NIGHT(1);
+
+    public final int previousPhase;
+
+    GamePhase(int nextPhase) {
+        this.previousPhase = nextPhase;
+    }
     
 }

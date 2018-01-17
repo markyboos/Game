@@ -13,8 +13,8 @@ public enum Team {
     //original teams
     ORCS(true),
     DRAGONS(true),
-    OLD_DEMONS(false),
-    UNDEAD(false),
+    OLD_DEMONS(true),
+    UNDEAD(true),
     
     //new teams
     VAMPIRES(false),
@@ -78,5 +78,12 @@ public enum Team {
         }
         
         return items;
+    }
+
+    public String toString() {
+        if (this == NO_ONE) {
+            return "";
+        }
+        return super.toString();
     }
 }

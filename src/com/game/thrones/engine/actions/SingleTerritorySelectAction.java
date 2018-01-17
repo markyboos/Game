@@ -9,6 +9,6 @@ import com.game.thrones.model.Territory;
  */
 public interface SingleTerritorySelectAction extends TerritorySelectAction {
     
-    public void setTerritory(Territory territory);
+    void setTerritory(Territory territory);
 
 }

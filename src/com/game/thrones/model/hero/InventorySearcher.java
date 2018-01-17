@@ -29,11 +29,9 @@ public class InventorySearcher {
     }
     
     public boolean isSlayer(Hero hero, Team team) {
-        for (Item item : hero.getInventory()) {
-            if (item instanceof SlayerItem) {
-                if (((SlayerItem)item).getTeam() == team) {
-                    return true;
-                }
+        for (SlayerItem item : hero.getSlayerItems()) {
+            if (((SlayerItem)item).getTeam() == team) {
+                return true;
             }
         }
         return false;
